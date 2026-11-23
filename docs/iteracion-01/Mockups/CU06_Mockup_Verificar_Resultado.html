@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+    * { font-family: 'Caveat', cursive !important; }
+    body { background: #faf8f5; }
+    .napkin-border { border: 2px solid #333; border-radius: 4px; }
+    .sketch-line { border-bottom: 1.5px dashed #999; }
+    .source-link { text-decoration: underline; color: #2563eb; cursor: pointer; font-size: 16px; }
+    .source-link:hover { color: #1d4ed8; }
+
+    /* Trust ring small */
+    .trust-sm { position: relative; width: 36px; height: 36px; flex-shrink: 0; }
+    .trust-sm svg { transform: rotate(-90deg); }
+    .trust-sm .pct { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 600; color: #333; }
+    .trust-sm .star-sm { position: absolute; top: -3px; right: -5px; font-size: 11px; }
+
+    .comment { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: #d4d4d4; border: 1.5px solid #999; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    .like-btn { border: none; background: none; cursor: pointer; font-size: 15px; padding: 2px 4px; }
+    .like-btn:hover { transform: scale(1.2); }
+
+    .note-field { border: 1.5px solid #aaa; border-radius: 4px; padding: 8px 12px; font-size: 16px; width: 100%; box-sizing: border-box; background: #fefefe; outline: none; resize: none; }
+    .note-field:focus { border-color: #555; }
+    .note-field::placeholder { color: #bbb; }
+    .btn-sm { border: 1.5px solid #888; border-radius: 4px; padding: 4px 12px; font-size: 15px; cursor: pointer; background: #fafafa; }
+    .btn-sm:hover { background: #eee; }
+  </style>
+</head>
+<body class="p-6">
+  <div style="max-width: 600px; margin: 0 auto;">
+
+    <!-- Titulo -->
+    <p style="font-size: 22px; color: #555; margin-bottom: 12px; text-align: center;">
+      ✏️ Mockup Servilleta — CU06: Contenido Verificado
+    </p>
+
+    <div class="napkin-border" style="background: #fff; overflow: hidden;">
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- PARTE SUPERIOR: Contenido + Veredicto      -->
+      <!-- ═══════════════════════════════════════════ -->
+      <div style="background: #fafafa; padding: 22px 24px; border-bottom: 2.5px solid #333;">
+
+        <!-- Header app -->
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+          <svg width="28" height="28" viewBox="0 0 100 100">
+            <polygon points="20,10 50,50 20,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+            <polygon points="80,10 50,50 80,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+            <line x1="20" y1="10" x2="80" y2="10" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+            <line x1="20" y1="90" x2="80" y2="90" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+          <span style="font-size: 18px; color: #222; font-weight: 600; letter-spacing: 2px;">DAGAZ</span>
+          <span style="font-size: 14px; color: #aaa; margin-left: auto;">Resultado de verificación</span>
+        </div>
+
+        <!-- Contenido verificado -->
+        <div style="border: 1.5px solid #ccc; border-radius: 6px; padding: 16px; background: #fff;">
+          <p style="font-size: 22px; color: #222; margin: 0 0 6px 0; font-weight: 600;">
+            "La ciudad enfrenta una crisis de agua potable, con reservas reducidas al 40%"
+          </p>
+          <p style="font-size: 15px; color: #888; margin: 0 0 12px 0;">
+            Contenido enviado por el usuario · Verificado el 1 Sep 2026
+          </p>
+
+          <!-- Veredicto prominente -->
+          <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 2px solid #16a34a; border-radius: 8px; background: #f0fdf4;">
+            <span style="font-size: 42px;">✅</span>
+            <div>
+              <p style="font-size: 24px; color: #16a34a; margin: 0; font-weight: 600;">Verdadero</p>
+              <p style="font-size: 15px; color: #555; margin: 2px 0 0 0;">La afirmación ha sido respaldada por múltiples fuentes confiables.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- PARTE INFERIOR: Fuentes + Notas Comunidad  -->
+      <!-- ═══════════════════════════════════════════ -->
+      <div style="padding: 20px 24px;">
+
+        <!-- Dos columnas: Fuentes | Notas comunidad -->
+        <div style="display: flex; gap: 18px;">
+
+          <!-- COLUMNA IZQUIERDA: Fuentes principales -->
+          <div style="flex: 1; border-right: 1.5px dashed #ccc; padding-right: 18px;">
+            <p style="font-size: 20px; color: #222; margin: 0 0 10px 0; font-weight: 600;">📎 Fuentes principales</p>
+
+            <!-- Fuente 1 -->
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+              <div class="trust-sm">
+                <svg width="36" height="36" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#16a34a" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="8.5" stroke-linecap="round"/>
+                </svg>
+                <span class="pct">91%</span>
+                <span class="star-sm">⭐</span>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 17px; font-weight: 600; color: #333;">Reuters</p>
+                <p style="margin: 0;"><span class="source-link">Informe hídrico 2026</span></p>
+              </div>
+            </div>
+
+            <!-- Fuente 2 -->
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+              <div class="trust-sm">
+                <svg width="36" height="36" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#16a34a" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="4.7" stroke-linecap="round"/>
+                </svg>
+                <span class="pct">95%</span>
+                <span class="star-sm">⭐</span>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 17px; font-weight: 600; color: #333;">OMS</p>
+                <p style="margin: 0;"><span class="source-link">Datos de agua potable</span></p>
+              </div>
+            </div>
+
+            <!-- Fuente 3 -->
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+              <div class="trust-sm">
+                <svg width="36" height="36" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#ca8a04" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="32.9" stroke-linecap="round"/>
+                </svg>
+                <span class="pct">65%</span>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 17px; font-weight: 600; color: #333;">Gobierno Local</p>
+                <p style="margin: 0;"><span class="source-link">Comunicado oficial</span></p>
+              </div>
+            </div>
+
+            <!-- Leyenda mini -->
+            <div style="margin-top: 8px; font-size: 13px; color: #aaa;">
+              🟢 >75% · 🟡 40-75% · 🔴 <40% · ⭐ Verificada
+            </div>
+          </div>
+
+          <!-- COLUMNA DERECHA: Notas de comunidad -->
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0 0 10px 0; font-weight: 600;">💬 Notas de la comunidad</p>
+
+            <!-- Comentario 1 -->
+            <div class="comment">
+              <div class="avatar">👤</div>
+              <div style="flex: 1;">
+                <p style="margin: 0; font-size: 15px; color: #333;"><b>User123</b></p>
+                <p style="margin: 2px 0 4px 0; font-size: 14px; color: #666;">Puedo confirmar, vivo en la zona y las restricciones ya comenzaron.</p>
+                <div style="display: flex; gap: 6px;">
+                  <button class="like-btn" onclick="this.textContent='👍 4'">👍 3</button>
+                  <button class="like-btn">👎 0</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comentario 2 -->
+            <div class="comment">
+              <div class="avatar">👤</div>
+              <div style="flex: 1;">
+                <p style="margin: 0; font-size: 15px; color: #333;"><b>Maria_R</b></p>
+                <p style="margin: 2px 0 4px 0; font-size: 14px; color: #666;">El dato del 40% coincide con el periódico local de ayer.</p>
+                <div style="display: flex; gap: 6px;">
+                  <button class="like-btn" onclick="this.textContent='👍 6'">👍 5</button>
+                  <button class="like-btn">👎 1</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comentario 3 -->
+            <div class="comment">
+              <div class="avatar">👤</div>
+              <div style="flex: 1;">
+                <p style="margin: 0; font-size: 15px; color: #333;"><b>AguaViva</b></p>
+                <p style="margin: 2px 0 4px 0; font-size: 14px; color: #666;">La fuente del gobierno no especifica la metodología del cálculo.</p>
+                <div style="display: flex; gap: 6px;">
+                  <button class="like-btn" onclick="this.textContent='👍 3'">👍 2</button>
+                  <button class="like-btn">👎 0</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sketch-line" style="margin: 8px 0 10px 0;"></div>
+
+            <!-- Escribir nota -->
+            <textarea class="note-field" rows="2" placeholder="Escribe tu nota..."></textarea>
+            <div style="text-align: right; margin-top: 6px;">
+              <button class="btn-sm" onclick="this.textContent='✔ Enviada'; this.style.color='#16a34a'; this.style.borderColor='#16a34a'">Enviar nota</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Anotaciones -->
+    <div style="margin-top: 14px; display: flex; justify-content: space-around; color: #aaa; font-size: 14px;">
+      <span>↑ Contenido + Veredicto ↑</span>
+      <span>↓ Fuentes + Comunidad ↓</span>
+    </div>
+
+  </div>
+</body>
+</html>

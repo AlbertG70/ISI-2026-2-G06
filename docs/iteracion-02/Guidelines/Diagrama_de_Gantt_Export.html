@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Diagrama de Gantt DAGAZ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    *::-webkit-scrollbar,
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      overflow-x: hidden;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200" style="background:#ffffff;">
+  <defs>
+    <style>
+      .title { font-size: 26px; font-weight: 700; fill: #1c1427; text-anchor: middle; }
+      .date-label { font-size: 13px; font-weight: 600; fill: #37304a; text-anchor: middle; }
+      .sprint-title { font-size: 15px; font-weight: 700; fill: #1f1633; }
+      .sprint-dates { font-size: 13px; font-weight: 600; fill: #52476b; }
+      .task-text { font-size: 12px; font-weight: 700; fill: #1e172e; }
+      .task-text-end { font-size: 12px; font-weight: 700; fill: #1e172e; text-anchor: end; }
+      .milestone-text { font-size: 12px; font-weight: 800; fill: #201335; }
+      .milestone-text-end { font-size: 12px; font-weight: 800; fill: #201335; text-anchor: end; }
+      .grid-line { stroke: #ece7f5; stroke-width: 1; }
+      .grid-line-major { stroke: #d8cfe8; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <!-- Título Superior -->
+  <text x="800" y="42" class="title">Cronograma Maestro y Diagrama de Gantt — Proyecto DAGAZ (14 Semanas)</text>
+
+  <!-- Bandas de Fondo por Sprint -->
+  <!-- S1: Y 70 to 225 -->
+  <rect x="0" y="70" width="1600" height="155" fill="#f8f4fc" />
+  <!-- S2: Y 225 to 400 -->
+  <rect x="0" y="225" width="1600" height="175" fill="#ffffff" />
+  <!-- S3: Y 400 to 495 -->
+  <rect x="0" y="400" width="1600" height="95" fill="#f8f4fc" />
+  <!-- S4: Y 495 to 600 -->
+  <rect x="0" y="495" width="1600" height="105" fill="#ffffff" />
+  <!-- S5: Y 600 to 785 (185px) -->
+  <rect x="0" y="600" width="1600" height="185" fill="#f8f4fc" />
+  <!-- S6: Y 785 to 915 (130px) -->
+  <rect x="0" y="785" width="1600" height="130" fill="#ffffff" />
+  <!-- S7: Y 915 to 1060 (145px) -->
+  <rect x="0" y="915" width="1600" height="145" fill="#f8f4fc" />
+
+  <!-- Líneas divisorias de Sprints horizontales -->
+  <line x1="0" y1="225" x2="1600" y2="225" stroke="#e3dbf0" stroke-width="1.2" />
+  <line x1="0" y1="400" x2="1600" y2="400" stroke="#e3dbf0" stroke-width="1.2" />
+  <line x1="0" y1="495" x2="1600" y2="495" stroke="#e3dbf0" stroke-width="1.2" />
+  <line x1="0" y1="600" x2="1600" y2="600" stroke="#e3dbf0" stroke-width="1.2" />
+  <line x1="0" y1="785" x2="1600" y2="785" stroke="#e3dbf0" stroke-width="1.2" />
+  <line x1="0" y1="915" x2="1600" y2="915" stroke="#e3dbf0" stroke-width="1.2" />
+  <line x1="0" y1="1060" x2="1600" y2="1060" stroke="#e3dbf0" stroke-width="1.2" />
+
+  <!-- Línea vertical divisoria entre columna etiquetas y timeline (X = 310) -->
+  <line x1="310" y1="50" x2="310" y2="1060" stroke="#d5c8e8" stroke-width="1.5" />
+
+  <!-- Textos de Sprints en Columna Izquierda -->
+  <text x="18" y="140" class="sprint-title">Sprint 1: Requisitos, Negocio &amp; DB</text>
+  <text x="18" y="160" class="sprint-dates">(23-Ago al 05-Sep)</text>
+
+  <text x="18" y="305" class="sprint-title">Sprint 2: Casos de Uso, UI &amp; Core IA</text>
+  <text x="18" y="325" class="sprint-dates">(06-Sep al 19-Sep)</text>
+
+  <text x="18" y="445" class="sprint-title">Sprint 3: Grafo 80 Fuentes &amp; Redes</text>
+  <text x="18" y="465" class="sprint-dates">(20-Sep al 03-Oct)</text>
+
+  <text x="18" y="540" class="sprint-title">Sprint 4: API Publica &amp; Auditoria</text>
+  <text x="18" y="560" class="sprint-dates">(27-Sep al 02-Oct)</text>
+
+  <text x="18" y="685" class="sprint-title">Sprint 5: Frontend Movil (+40)</text>
+  <text x="18" y="705" class="sprint-dates">(02-Oct al 16-Oct)</text>
+
+  <text x="18" y="845" class="sprint-title">Sprint 6: Benchmark &amp; Piloto</text>
+  <text x="18" y="865" class="sprint-dates">(17-Oct al 31-Oct)</text>
+
+  <text x="18" y="975" class="sprint-title">Sprint 7: CI/CD &amp; Cierre MVP</text>
+  <text x="18" y="995" class="sprint-dates">(01-Nov al 15-Nov)</text>
+
+  <!-- LÍNEAS DE CUADRÍCULA VERTICALES Y FECHAS -->
+  <line x1="335" y1="55" x2="335" y2="1060" class="grid-line" />
+  <text x="335" y="65" class="date-label">24/08</text>
+
+  <line x1="437" y1="55" x2="437" y2="1060" class="grid-line" />
+  <text x="437" y="65" class="date-label">31/08</text>
+
+  <line x1="539" y1="55" x2="539" y2="1060" class="grid-line" />
+  <text x="539" y="65" class="date-label">07/09</text>
+
+  <line x1="641" y1="55" x2="641" y2="1060" class="grid-line" />
+  <text x="641" y="65" class="date-label">14/09</text>
+
+  <line x1="743" y1="55" x2="743" y2="1060" class="grid-line" />
+  <text x="743" y="65" class="date-label">21/09</text>
+
+  <line x1="845" y1="55" x2="845" y2="1060" class="grid-line" />
+  <text x="845" y="65" class="date-label">28/09</text>
+
+  <line x1="947" y1="55" x2="947" y2="1060" class="grid-line" />
+  <text x="947" y="65" class="date-label">05/10</text>
+
+  <line x1="1151" y1="55" x2="1151" y2="1060" class="grid-line" />
+  <text x="1151" y="65" class="date-label">19/10</text>
+
+  <line x1="1254" y1="55" x2="1254" y2="1060" class="grid-line" />
+  <text x="1254" y="65" class="date-label">26/10</text>
+
+  <line x1="1356" y1="55" x2="1356" y2="1060" class="grid-line" />
+  <text x="1356" y="65" class="date-label">02/11</text>
+
+  <line x1="1458" y1="55" x2="1458" y2="1060" class="grid-line" />
+  <text x="1458" y="65" class="date-label">09/11</text>
+
+  <line x1="1560" y1="55" x2="1560" y2="1060" class="grid-line-major" />
+  <text x="1560" y="65" class="date-label">16/11</text>
+
+  <!-- LÍNEA HOY 10/10 (EN X = 1020) -->
+  <line x1="1020" y1="50" x2="1020" y2="1060" stroke="#dc2626" stroke-width="2" />
+  <text x="1020" y="56" font-size="11" font-weight="800" fill="#dc2626" text-anchor="middle">hoy</text>
+  <text x="1020" y="68" font-size="12" font-weight="800" fill="#dc2626" text-anchor="middle">10/10</text>
+
+
+  <!-- ==================== SPRINT 1 TAREAS ==================== -->
+  <rect x="320" y="80" width="45" height="11" rx="2" fill="#d2bee8" />
+  <text x="372" y="90" class="task-text">Ideacion y Problemas ACT-01</text>
+
+  <rect x="360" y="94" width="55" height="11" rx="2" fill="#d2bee8" />
+  <text x="422" y="104" class="task-text">Metodologia Scrum vs RUP ACT-02</text>
+
+  <rect x="345" y="108" width="70" height="11" rx="2" fill="#d2bee8" />
+  <text x="422" y="118" class="task-text">Analisis y Canvas Negocio ACT-03 ACT-04</text>
+
+  <rect x="388" y="122" width="60" height="11" rx="2" fill="#d2bee8" />
+  <text x="455" y="132" class="task-text">Analisis y Modelo Requisitos ACT-05 ACT-06</text>
+
+  <rect x="320" y="136" width="68" height="11" rx="2" fill="#d2bee8" />
+  <text x="395" y="146" class="task-text">Persistencia Inicial MariaDB (TSK-1.1)</text>
+
+  <rect x="388" y="150" width="70" height="11" rx="2" fill="#d2bee8" />
+  <text x="465" y="160" class="task-text">DDL 10 Tablas Raiden.sql (TSK-1.2)</text>
+
+  <rect x="448" y="164" width="50" height="11" rx="2" fill="#d2bee8" />
+  <text x="505" y="174" class="task-text">Indices B-Tree Relacionales (TSK-1.3)</text>
+
+  <rect x="462" y="178" width="55" height="11" rx="2" fill="#d2bee8" />
+  <text x="524" y="188" class="task-text">Modelos Eloquent y Relaciones (TSK-1.4)</text>
+
+  <rect x="475" y="192" width="42" height="11" rx="2" fill="#d2bee8" />
+  <text x="524" y="202" class="task-text">Seeder Grafo Nivel 1 (TSK-1.5)</text>
+
+  <rect x="475" y="206" width="42" height="11" rx="2" fill="#d2bee8" />
+  <text x="524" y="216" class="task-text">Auth Sanctum y Hashing (TSK-1.6 TSK-1.7)</text>
+
+
+  <!-- ==================== SPRINT 2 TAREAS ==================== -->
+  <rect x="520" y="234" width="72" height="11" rx="2" fill="#d2bee8" />
+  <text x="598" y="244" class="task-text">Analisis y Descripcion CU01-CU07 ACT-07/08</text>
+
+  <rect x="550" y="248" width="70" height="11" rx="2" fill="#d2bee8" />
+  <text x="628" y="258" class="task-text">Modelado UML Casos de Uso ACT-09</text>
+
+  <rect x="565" y="262" width="65" height="11" rx="2" fill="#d2bee8" />
+  <text x="638" y="272" class="task-text">Modelado Secuencias DSS y DS ACT-10</text>
+
+  <rect x="578" y="276" width="70" height="11" rx="2" fill="#d2bee8" />
+  <text x="655" y="286" class="task-text">Propuesta Mockups UI Servilleta ACT-11</text>
+
+  <rect x="520" y="290" width="60" height="11" rx="2" fill="#d2bee8" />
+  <text x="588" y="300" class="task-text">Strategy Drivers IA (TSK-2.1)</text>
+
+  <rect x="565" y="304" width="60" height="11" rx="2" fill="#d2bee8" />
+  <text x="632" y="314" class="task-text">Extractor de Afirmaciones REQ-01 (TSK-2.2)</text>
+
+  <rect x="595" y="318" width="72" height="11" rx="2" fill="#d2bee8" />
+  <text x="674" y="328" class="task-text">Microservicios Python OCR y STT (TSK-2.3)</text>
+
+  <!-- HITO APROBACION SUPERVISOR (14-Sep: X = 641) -->
+  <polygon points="641,332 648,339 641,346 634,339" fill="#3c1556" />
+  <text x="655" y="343" class="milestone-text">Aprobacion Formal Supervisor (4.0/5.0) [Hito]</text>
+
+  <rect x="625" y="349" width="60" height="11" rx="2" fill="#d2bee8" />
+  <text x="692" y="359" class="task-text">Recuperacion de Evidencia REQ-05 (TSK-2.4)</text>
+
+  <rect x="652" y="363" width="55" height="11" rx="2" fill="#d2bee8" />
+  <text x="714" y="373" class="task-text">Verificacion Cruzada y Ponderacion (TSK-2.5)</text>
+
+  <rect x="668" y="377" width="50" height="11" rx="2" fill="#d2bee8" />
+  <text x="725" y="387" class="task-text">Sintesis Veredicto y Telemetria (TSK-2.6/7)</text>
+
+
+  <!-- ==================== SPRINT 3 TAREAS ==================== -->
+  <rect x="728" y="408" width="75" height="11" rx="2" fill="#d2bee8" />
+  <text x="810" y="418" class="task-text">Grafo 80 Fuentes IFCN (TSK-3.1)</text>
+
+  <rect x="785" y="422" width="85" height="11" rx="2" fill="#d2bee8" />
+  <text x="878" y="432" class="task-text">Migración Neon &amp; Ingesta 8.000 Noticias (TSK-3.2)</text>
+
+  <rect x="815" y="436" width="65" height="11" rx="2" fill="#d2bee8" />
+  <text x="888" y="446" class="task-text">Conector Wayback Machine Archive (TSK-3.3)</text>
+
+  <rect x="830" y="450" width="75" height="11" rx="2" fill="#d2bee8" />
+  <text x="912" y="460" class="task-text">Notas Comunitarias CU01 CU02 (TSK-3.4)</text>
+
+  <rect x="858" y="464" width="70" height="11" rx="2" fill="#d2bee8" />
+  <text x="935" y="474" class="task-text">Historial CU03 CU04 y Fuentes CU07 (TSK-3.5)</text>
+
+
+  <!-- ==================== SPRINT 4 TAREAS ==================== -->
+  <rect x="830" y="503" width="55" height="11" rx="2" fill="#d2bee8" />
+  <text x="892" y="513" class="task-text">API Publica REST Redacciones (TSK-4.1)</text>
+
+  <rect x="845" y="517" width="50" height="11" rx="2" fill="#d2bee8" />
+  <text x="902" y="527" class="task-text">Middleware EnsureValidApiKey (TSK-4.2)</text>
+
+  <rect x="858" y="531" width="45" height="11" rx="2" fill="#d2bee8" />
+  <text x="910" y="541" class="task-text">Circuit Breaker Costes LLM (TSK-4.3)</text>
+
+  <rect x="872" y="545" width="40" height="11" rx="2" fill="#d2bee8" />
+  <text x="920" y="555" class="task-text">Recuperacion Interlingue ES-EN (TSK-4.4)</text>
+
+  <rect x="888" y="559" width="35" height="11" rx="2" fill="#d2bee8" />
+  <text x="930" y="569" class="task-text">Exportador Forense ClaimReview (TSK-4.5)</text>
+
+  <!-- HITO GATE 1 - BACKEND FREEZE (02-Oct: X = 905) -->
+  <polygon points="905,573 912,580 905,587 898,580" fill="#3c1556" />
+  <text x="920" y="584" class="milestone-text">Gate 1 - Backend Freeze (107 Tests) [Hito]</text>
+
+
+  <!-- ==================== SPRINT 5 TAREAS ==================== -->
+  <rect x="905" y="608" width="40" height="11" rx="2" fill="#d2bee8" />
+  <text x="952" y="618" class="task-text">UI Tailwind y Alpine.js (TSK-5.1 TSK-5.2)</text>
+
+  <rect x="918" y="622" width="35" height="11" rx="2" fill="#d2bee8" />
+  <text x="960" y="632" class="task-text">Pestanas Ingesta y Audio Web (TSK-5.3)</text>
+
+  <rect x="918" y="636" width="35" height="11" rx="2" fill="#d2bee8" />
+  <text x="960" y="646" class="task-text">Tarjeta Veredicto y Semaforo SVG (TSK-5.4)</text>
+
+  <rect x="918" y="650" width="35" height="11" rx="2" fill="#d2bee8" />
+  <text x="960" y="660" class="task-text">Explorador 80 Fuentes fuentes.html (TSK-5.5)</text>
+
+  <rect x="918" y="664" width="35" height="11" rx="2" fill="#d2bee8" />
+  <text x="960" y="674" class="task-text">Servidor Ligero api_server y CORS (TSK-5.6)</text>
+
+  <rect x="932" y="678" width="25" height="11" rx="2" fill="#d2bee8" />
+  <text x="964" y="688" class="task-text">Suite Pruebas VerificacionesBackend (TSK-5.7)</text>
+
+  <!-- TSK-5.8 Integracion Reactiva y Pulido UI (05 Oct - 02 Nov) BARRA PURPURA OSCURA -->
+  <rect x="947" y="692" width="410" height="16" rx="3" fill="#4d1b70" />
+  <text x="1152" y="704" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Integracion Reactiva y Pulido UI (TSK-5.8)</text>
+
+  <!-- HITO FORMAL V0.1.0-PRE-ALPHA (06-Oct: X = 962) -->
+  <polygon points="962,714 970,722 962,730 954,722" fill="#047857" stroke="#ffffff" stroke-width="1.5" />
+  <rect x="978" y="713" width="285" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" />
+  <text x="984" y="726" font-size="11.5" font-weight="800" fill="#047857">★ Hito: Version v0.1.0-pre-alpha (149 Tests)</text>
+
+  <!-- GATE 2 - FRONTEND FREEZE (16-Oct: X = 1108) -->
+  <polygon points="1108,740 1116,748 1108,756 1100,748" fill="#3c1556" stroke="#ffffff" stroke-width="1.5" />
+  <text x="1090" y="752" class="milestone-text-end">Gate 2 - Frontend Freeze [16-Oct]</text>
+
+  <!-- GATE REVISION FORMAL DE SUPERVISOR (16-OCT: X = 1108) [CALIFICACION 5/5] -->
+  <polygon points="1108,764 1116,772 1108,780 1100,772" fill="#047857" stroke="#ffffff" stroke-width="1.5" />
+  <rect x="850" y="763" width="270" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" />
+  <text x="1110" y="776" font-size="11.5" font-weight="800" fill="#065f46" text-anchor="end">Revisión Supervisor [16-Oct] (Aprobado 5/5)</text>
+
+
+  <!-- ==================== SPRINT 6 TAREAS ==================== -->
+  <!-- 1. UI NOTAS COMUNITARIAS Y CALIFICACION (TSK-6.1) - HECHO (LAVANDA) -->
+  <rect x="930" y="794" width="160" height="13" rx="2" fill="#d2bee8" stroke="#bfa5dd" stroke-width="1" />
+  <text x="1098" y="805" class="task-text" fill="#2d1e44">UI Notas Comunitarias y Calificacion (TSK-6.1) [Hecho]</text>
+
+  <!-- 2. Benchmark 500 Afirmaciones REQ-11 (TSK-6.2) -->
+  <rect x="1065" y="812" width="165" height="13" rx="2" fill="#741b2c" />
+  <text x="1240" y="823" class="task-text">Benchmark 500 Afirmaciones REQ-11 (TSK-6.2)</text>
+
+  <!-- 3. Auditoria Sesgo Politico REQ-17 (TSK-6.3) -->
+  <rect x="1115" y="830" width="135" height="13" rx="2" fill="#741b2c" />
+  <text x="1260" y="841" class="task-text">Auditoria Sesgo Politico REQ-17 (TSK-6.3)</text>
+
+  <!-- 4. Evaluacion Formal F1 Precision REQ-24 (TSK-6.4) -->
+  <rect x="1135" y="848" width="130" height="13" rx="2" fill="#741b2c" />
+  <text x="1275" y="859" class="task-text">Evaluacion Formal F1 Precision REQ-24 (TSK-6.4)</text>
+
+  <!-- 5. Prueba de Carga 30 Dias REQ-21 (TSK-6.5) -->
+  <rect x="1085" y="866" width="170" height="13" rx="2" fill="#741b2c" />
+  <text x="1265" y="877" class="task-text">Prueba de Carga 30 Dias REQ-21 (TSK-6.5)</text>
+
+  <!-- 6. Piloto Redaccion 1 - 50 Veredictos (TSK-6.6) -->
+  <rect x="1145" y="884" width="125" height="13" rx="2" fill="#741b2c" />
+  <text x="1280" y="895" class="task-text">Piloto Redaccion 1 - 50 Veredictos (TSK-6.6)</text>
+
+
+  <!-- ==================== SPRINT 7 TAREAS ==================== -->
+  <!-- 1. PIPELINE GITHUB ACTIONS CI/CD (TSK-7.1) - HECHO (LAVANDA) -->
+  <rect x="947" y="926" width="140" height="13" rx="2" fill="#d2bee8" stroke="#bfa5dd" stroke-width="1" />
+  <text x="1098" y="937" class="task-text" fill="#2d1e44">Pipeline GitHub Actions CI/CD (TSK-7.1) [Hecho]</text>
+
+  <!-- 2. Onboarding Redacciones 2 y 3 REQ-26 (TSK-7.2) -->
+  <rect x="1295" y="946" width="170" height="13" rx="2" fill="#741b2c" />
+  <text x="1280" y="957" class="task-text-end">Onboarding Redacciones 2 y 3 REQ-26 (TSK-7.2)</text>
+
+  <!-- 3. Manuales de Usuario y Despliegue REQ-27 (TSK-7.3) -->
+  <rect x="1310" y="966" width="165" height="13" rx="2" fill="#741b2c" />
+  <text x="1295" y="977" class="task-text-end">Manuales de Usuario y Despliegue REQ-27 (TSK-7.3)</text>
+
+  <!-- 4. Retrospectiva Final y Traspaso REQ-28 (TSK-7.4) -->
+  <rect x="1375" y="986" width="170" height="13" rx="2" fill="#741b2c" />
+  <text x="1360" y="997" class="task-text-end">Retrospectiva Final y Traspaso REQ-28 (TSK-7.4)</text>
+
+  <!-- 5. GATE 3 - LIBERACION OFICIAL MVP V1.0.0 (16-Nov: X = 1560) -->
+  <polygon points="1560,1015 1569,1024 1560,1033 1551,1024" fill="#7f1d1d" stroke="#ffffff" stroke-width="1.5" />
+  <text x="1540" y="1028" class="milestone-text-end" fill="#7f1d1d">Gate 3 - Liberacion Oficial MVP v1.0.0 [Hito]</text>
+
+
+  <!-- ==================== LEYENDA INFERIOR ==================== -->
+  <rect x="0" y="1090" width="1600" height="110" fill="#f5f2fa" stroke="#e0d6ed" stroke-width="1" />
+  
+  <rect x="30" y="1110" width="22" height="14" rx="2" fill="#d2bee8" />
+  <text x="60" y="1122" font-size="12" font-weight="700" fill="#2d2242">Tareas Base Completadas (S1 – S5, TSK-6.1, TSK-7.1)</text>
+
+  <rect x="420" y="1110" width="22" height="14" rx="2" fill="#4d1b70" />
+  <text x="450" y="1122" font-size="12" font-weight="700" fill="#2d2242">Integración Reactiva UI (TSK-5.8)</text>
+
+  <rect x="710" y="1110" width="22" height="14" rx="2" fill="#741b2c" />
+  <text x="740" y="1122" font-size="12" font-weight="700" fill="#2d2242">Benchmark, Carga &amp; Piloto Pendientes (S6 – S7)</text>
+
+  <polygon points="1080,1110 1087,1117 1080,1124 1073,1117" fill="#3c1556" />
+  <text x="1095" y="1121" font-size="12" font-weight="700" fill="#2d2242">Quality Gates Formales (0, 1, 2, 3)</text>
+
+  <!-- Nuevos hitos en leyenda -->
+  <polygon points="30,1145 37,1152 30,1159 23,1152" fill="#047857" />
+  <text x="45" y="1156" font-size="12" font-weight="800" fill="#047857">Hito Versión v0.1.0-pre-alpha (06-Oct) [Completado]</text>
+
+  <polygon points="420,1145 427,1152 420,1159 413,1152" fill="#047857" />
+  <text x="435" y="1156" font-size="12" font-weight="800" fill="#065f46">Gate: Revisión Formal Supervisor (16-Oct) [Aprobado 5/5]</text>
+
+  <line x1="840" y1="1145" x2="840" y2="1160" stroke="#dc2626" stroke-width="2.5" />
+  <text x="850" y="1156" font-size="12" font-weight="800" fill="#dc2626">Línea de Corte Actual (hoy 10/10)</text>
+
+  <text x="800" y="1185" font-size="11.5" font-weight="600" fill="#695f80" text-anchor="middle">
+    Proyecto DAGAZ — Plataforma Multicanal de Verificación de Desinformación | UPB ISI-2026-2 G06 | 14 Semanas / 7 Sprints
+  </text>
+</svg>
+</body>
+</html>

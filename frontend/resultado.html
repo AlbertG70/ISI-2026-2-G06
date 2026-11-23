@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAGAZ - Detalle de Resultado Verificado</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dagaz-dark': '#1a1a2e',
+                        'dagaz-light': '#faf8f5',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-dagaz-light text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+    
+    <header class="bg-dagaz-dark text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center gap-3" aria-label="Ir al inicio de DAGAZ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 22L20 2L4 2L20 22"></path>
+                            <path d="M4 2V22"></path>
+                            <path d="M20 2V22"></path>
+                        </svg>
+                        <span class="text-3xl font-bold tracking-wider uppercase">Dagaz</span>
+                    </a>
+                </div>
+                
+                <nav class="flex space-x-6 items-center">
+                    <a href="index.html" class="text-xl font-bold px-4 py-2.5 rounded-lg bg-white text-dagaz-dark shadow">Verificar</a>
+                    <a href="fuentes.html" class="text-xl font-medium px-4 py-2.5 rounded-lg text-white hover:bg-gray-800">Fuentes</a>
+                    <a href="acerca.html" class="text-xl font-medium px-4 py-2.5 rounded-lg text-white hover:bg-gray-800">Acerca de</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full" x-data="resultadoDetalle()">
+        <div class="space-y-8">
+            <a href="index.html" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-bold text-2xl group">
+                <span class="mr-2 transform group-hover:-translate-x-2 transition-transform">←</span> Volver a verificar otro contenido
+            </a>
+
+            <!-- Contenido Original -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-md border-2 border-gray-200">
+                <p class="text-sm uppercase tracking-wider font-extrabold text-gray-500 mb-2">Contenido verificado:</p>
+                <blockquote class="text-2xl text-gray-900 italic font-medium border-l-4 border-gray-400 pl-4" x-text="resultado.contenido_original"></blockquote>
+                <p class="text-sm text-gray-500 mt-3" x-text="'Fecha de verificación: ' + resultado.fecha"></p>
+            </div>
+
+            <!-- Veredicto Principal -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-3 border-green-600">
+                <div class="p-6 sm:p-8 bg-green-50 border-b-2 border-green-600 flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div>
+                        <span class="text-lg font-bold text-gray-700 uppercase tracking-wide">Veredicto emitido</span>
+                        <div class="text-4xl sm:text-5xl font-black text-green-700 flex items-center gap-3 mt-1">
+                            <span>✅</span>
+                            <span x-text="resultado.clasificacion"></span>
+                        </div>
+                    </div>
+
+                    <!-- Anillo Radial SVG -->
+                    <div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center bg-white rounded-full p-2 shadow-md">
+                        <svg class="w-28 h-28 transform -rotate-90" viewBox="0 0 40 40">
+                            <circle class="text-gray-200" stroke-width="4" stroke="currentColor" fill="transparent" r="18" cx="20" cy="20" />
+                            <circle class="text-green-500" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="transparent" r="18" cx="20" cy="20" 
+                                    :stroke-dasharray="2 * Math.PI * 18" 
+                                    :stroke-dashoffset="dashOffset(resultado.confianza)" 
+                                    class="transition-all duration-1000 ease-out" />
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center">
+                            <span class="text-3xl font-extrabold text-gray-900" x-text="resultado.confianza + '%'"></span>
+                            <span class="text-xs font-bold text-gray-500 uppercase">Confianza</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8 bg-white">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Explicación del veredicto:</h3>
+                    <p class="text-xl text-gray-800 leading-relaxed font-medium" x-text="resultado.justificacion"></p>
+                </div>
+            </div>
+
+            <!-- Fuentes -->
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8">
+                <h3 class="text-2xl font-extrabold text-gray-900 mb-6">Fuentes consultadas</h3>
+                <div class="space-y-4">
+                    <template x-for="fuente in resultado.fuentes" :key="fuente.url">
+                        <div class="bg-gray-50 rounded-xl p-5 border border-gray-200 flex items-center gap-4">
+                            <div class="relative w-16 h-16 flex-shrink-0 bg-white rounded-full shadow-sm flex items-center justify-center font-bold text-base text-gray-800" x-text="fuente.credibilidad + '%'">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold text-gray-900" x-text="fuente.nombre"></h4>
+                                <p class="text-lg text-gray-600" x-text="fuente.articulo"></p>
+                            </div>
+                            <a :href="fuente.url" target="_blank" class="px-4 py-2.5 bg-white border-2 border-gray-300 rounded-lg text-blue-700 font-bold text-base hover:bg-gray-50">
+                                Ver fuente ↗
+                            </a>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-10 mt-auto border-t border-gray-800 text-center">
+        <p class="text-lg text-gray-400">&copy; 2026 Proyecto DAGAZ. ISI-CORP.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('resultadoDetalle', () => ({
+            resultado: {
+                clasificacion: 'Verdadero',
+                confianza: 91,
+                justificacion: 'La afirmación ha sido respaldada por múltiples fuentes de alta credibilidad. Los datos hídricos presentados coinciden con los informes gubernamentales y de organismos multilaterales.',
+                contenido_original: '"La ciudad enfrenta una crisis de agua potable, con reservas reducidas al 40%"',
+                fecha: '1 de Octubre de 2026',
+                fuentes: [
+                    { nombre: 'Reuters', credibilidad: 95, url: 'https://reuters.com', articulo: 'Informe hídrico y ambiental 2026' },
+                    { nombre: 'OMS', credibilidad: 91, url: 'https://who.int', articulo: 'Base de datos de agua potable' },
+                    { nombre: 'El Tiempo', credibilidad: 85, url: 'https://eltiempo.com', articulo: 'Cobertura nacional de reservas' }
+                ]
+            },
+            dashOffset(porcentaje) {
+                const c = 2 * Math.PI * 18;
+                return c - (porcentaje / 100) * c;
+            }
+        }));
+    });
+    </script>
+</body>
+</html>

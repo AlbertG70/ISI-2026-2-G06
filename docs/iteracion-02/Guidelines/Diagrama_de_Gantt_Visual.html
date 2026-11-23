@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma Maestro y Diagrama de Gantt — Proyecto DAGAZ (14 Semanas)</title>
+  <style>
+    :root {
+      --bg-page: #f8f7fc;
+      --bg-card: #ffffff;
+      --text-main: #1d182b;
+      --text-muted: #5e5670;
+      --border-color: #e5e0f0;
+      
+      /* Gama cromática oficial del Proyecto DAGAZ */
+      --color-lavender: #d2bee8;
+      --color-lavender-border: #bfa5dd;
+      --color-lavender-text: #2d1e44;
+      
+      --color-purple-deep: #4d1b70;
+      --color-purple-light: #f5effc;
+      
+      --color-maroon: #741b2c;
+      --color-maroon-light: #fdf2f4;
+      
+      --color-emerald: #047857;
+      --color-emerald-light: #ecfdf5;
+      
+      --color-amber: #d97706;
+      --color-amber-light: #fffbeb;
+      
+      --color-gate-diamond: #3c1556;
+      --color-today: #dc2626;
+      
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE y Edge */
+    }
+
+    *::-webkit-scrollbar,
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none !important; /* Chrome, Safari, Edge, Opera */
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+    }
+
+    .container {
+      max-width: 1640px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(45, 30, 68, 0.08);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    /* Encabezado Principal */
+    .header {
+      padding: 24px 28px 18px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(180deg, #fbf9fe 0%, #f3eef9 100%);
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ede6f7;
+      color: #432168;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e1430;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 19px;
+      }
+    }
+
+    .header p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Barra de Estado y Metadatos Rápidos */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .stat-pill.prealpha {
+      background: var(--color-emerald-light);
+      color: var(--color-emerald);
+      border-color: #a7f3d0;
+    }
+
+    .stat-pill.gate-supervisor {
+      background: var(--color-emerald-light);
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+
+    .stat-pill.completed {
+      background: #f3e8ff;
+      color: #6b21a8;
+      border-color: #d8b4fe;
+    }
+
+    /* Barra de Herramientas y Zoom */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: #faf8fd;
+      border-bottom: 1px solid var(--border-color);
+      gap: 12px;
+    }
+
+    .view-toggles {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-tab {
+      background: #ffffff;
+      border: 1px solid #d4cde3;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #3f3652;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-tab.active, .btn-tab:hover {
+      background: #4d1b70;
+      color: #ffffff;
+      border-color: #4d1b70;
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-zoom {
+      background: #ffffff;
+      border: 1px solid #d4cde3;
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #372f48;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-zoom:hover {
+      background: #ede6f7;
+      border-color: #baabdb;
+    }
+
+    .zoom-level-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: #554a6e;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    /* Leyenda de Convenciones */
+    .legend-container {
+      padding: 12px 20px;
+      background: #f7f4fc;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .legend-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 16px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #2b213f;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color-box {
+      width: 18px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-diamond-icon {
+      width: 11px;
+      height: 11px;
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* Contenedor Responsivo del SVG */
+    .gantt-scroll-viewport {
+      position: relative;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      background: #ffffff;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 12px;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    .gantt-scroll-viewport::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    .gantt-svg-canvas {
+      display: block;
+      margin: 0 auto;
+      transition: transform 0.2s ease-out;
+      transform-origin: top left;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      min-width: 1050px;
+    }
+
+    /* Vista Tabular Alternativa (Sin cortes de texto) */
+    .table-view-container {
+      display: none;
+      padding: 24px;
+      overflow-x: auto;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    .table-view-container::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    .table-view-container.active {
+      display: block;
+    }
+
+    .responsive-wbs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .responsive-wbs-table th {
+      background: #f2eefa;
+      color: #2c1a4b;
+      font-weight: 700;
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 2px solid #ddd5eb;
+    }
+
+    .responsive-wbs-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #eee9f5;
+      vertical-align: middle;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .responsive-wbs-table tr:hover td {
+      background: #faf7fd;
+    }
+
+    .sprint-separator-row td {
+      background: #ede6f7 !important;
+      font-weight: 800;
+      color: #321650;
+      padding: 12px 14px;
+      border-top: 2px solid #d4c5eb;
+      border-bottom: 1px solid #d4c5eb;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-status.done {
+      background: #d2bee8;
+      color: #27143e;
+      border: 1px solid #b79ed8;
+    }
+
+    .badge-status.in-progress {
+      background: #4d1b70;
+      color: #ffffff;
+    }
+
+    .badge-status.pending {
+      background: #fdf2f4;
+      color: #741b2c;
+      border: 1px solid #f8b4be;
+    }
+
+    .badge-status.milestone {
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-status.gate-amber {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    /* Tooltip Flotante Interactivo */
+    #tooltip-card {
+      position: absolute;
+      display: none;
+      background: #1c1429;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      pointer-events: none;
+      z-index: 100;
+      max-width: 280px;
+    }
+
+    #tooltip-card strong {
+      display: block;
+      color: #d8b4fe;
+      margin-bottom: 2px;
+      font-size: 12.5px;
+    }
+
+    /* Pie de Página */
+    .footer {
+      padding: 18px 28px;
+      background: #f5f2fa;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Encabezado -->
+    <header class="header">
+      <div class="header-badge">UPB ISI-2026-II • Proyecto DAGAZ</div>
+      <h1>Cronograma Maestro y Diagrama de Gantt (14 Semanas)</h1>
+      <p>
+        Plataforma Multicanal de Detección de Desinformación y Fact-Checking Colaborativo.
+        Desglose oficial de 7 Sprints, 28 Requisitos y Quality Gates Formales.
+      </p>
+    </header>
+
+    <!-- Barra de Estado / Píldoras Informativas -->
+    <div class="stats-bar">
+      <div class="stat-pill prealpha">
+        <span>★</span>
+        <span><strong>Versión v0.1.6:</strong> Consolidada (171 Tests QA OK)</span>
+      </div>
+      <div class="stat-pill gate-supervisor">
+        <span>★</span>
+        <span><strong>Gate Supervisor:</strong> Revisión Formal Aprobada (16-Oct-2026, Calificación: 5.0 / 5.0 — 5/5)</span>
+      </div>
+      <div class="stat-pill completed">
+        <span>✓</span>
+        <span><strong>GitHub Actions CI/CD (TSK-7.1):</strong> [Hecho]</span>
+      </div>
+      <div class="stat-pill completed">
+        <span>✓</span>
+        <span><strong>UI Notas Comunitarias (TSK-6.1):</strong> [Hecho]</span>
+      </div>
+    </div>
+
+    <!-- Barra de Herramientas y Zoom -->
+    <div class="toolbar">
+      <div class="view-toggles">
+        <button class="btn-tab active" id="btn-view-svg" onclick="switchView('svg')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          Vista Gráfica (Diagrama de Gantt)
+        </button>
+        <button class="btn-tab" id="btn-view-table" onclick="switchView('table')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+          Vista Tabular Completa (WBS sin recortes)
+        </button>
+      </div>
+
+      <div class="zoom-controls" id="svg-zoom-bar">
+        <span style="font-size: 12px; color: #615875; margin-right: 4px;">Zoom:</span>
+        <button class="btn-zoom" onclick="zoomOut()" title="Reducir">–</button>
+        <span class="zoom-level-text" id="zoom-text">100%</span>
+        <button class="btn-zoom" onclick="zoomIn()" title="Aumentar">+</button>
+        <button class="btn-zoom" onclick="resetZoom()" title="Ajustar al 100%">100%</button>
+        <button class="btn-zoom" onclick="fitWidth()" title="Ajustar a Ancho">Ajustar</button>
+        <a href="Diagrama_de_Gantt.png" download="Diagrama_de_Gantt_DAGAZ.png" class="btn-zoom" style="text-decoration:none;" title="Descargar Imagen PNG">📥 PNG</a>
+      </div>
+    </div>
+
+    <!-- Leyenda de Convenciones -->
+    <div class="legend-container">
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="legend-color-box" style="background: #d2bee8; border: 1px solid #bfa5dd;"></div>
+          <span>Tareas Base Completadas (S1–S5, TSK-6.1, TSK-7.1)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color-box" style="background: #4d1b70;"></div>
+          <span>Integración Reactiva UI (TSK-5.8)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color-box" style="background: #741b2c;"></div>
+          <span>Benchmark, Carga &amp; Piloto (S6–S7 Pendientes)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-diamond-icon" style="background: #3c1556;"></div>
+          <span>Quality Gates Formales (Gates 0, 1, 2, 3)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-diamond-icon" style="background: #047857;"></div>
+          <span style="color: #047857; font-weight: 700;">Hito v0.1.0-pre-alpha (06-Oct) [Completado]</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-diamond-icon" style="background: #047857;"></div>
+          <span style="color: #065f46; font-weight: 700;">Gate: Revisión Supervisor (16-Oct) [Aprobado 5/5]</span>
+        </div>
+        <div class="legend-item">
+          <div style="width: 14px; height: 3px; background: #dc2626; border-radius: 1px;"></div>
+          <span style="color: #dc2626; font-weight: 700;">Línea de Corte Actual (hoy 10/10)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA 1: DIAGRAMA SVG VECTORIAL TOTALMENTE RESPONSIVO -->
+    <div class="gantt-scroll-viewport" id="gantt-viewport">
+      <svg id="gantt-svg" class="gantt-svg-canvas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" preserveAspectRatio="xMinYMin meet">
+        <defs>
+          <style>
+            .title { font-size: 26px; font-weight: 700; fill: #1c1427; text-anchor: middle; }
+            .date-label { font-size: 13px; font-weight: 600; fill: #37304a; text-anchor: middle; }
+            .sprint-title { font-size: 15px; font-weight: 700; fill: #1f1633; }
+            .sprint-dates { font-size: 13px; font-weight: 600; fill: #52476b; }
+            .task-text { font-size: 12px; font-weight: 700; fill: #1e172e; }
+            .task-text-end { font-size: 12px; font-weight: 700; fill: #1e172e; text-anchor: end; }
+            .milestone-text { font-size: 12px; font-weight: 800; fill: #201335; }
+            .milestone-text-end { font-size: 12px; font-weight: 800; fill: #201335; text-anchor: end; }
+            .grid-line { stroke: #ece7f5; stroke-width: 1; }
+            .grid-line-major { stroke: #d8cfe8; stroke-width: 1.5; }
+            .interactive-task { cursor: pointer; transition: opacity 0.15s; }
+            .interactive-task:hover { opacity: 0.85; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+          </style>
+        </defs>
+
+        <!-- Título Superior -->
+        <text x="800" y="42" class="title">Cronograma Maestro y Diagrama de Gantt — Proyecto DAGAZ (14 Semanas)</text>
+
+        <!-- Bandas de Fondo por Sprint -->
+        <rect x="0" y="70" width="1600" height="155" fill="#f8f4fc" />
+        <rect x="0" y="225" width="1600" height="175" fill="#ffffff" />
+        <rect x="0" y="400" width="1600" height="95" fill="#f8f4fc" />
+        <rect x="0" y="495" width="1600" height="105" fill="#ffffff" />
+        <rect x="0" y="600" width="1600" height="185" fill="#f8f4fc" />
+        <rect x="0" y="785" width="1600" height="130" fill="#ffffff" />
+        <rect x="0" y="915" width="1600" height="145" fill="#f8f4fc" />
+
+        <!-- Líneas divisorias horizontales -->
+        <line x1="0" y1="225" x2="1600" y2="225" stroke="#e3dbf0" stroke-width="1.2" />
+        <line x1="0" y1="400" x2="1600" y2="400" stroke="#e3dbf0" stroke-width="1.2" />
+        <line x1="0" y1="495" x2="1600" y2="495" stroke="#e3dbf0" stroke-width="1.2" />
+        <line x1="0" y1="600" x2="1600" y2="600" stroke="#e3dbf0" stroke-width="1.2" />
+        <line x1="0" y1="785" x2="1600" y2="785" stroke="#e3dbf0" stroke-width="1.2" />
+        <line x1="0" y1="915" x2="1600" y2="915" stroke="#e3dbf0" stroke-width="1.2" />
+        <line x1="0" y1="1060" x2="1600" y2="1060" stroke="#e3dbf0" stroke-width="1.2" />
+
+        <!-- Línea vertical divisoria entre columna etiquetas y timeline (X = 310) -->
+        <line x1="310" y1="50" x2="310" y2="1060" stroke="#d5c8e8" stroke-width="1.5" />
+
+        <!-- Textos de Sprints en Columna Izquierda -->
+        <text x="18" y="140" class="sprint-title">Sprint 1: Requisitos, Negocio &amp; DB</text>
+        <text x="18" y="160" class="sprint-dates">(23-Ago al 05-Sep)</text>
+
+        <text x="18" y="305" class="sprint-title">Sprint 2: Casos de Uso, UI &amp; Core IA</text>
+        <text x="18" y="325" class="sprint-dates">(06-Sep al 19-Sep)</text>
+
+        <text x="18" y="445" class="sprint-title">Sprint 3: Grafo 80 Fuentes &amp; Redes</text>
+        <text x="18" y="465" class="sprint-dates">(20-Sep al 03-Oct)</text>
+
+        <text x="18" y="540" class="sprint-title">Sprint 4: API Publica &amp; Auditoria</text>
+        <text x="18" y="560" class="sprint-dates">(27-Sep al 02-Oct)</text>
+
+        <text x="18" y="685" class="sprint-title">Sprint 5: Frontend Movil (+40)</text>
+        <text x="18" y="705" class="sprint-dates">(02-Oct al 16-Oct)</text>
+
+        <text x="18" y="845" class="sprint-title">Sprint 6: Benchmark &amp; Piloto</text>
+        <text x="18" y="865" class="sprint-dates">(17-Oct al 31-Oct)</text>
+
+        <text x="18" y="975" class="sprint-title">Sprint 7: CI/CD &amp; Cierre MVP</text>
+        <text x="18" y="995" class="sprint-dates">(01-Nov al 15-Nov)</text>
+
+        <!-- LÍNEAS DE CUADRÍCULA VERTICALES Y FECHAS -->
+        <line x1="335" y1="55" x2="335" y2="1060" class="grid-line" />
+        <text x="335" y="65" class="date-label">24/08</text>
+
+        <line x1="437" y1="55" x2="437" y2="1060" class="grid-line" />
+        <text x="437" y="65" class="date-label">31/08</text>
+
+        <line x1="539" y1="55" x2="539" y2="1060" class="grid-line" />
+        <text x="539" y="65" class="date-label">07/09</text>
+
+        <line x1="641" y1="55" x2="641" y2="1060" class="grid-line" />
+        <text x="641" y="65" class="date-label">14/09</text>
+
+        <line x1="743" y1="55" x2="743" y2="1060" class="grid-line" />
+        <text x="743" y="65" class="date-label">21/09</text>
+
+        <line x1="845" y1="55" x2="845" y2="1060" class="grid-line" />
+        <text x="845" y="65" class="date-label">28/09</text>
+
+        <line x1="947" y1="55" x2="947" y2="1060" class="grid-line" />
+        <text x="947" y="65" class="date-label">05/10</text>
+
+        <!-- LÍNEA DE CORTE ACTUAL: HOY 10/10 (X = 1017) -->
+        <line x1="1017" y1="50" x2="1017" y2="1060" stroke="#dc2626" stroke-width="2" />
+        <text x="1017" y="42" font-size="12" font-weight="800" fill="#dc2626" text-anchor="middle">hoy</text>
+        <text x="1017" y="54" font-size="12" font-weight="800" fill="#dc2626" text-anchor="middle">10/10</text>
+
+        <line x1="1152" y1="55" x2="1152" y2="1060" class="grid-line" />
+        <text x="1152" y="65" class="date-label">19/10</text>
+
+        <line x1="1254" y1="55" x2="1254" y2="1060" class="grid-line" />
+        <text x="1254" y="65" class="date-label">26/10</text>
+
+        <line x1="1356" y1="55" x2="1356" y2="1060" class="grid-line" />
+        <text x="1356" y="65" class="date-label">02/11</text>
+
+        <line x1="1458" y1="55" x2="1458" y2="1060" class="grid-line" />
+        <text x="1458" y="65" class="date-label">09/11</text>
+
+        <line x1="1560" y1="55" x2="1560" y2="1060" class="grid-line" />
+        <text x="1560" y="65" class="date-label">16/11</text>
+
+
+        <!-- ==================== SPRINT 1 TAREAS ==================== -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-01', 'Ideacion y Problemas', '23-Ago al 26-Ago', 'Completado (S1)')">
+          <rect x="320" y="76" width="60" height="11" rx="2" fill="#d2bee8" />
+          <text x="388" y="86" class="task-text">Ideacion y Problemas ACT-01</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-02', 'Metodologia Scrum vs RUP', '26-Ago al 30-Ago', 'Completado (S1)')">
+          <rect x="364" y="90" width="60" height="11" rx="2" fill="#d2bee8" />
+          <text x="432" y="100" class="task-text">Metodologia Scrum vs RUP ACT-02</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-03/04', 'Analisis y Canvas Negocio', '25-Ago al 30-Ago', 'Completado (S1)')">
+          <rect x="349" y="104" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="432" y="114" class="task-text">Analisis y Canvas Negocio ACT-03 ACT-04</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-05/06', 'Analisis y Modelo Requisitos', '28-Ago al 01-Sep', 'Completado (S1)')">
+          <rect x="393" y="118" width="60" height="11" rx="2" fill="#d2bee8" />
+          <text x="461" y="128" class="task-text">Analisis y Modelo Requisitos ACT-05 ACT-06</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-1.1', 'Persistencia Inicial MariaDB', '23-Ago al 28-Ago', 'Completado (S1)')">
+          <rect x="320" y="132" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="403" y="142" class="task-text">Persistencia Inicial MariaDB (TSK-1.1)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-1.2', 'DDL 10 Tablas Raiden.sql', '28-Ago al 02-Sep', 'Completado (S1)')">
+          <rect x="393" y="146" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="476" y="156" class="task-text">DDL 10 Tablas Raiden.sql (TSK-1.2)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-1.3', 'Indices B-Tree Relacionales', '01-Sep al 04-Sep', 'Completado (S1)')">
+          <rect x="451" y="160" width="45" height="11" rx="2" fill="#d2bee8" />
+          <text x="504" y="170" class="task-text">Indices B-Tree Relacionales (TSK-1.3)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-1.4', 'Modelos Eloquent y Relaciones', '02-Sep al 05-Sep', 'Completado (S1)')">
+          <rect x="466" y="174" width="45" height="11" rx="2" fill="#d2bee8" />
+          <text x="519" y="184" class="task-text">Modelos Eloquent y Relaciones (TSK-1.4)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-1.5', 'Seeder Grafo Nivel 1', '03-Sep al 05-Sep', 'Completado (S1)')">
+          <rect x="480" y="188" width="30" height="11" rx="2" fill="#d2bee8" />
+          <text x="518" y="198" class="task-text">Seeder Grafo Nivel 1 (TSK-1.5)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-1.6/7', 'Auth Sanctum y Hashing', '03-Sep al 05-Sep', 'Completado (S1)')">
+          <rect x="480" y="202" width="30" height="11" rx="2" fill="#d2bee8" />
+          <text x="518" y="212" class="task-text">Auth Sanctum y Hashing (TSK-1.6 TSK-1.7)</text>
+        </g>
+
+
+        <!-- ==================== SPRINT 2 TAREAS ==================== -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-07/08', 'Analisis y Descripcion CU01-CU07', '06-Sep al 11-Sep', 'Completado (S2)')">
+          <rect x="525" y="233" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="608" y="243" class="task-text">Analisis y Descripcion CU01-CU07 ACT-07/08</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-09', 'Modelado UML Casos de Uso', '08-Sep al 13-Sep', 'Completado (S2)')">
+          <rect x="554" y="247" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="637" y="257" class="task-text">Modelado UML Casos de Uso ACT-09</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-10', 'Modelado Secuencias DSS y DS', '09-Sep al 14-Sep', 'Completado (S2)')">
+          <rect x="568" y="261" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="651" y="271" class="task-text">Modelado Secuencias DSS y DS ACT-10</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'ACT-11', 'Propuesta Mockups UI Servilleta', '10-Sep al 15-Sep', 'Completado (S2)')">
+          <rect x="583" y="275" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="666" y="285" class="task-text">Propuesta Mockups UI Servilleta ACT-11</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-2.1', 'Strategy Drivers IA', '06-Sep al 10-Sep', 'Completado (S2)')">
+          <rect x="525" y="289" width="60" height="11" rx="2" fill="#d2bee8" />
+          <text x="593" y="299" class="task-text">Strategy Drivers IA (TSK-2.1)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-2.2', 'Extractor de Afirmaciones REQ-01', '09-Sep al 13-Sep', 'Completado (S2)')">
+          <rect x="568" y="303" width="60" height="11" rx="2" fill="#d2bee8" />
+          <text x="636" y="313" class="task-text">Extractor de Afirmaciones REQ-01 (TSK-2.2)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-2.3', 'Microservicios Python OCR y STT', '11-Sep al 16-Sep', 'Completado (S2)')">
+          <rect x="598" y="317" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="681" y="327" class="task-text">Microservicios Python OCR y STT (TSK-2.3)</text>
+        </g>
+
+        <!-- GATE 0 SUPERVISOR (14-Sep: X = 641) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'GATE 0', 'Aprobacion Formal Supervisor (Calificacion 4.0 / 5.0)', '14-Sep-2026', 'Completado')">
+          <polygon points="641,332 648,339 641,346 634,339" fill="#3c1556" />
+          <text x="655" y="343" class="milestone-text">Aprobacion Formal Supervisor (4.0/5.0) [Hito]</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-2.4', 'Recuperacion de Evidencia REQ-05', '13-Sep al 17-Sep', 'Completado (S2)')">
+          <rect x="627" y="347" width="60" height="11" rx="2" fill="#d2bee8" />
+          <text x="695" y="357" class="task-text">Recuperacion de Evidencia REQ-05 (TSK-2.4)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-2.5', 'Verificacion Cruzada y Ponderacion', '15-Sep al 18-Sep', 'Completado (S2)')">
+          <rect x="656" y="361" width="45" height="11" rx="2" fill="#d2bee8" />
+          <text x="709" y="371" class="task-text">Verificacion Cruzada y Ponderacion (TSK-2.5)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-2.6/7', 'Sintesis Veredicto y Telemetria', '16-Sep al 19-Sep', 'Completado (S2)')">
+          <rect x="671" y="375" width="45" height="11" rx="2" fill="#d2bee8" />
+          <text x="724" y="385" class="task-text">Sintesis Veredicto y Telemetria (TSK-2.6/7)</text>
+        </g>
+
+
+        <!-- ==================== SPRINT 3 TAREAS ==================== -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-3.1', 'Grafo 80 Fuentes IFCN', '20-Sep al 25-Sep', 'Completado (S3)')">
+          <rect x="728" y="408" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="811" y="418" class="task-text">Grafo 80 Fuentes IFCN (TSK-3.1)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-3.2', 'Migración Neon & Ingesta 8.000 Noticias', '24-Sep al 30-Sep', 'Completado (S3)')">
+          <rect x="785" y="422" width="85" height="11" rx="2" fill="#d2bee8" />
+          <text x="878" y="432" class="task-text">Migración Neon &amp; Ingesta 8.000 Noticias (TSK-3.2)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-3.3', 'Conector Wayback Machine Archive', '26-Sep al 30-Sep', 'Completado (S3)')">
+          <rect x="815" y="436" width="65" height="11" rx="2" fill="#d2bee8" />
+          <text x="888" y="446" class="task-text">Conector Wayback Machine Archive (TSK-3.3)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-3.4', 'Notas Comunitarias CU01 CU02', '27-Sep al 02-Oct', 'Completado (S3)')">
+          <rect x="830" y="450" width="75" height="11" rx="2" fill="#d2bee8" />
+          <text x="912" y="460" class="task-text">Notas Comunitarias CU01 CU02 (TSK-3.4)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-3.5', 'Historial CU03 CU04 y Fuentes CU07', '29-Sep al 03-Oct', 'Completado (S3)')">
+          <rect x="858" y="464" width="70" height="11" rx="2" fill="#d2bee8" />
+          <text x="935" y="474" class="task-text">Historial CU03 CU04 y Fuentes CU07 (TSK-3.5)</text>
+        </g>
+
+
+        <!-- ==================== SPRINT 4 TAREAS ==================== -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-4.1', 'API Publica REST Redacciones', '27-Sep al 30-Sep', 'Completado (S4)')">
+          <rect x="830" y="503" width="55" height="11" rx="2" fill="#d2bee8" />
+          <text x="892" y="513" class="task-text">API Publica REST Redacciones (TSK-4.1)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-4.2', 'Middleware EnsureValidApiKey', '28-Sep al 01-Oct', 'Completado (S4)')">
+          <rect x="845" y="517" width="50" height="11" rx="2" fill="#d2bee8" />
+          <text x="902" y="527" class="task-text">Middleware EnsureValidApiKey (TSK-4.2)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-4.3', 'Circuit Breaker Costes LLM', '29-Sep al 01-Oct', 'Completado (S4)')">
+          <rect x="858" y="531" width="45" height="11" rx="2" fill="#d2bee8" />
+          <text x="910" y="541" class="task-text">Circuit Breaker Costes LLM (TSK-4.3)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-4.4', 'Recuperacion Interlingue ES-EN', '30-Sep al 02-Oct', 'Completado (S4)')">
+          <rect x="872" y="545" width="40" height="11" rx="2" fill="#d2bee8" />
+          <text x="920" y="555" class="task-text">Recuperacion Interlingue ES-EN (TSK-4.4)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-4.5', 'Exportador Forense ClaimReview', '01-Oct al 02-Oct', 'Completado (S4)')">
+          <rect x="888" y="559" width="35" height="11" rx="2" fill="#d2bee8" />
+          <text x="930" y="569" class="task-text">Exportador Forense ClaimReview (TSK-4.5)</text>
+        </g>
+
+        <!-- HITO GATE 1 - BACKEND FREEZE (02-Oct: X = 905) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'GATE 1', 'Gate 1 - Backend Freeze (107 Tests PHPUnit)', '02-Oct-2026', 'Completado')">
+          <polygon points="905,573 912,580 905,587 898,580" fill="#3c1556" />
+          <text x="920" y="584" class="milestone-text">Gate 1 - Backend Freeze (107 Tests) [Hito]</text>
+        </g>
+
+
+        <!-- ==================== SPRINT 5 TAREAS ==================== -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.1/2', 'UI Tailwind y Alpine.js', '02-Oct al 04-Oct', 'Completado (S5)')">
+          <rect x="905" y="608" width="40" height="11" rx="2" fill="#d2bee8" />
+          <text x="952" y="618" class="task-text">UI Tailwind y Alpine.js (TSK-5.1 TSK-5.2)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.3', 'Pestanas Ingesta y Audio Web', '03-Oct al 04-Oct', 'Completado (S5)')">
+          <rect x="918" y="622" width="35" height="11" rx="2" fill="#d2bee8" />
+          <text x="960" y="632" class="task-text">Pestanas Ingesta y Audio Web (TSK-5.3)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.4', 'Tarjeta Veredicto y Semaforo SVG', '03-Oct al 04-Oct', 'Completado (S5)')">
+          <rect x="918" y="636" width="35" height="11" rx="2" fill="#d2bee8" />
+          <text x="960" y="646" class="task-text">Tarjeta Veredicto y Semaforo SVG (TSK-5.4)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.5', 'Explorador 80 Fuentes fuentes.html', '03-Oct al 04-Oct', 'Completado (S5)')">
+          <rect x="918" y="650" width="35" height="11" rx="2" fill="#d2bee8" />
+          <text x="960" y="660" class="task-text">Explorador 80 Fuentes fuentes.html (TSK-5.5)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.6', 'Servidor Ligero api_server y CORS', '03-Oct al 04-Oct', 'Completado (S5)')">
+          <rect x="918" y="664" width="35" height="11" rx="2" fill="#d2bee8" />
+          <text x="960" y="674" class="task-text">Servidor Ligero api_server y CORS (TSK-5.6)</text>
+        </g>
+
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.7', 'Suite Pruebas VerificacionesBackend', '04-Oct al 04-Oct', 'Completado (S5)')">
+          <rect x="932" y="678" width="25" height="11" rx="2" fill="#d2bee8" />
+          <text x="964" y="688" class="task-text">Suite Pruebas VerificacionesBackend (TSK-5.7)</text>
+        </g>
+
+        <!-- TSK-5.8 Integracion Reactiva y Pulido UI (05 Oct - 02 Nov) BARRA PURPURA OSCURA -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-5.8', 'Integracion Reactiva y Pulido UI', '05-Oct al 02-Nov', '⚡ En Curso Activo')">
+          <rect x="947" y="692" width="410" height="16" rx="3" fill="#4d1b70" />
+          <text x="1152" y="704" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Integracion Reactiva y Pulido UI (TSK-5.8)</text>
+        </g>
+
+        <!-- HITO FORMAL V0.1.0-PRE-ALPHA (06-Oct: X = 962) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'HITO PRE-ALPHA', 'Version v0.1.0-pre-alpha (Pre-Alpha Funcional 149 Tests)', '06-Oct-2026', '★ Consolidado')">
+          <polygon points="962,714 970,722 962,730 954,722" fill="#047857" stroke="#ffffff" stroke-width="1.5" />
+          <rect x="978" y="713" width="285" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" />
+          <text x="984" y="726" font-size="11.5" font-weight="800" fill="#047857">★ Hito: Version v0.1.0-pre-alpha (149 Tests)</text>
+        </g>
+
+        <!-- GATE 2 - FRONTEND FREEZE (16-Oct: X = 1108) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'GATE 2', 'Gate 2 - Frontend Freeze (23 Vitest)', '16-Oct-2026', 'Programado')">
+          <polygon points="1108,740 1116,748 1108,756 1100,748" fill="#3c1556" stroke="#ffffff" stroke-width="1.5" />
+          <text x="1090" y="752" class="milestone-text-end">Gate 2 - Frontend Freeze [16-Oct]</text>
+        </g>
+
+        <!-- GATE: REVISION FORMAL DE SUPERVISOR (16-OCT: X = 1108) [CALIFICACION 5/5] -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'GATE SUPERVISOR', 'Revisión Formal de Supervisor (Segunda Auditoría Académica - Calificación: 5.0 / 5.0)', '16-Oct-2026', '★ Aprobado (5/5)')">
+          <polygon points="1108,764 1116,772 1108,780 1100,772" fill="#047857" stroke="#ffffff" stroke-width="1.5" />
+          <rect x="850" y="763" width="270" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" />
+          <text x="1110" y="776" font-size="11.5" font-weight="800" fill="#065f46" text-anchor="end">Revisión Supervisor [16-Oct] (Aprobado 5/5)</text>
+        </g>
+
+
+        <!-- ==================== SPRINT 6 TAREAS ==================== -->
+        <!-- 1. UI NOTAS COMUNITARIAS Y CALIFICACION (TSK-6.1) - HECHO (LAVANDA) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-6.1', 'UI Notas Comunitarias y Calificacion', '03-Oct al 05-Oct', '✅ Hecho / Completado')">
+          <rect x="930" y="794" width="160" height="13" rx="2" fill="#d2bee8" stroke="#bfa5dd" stroke-width="1" />
+          <text x="1098" y="805" class="task-text" fill="#2d1e44">UI Notas Comunitarias y Calificacion (TSK-6.1) [Hecho]</text>
+        </g>
+
+        <!-- 2. Benchmark 500 Afirmaciones REQ-11 (TSK-6.2) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-6.2', 'Benchmark 500 Afirmaciones REQ-11', '21-Oct al 31-Oct', '⏳ Pendiente')">
+          <rect x="1065" y="812" width="165" height="13" rx="2" fill="#741b2c" />
+          <text x="1240" y="823" class="task-text">Benchmark 500 Afirmaciones REQ-11 (TSK-6.2)</text>
+        </g>
+
+        <!-- 3. Auditoria Sesgo Politico REQ-17 (TSK-6.3) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-6.3', 'Auditoria Sesgo Politico REQ-17', '24-Oct al 31-Oct', '⏳ Pendiente')">
+          <rect x="1115" y="830" width="135" height="13" rx="2" fill="#741b2c" />
+          <text x="1260" y="841" class="task-text">Auditoria Sesgo Politico REQ-17 (TSK-6.3)</text>
+        </g>
+
+        <!-- 4. Evaluacion Formal F1 Precision REQ-24 (TSK-6.4) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-6.4', 'Evaluacion Formal F1 Precision REQ-24', '25-Oct al 31-Oct', '⏳ Pendiente')">
+          <rect x="1135" y="848" width="130" height="13" rx="2" fill="#741b2c" />
+          <text x="1275" y="859" class="task-text">Evaluacion Formal F1 Precision REQ-24 (TSK-6.4)</text>
+        </g>
+
+        <!-- 5. Prueba de Carga 30 Dias REQ-21 (TSK-6.5) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-6.5', 'Prueba de Carga 30 Dias REQ-21', '20-Oct al 31-Oct', '⏳ Pendiente')">
+          <rect x="1085" y="866" width="170" height="13" rx="2" fill="#741b2c" />
+          <text x="1265" y="877" class="task-text">Prueba de Carga 30 Dias REQ-21 (TSK-6.5)</text>
+        </g>
+
+        <!-- 6. Piloto Redaccion 1 - 50 Veredictos (TSK-6.6) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-6.6', 'Piloto Redaccion 1 - 50 Veredictos', '26-Oct al 31-Oct', '⏳ Pendiente')">
+          <rect x="1145" y="884" width="125" height="13" rx="2" fill="#741b2c" />
+          <text x="1280" y="895" class="task-text">Piloto Redaccion 1 - 50 Veredictos (TSK-6.6)</text>
+        </g>
+
+
+        <!-- ==================== SPRINT 7 TAREAS ==================== -->
+        <!-- 1. PIPELINE GITHUB ACTIONS CI/CD (TSK-7.1) - HECHO (LAVANDA) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-7.1', 'Pipeline GitHub Actions CI/CD', '05-Oct al 06-Oct', '✅ Hecho / Completado')">
+          <rect x="947" y="926" width="140" height="13" rx="2" fill="#d2bee8" stroke="#bfa5dd" stroke-width="1" />
+          <text x="1098" y="937" class="task-text" fill="#2d1e44">Pipeline GitHub Actions CI/CD (TSK-7.1) [Hecho]</text>
+        </g>
+
+        <!-- 2. Onboarding Redacciones 2 y 3 REQ-26 (TSK-7.2) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-7.2', 'Onboarding Redacciones 2 y 3 REQ-26', '01-Nov al 10-Nov', '⏳ Pendiente')">
+          <rect x="1295" y="946" width="170" height="13" rx="2" fill="#741b2c" />
+          <text x="1280" y="957" class="task-text-end">Onboarding Redacciones 2 y 3 REQ-26 (TSK-7.2)</text>
+        </g>
+
+        <!-- 3. Manuales de Usuario y Despliegue REQ-27 (TSK-7.3) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-7.3', 'Manuales de Usuario y Despliegue REQ-27', '02-Nov al 12-Nov', '⏳ Pendiente')">
+          <rect x="1310" y="966" width="165" height="13" rx="2" fill="#741b2c" />
+          <text x="1295" y="977" class="task-text-end">Manuales de Usuario y Despliegue REQ-27 (TSK-7.3)</text>
+        </g>
+
+        <!-- 4. Retrospectiva Final y Traspaso REQ-28 (TSK-7.4) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'TSK-7.4', 'Retrospectiva Final y Traspaso REQ-28', '06-Nov al 15-Nov', '⏳ Pendiente')">
+          <rect x="1375" y="986" width="170" height="13" rx="2" fill="#741b2c" />
+          <text x="1360" y="997" class="task-text-end">Retrospectiva Final y Traspaso REQ-28 (TSK-7.4)</text>
+        </g>
+
+        <!-- 5. GATE 3 - LIBERACION OFICIAL MVP V1.0.0 (16-Nov: X = 1560) -->
+        <g class="interactive-task" onmouseover="showTip(evt, 'GATE 3', 'Gate 3 - Liberacion Oficial MVP v1.0.0 (Cierre 14 Semanas)', '16-Nov-2026', 'Hito Final')">
+          <polygon points="1560,1015 1569,1024 1560,1033 1551,1024" fill="#7f1d1d" stroke="#ffffff" stroke-width="1.5" />
+          <text x="1540" y="1028" class="milestone-text-end" fill="#7f1d1d">Gate 3 - Liberacion Oficial MVP v1.0.0 [Hito]</text>
+        </g>
+
+
+        <!-- ==================== LEYENDA INFERIOR ==================== -->
+        <rect x="0" y="1090" width="1600" height="110" fill="#f5f2fa" stroke="#e0d6ed" stroke-width="1" />
+        
+        <rect x="30" y="1110" width="22" height="14" rx="2" fill="#d2bee8" />
+        <text x="60" y="1122" font-size="12" font-weight="700" fill="#2d2242">Tareas Base Completadas (S1 – S5, TSK-6.1, TSK-7.1)</text>
+
+        <rect x="420" y="1110" width="22" height="14" rx="2" fill="#4d1b70" />
+        <text x="450" y="1122" font-size="12" font-weight="700" fill="#2d2242">Integración Reactiva UI (TSK-5.8)</text>
+
+        <rect x="710" y="1110" width="22" height="14" rx="2" fill="#741b2c" />
+        <text x="740" y="1122" font-size="12" font-weight="700" fill="#2d2242">Benchmark, Carga &amp; Piloto Pendientes (S6 – S7)</text>
+
+        <polygon points="1080,1110 1087,1117 1080,1124 1073,1117" fill="#3c1556" />
+        <text x="1095" y="1121" font-size="12" font-weight="700" fill="#2d2242">Quality Gates Formales (0, 1, 2, 3)</text>
+
+        <!-- Nuevos hitos en leyenda -->
+        <polygon points="30,1145 37,1152 30,1159 23,1152" fill="#047857" />
+        <text x="45" y="1156" font-size="12" font-weight="800" fill="#047857">Hito Versión v0.1.0-pre-alpha (06-Oct) [Completado]</text>
+
+        <polygon points="420,1145 427,1152 420,1159 413,1152" fill="#047857" />
+        <text x="435" y="1156" font-size="12" font-weight="800" fill="#065f46">Gate: Revisión Formal Supervisor (16-Oct) [Aprobado 5/5]</text>
+
+        <line x1="840" y1="1145" x2="840" y2="1160" stroke="#dc2626" stroke-width="2.5" />
+        <text x="850" y="1156" font-size="12" font-weight="800" fill="#dc2626">Línea de Corte Actual (hoy 10/10)</text>
+
+        <text x="800" y="1185" font-size="11.5" font-weight="600" fill="#695f80" text-anchor="middle">
+          Proyecto DAGAZ — Plataforma Multicanal de Verificación de Desinformación | UPB ISI-2026-2 G06 | 14 Semanas / 7 Sprints
+        </text>
+      </svg>
+    </div>
+
+    <!-- VISTA 2: TABLA RESPONSIVA DETALLADA (TEXTOS 100% COMPLETOS SIN CORTES) -->
+    <div class="table-view-container" id="wbs-table-viewport">
+      <table class="responsive-wbs-table">
+        <thead>
+          <tr>
+            <th style="width: 110px;">ID / Código</th>
+            <th>Descripción Completa de la Tarea / Hito</th>
+            <th style="width: 170px;">Fechas de Ejecución</th>
+            <th style="width: 130px;">Puntos / Entregable</th>
+            <th style="width: 140px;">Estado Actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- SPRINT 1 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 1: Requisitos, Negocio &amp; Base de Datos (23-Ago al 05-Sep) — 45 pts</td>
+          </tr>
+          <tr>
+            <td><strong>ACT-01</strong></td>
+            <td>Ideación, identificación del problema y justificación del sistema</td>
+            <td>23-Ago – 26-Ago</td>
+            <td>Documento ACT-01</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>ACT-02</strong></td>
+            <td>Metodología de desarrollo: Comparativa Scrum vs. RUP</td>
+            <td>26-Ago – 30-Ago</td>
+            <td>Documento ACT-02</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>ACT-03/04</strong></td>
+            <td>Análisis de Dominio y Business Model Canvas</td>
+            <td>25-Ago – 30-Ago</td>
+            <td>Documentos ACT-03/04</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>ACT-05/06</strong></td>
+            <td>Modelo de Requisitos del Sistema y Requerimientos Funcionales</td>
+            <td>28-Ago – 01-Sep</td>
+            <td>Documentos ACT-05/06</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-1.1</strong></td>
+            <td>Configuración de Base de Datos Relacional MariaDB 10.4+/10.11+ LTS local ('raiden')</td>
+            <td>23-Ago – 28-Ago</td>
+            <td>MariaDB / TablePlus</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-1.2</strong></td>
+            <td>DDL de 10 Tablas maestras e índices de integridad (Raiden.sql)</td>
+            <td>28-Ago – 02-Sep</td>
+            <td>Script Raiden.sql</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-1.3</strong></td>
+            <td>Índices B-Tree optimizados y restricciones de integridad referencial en MariaDB</td>
+            <td>01-Sep – 04-Sep</td>
+            <td>Índices B-Tree MariaDB</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-1.4</strong></td>
+            <td>Modelos Eloquent en Laravel y definición de relaciones relacionales</td>
+            <td>02-Sep – 05-Sep</td>
+            <td>Modelos Eloquent</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-1.5</strong></td>
+            <td>Seeder de Grafo Nivel 1 de fuentes verificadas</td>
+            <td>03-Sep – 05-Sep</td>
+            <td>DatabaseSeeder.php</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-1.6/7</strong></td>
+            <td>Autenticación de Usuarios con Laravel Sanctum y Hashing Seguro</td>
+            <td>03-Sep – 05-Sep</td>
+            <td>Sanctum Token Auth</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+
+          <!-- SPRINT 2 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 2: Casos de Uso, UI &amp; Core de Inteligencia Artificial (06-Sep al 19-Sep) — 73 pts</td>
+          </tr>
+          <tr>
+            <td><strong>ACT-07/08</strong></td>
+            <td>Análisis y especificación formal de Casos de Uso CU01 al CU07</td>
+            <td>06-Sep – 11-Sep</td>
+            <td>Especificaciones CU</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>ACT-09</strong></td>
+            <td>Modelado UML estructural de Casos de Uso del sistema</td>
+            <td>08-Sep – 13-Sep</td>
+            <td>Diagramas UML</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>ACT-10</strong></td>
+            <td>Modelado de Diagramas de Secuencia del Sistema (DSS) y Secuencias Detalladas</td>
+            <td>09-Sep – 14-Sep</td>
+            <td>Diagramas Secuencia</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>ACT-11</strong></td>
+            <td>Propuesta y prototipado de Mockups de UI Servilleta</td>
+            <td>10-Sep – 15-Sep</td>
+            <td>Mockups UI</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-2.1</strong></td>
+            <td>Patrón Strategy para Drivers de Modelos de Lenguaje (OpenAI, Gemini, Anthropic)</td>
+            <td>06-Sep – 10-Sep</td>
+            <td>Driver Pattern IA</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-2.2</strong></td>
+            <td>Extractor Atómico de Afirmaciones Fácticas (REQ-01)</td>
+            <td>09-Sep – 13-Sep</td>
+            <td>ClaimExtractorService</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-2.3</strong></td>
+            <td>Microservicios de Extracción Multimedia: OCR (Tesseract) y STT (Whisper)</td>
+            <td>11-Sep – 16-Sep</td>
+            <td>Services OCR &amp; STT</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr style="background: #fbf9fe;">
+            <td><strong>GATE 0</strong></td>
+            <td><strong>★ Aprobación Metodológica y Arquitectónica del Docente Supervisor</strong></td>
+            <td><strong>14-Sep-2026</strong></td>
+            <td><strong>Calificación 4.0 / 5.0</strong></td>
+            <td><span class="badge-status done">Superado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-2.4</strong></td>
+            <td>Motor de Recuperación de Evidencias Vectoriales KNN (REQ-05)</td>
+            <td>13-Sep – 17-Sep</td>
+            <td>EvidenceRetrieval</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-2.5</strong></td>
+            <td>Módulo de Verificación Cruzada y Ponderación por Reputación de Fuente</td>
+            <td>15-Sep – 18-Sep</td>
+            <td>CrossVerification</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-2.6/7</strong></td>
+            <td>Síntesis de Veredicto Final Multidimensional y Telemetría de Verificación</td>
+            <td>16-Sep – 19-Sep</td>
+            <td>VerdictSynthesizer</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+
+          <!-- SPRINT 3 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 3: Grafo de 80 Fuentes Confiables &amp; Redes Comunitarias (20-Sep al 03-Oct) — 41 pts</td>
+          </tr>
+          <tr>
+            <td><strong>TSK-3.1</strong></td>
+            <td>Construcción del Grafo de Conocimiento con 80 Fuentes Confiables Certificadas IFCN</td>
+            <td>20-Sep – 25-Sep</td>
+            <td>Grafo 80 Fuentes</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-3.2</strong></td>
+            <td>Migración arquitectónica a PostgreSQL 18 con pgvector en Neon.tech e Ingesta de 8.000+ noticias</td>
+            <td>24-Sep – 30-Sep</td>
+            <td>Neon / pgvector</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-3.3</strong></td>
+            <td>Conector con API de Wayback Machine Archive para preservación de evidencias</td>
+            <td>26-Sep – 30-Sep</td>
+            <td>ArchiveConnector</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-3.4</strong></td>
+            <td>Lógica de backend para Notas Comunitarias y Calificación (CU01, CU02)</td>
+            <td>27-Sep – 02-Oct</td>
+            <td>CommunityNotesController</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-3.5</strong></td>
+            <td>Historial de Verificaciones y Navegador de Fuentes Confiables (CU03, CU04, CU07)</td>
+            <td>29-Sep – 03-Oct</td>
+            <td>HistoryController</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+
+          <!-- SPRINT 4 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 4: API Pública, Auditoría &amp; Congelamiento Backend (27-Sep al 02-Oct) — 33 pts</td>
+          </tr>
+          <tr>
+            <td><strong>TSK-4.1</strong></td>
+            <td>API Pública REST para consumo seguro desde Redacciones y Medios de Comunicación</td>
+            <td>27-Sep – 30-Sep</td>
+            <td>/api/v1/verifications</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-4.2</strong></td>
+            <td>Middleware EnsureValidApiKey con control de cuotas y rate limiting</td>
+            <td>28-Sep – 01-Oct</td>
+            <td>EnsureValidApiKey</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-4.3</strong></td>
+            <td>Circuit Breaker para contención de costes de Tokens de Modelos LLM</td>
+            <td>29-Sep – 01-Oct</td>
+            <td>LlmCircuitBreaker</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-4.4</strong></td>
+            <td>Recuperación de evidencias en arquitectura interlingüe Español-Inglés</td>
+            <td>30-Sep – 02-Oct</td>
+            <td>CrossLingualRetrieval</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-4.5</strong></td>
+            <td>Exportador Forense de Dictámenes en esquema estándar ClaimReview (schema.org)</td>
+            <td>01-Oct – 02-Oct</td>
+            <td>ClaimReviewExporter</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr style="background: #fbf9fe;">
+            <td><strong>GATE 1</strong></td>
+            <td><strong>★ Gate 1 — Backend Freeze (Certificación de 107 Pruebas Unitarias al 100%)</strong></td>
+            <td><strong>02-Oct-2026</strong></td>
+            <td><strong>107 Tests PHPUnit</strong></td>
+            <td><span class="badge-status done">Superado</span></td>
+          </tr>
+
+          <!-- SPRINT 5 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 5: Frontend Móvil, Accesibilidad (+40) &amp; Pulido UI (02-Oct al 16-Oct) — 26 pts</td>
+          </tr>
+          <tr>
+            <td><strong>TSK-5.1/2</strong></td>
+            <td>Maquetación responsiva con Tailwind CSS y componentes reactivos Alpine.js</td>
+            <td>02-Oct – 04-Oct</td>
+            <td>Layouts Blade</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-5.3</strong></td>
+            <td>Pestañas de Ingesta Multicanal: Texto, URLs y Grabadora de Audio en navegador</td>
+            <td>03-Oct – 04-Oct</td>
+            <td>InputTabs.blade.php</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-5.4</strong></td>
+            <td>Tarjeta interactiva de Veredicto con Semáforo SVG de Credibilidad y Desglose</td>
+            <td>03-Oct – 04-Oct</td>
+            <td>VerdictCard.blade.php</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-5.5</strong></td>
+            <td>Explorador del Grafo de 80 Fuentes Confiables (fuentes.html)</td>
+            <td>03-Oct – 04-Oct</td>
+            <td>fuentes.html</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-5.6</strong></td>
+            <td>Servidor ligero de API api_server con soporte CORS para cliente web</td>
+            <td>03-Oct – 04-Oct</td>
+            <td>api_server.php</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-5.7</strong></td>
+            <td>Suite de Pruebas de Integración Frontend-Backend VerificacionesBackendTest</td>
+            <td>04-Oct – 04-Oct</td>
+            <td>VerificacionesBackendTest</td>
+            <td><span class="badge-status done">Completado</span></td>
+          </tr>
+          <tr style="background: #fdf8ff;">
+            <td><strong>TSK-5.8</strong></td>
+            <td><strong>Integración Reactiva UI, Refinamiento de Accesibilidad y Pulido Visual</strong></td>
+            <td>05-Oct – 02-Nov</td>
+            <td>Mejoras UI Continuas</td>
+            <td><span class="badge-status in-progress">⚡ En Curso</span></td>
+          </tr>
+          <tr style="background: #ecfdf5;">
+            <td><strong>HITO PRE-ALPHA</strong></td>
+            <td><strong>★ Consolidación Oficial Versión v0.1.0-pre-alpha (149 Tests de Calidad)</strong></td>
+            <td><strong>06-Oct-2026</strong></td>
+            <td><strong>Release v0.1.0</strong></td>
+            <td><span class="badge-status milestone">★ Consolidado</span></td>
+          </tr>
+          <tr style="background: #fbf9fe;">
+            <td><strong>GATE 2</strong></td>
+            <td><strong>★ Gate 2 — Frontend Freeze (23 Pruebas Vitest de UI Certificadas)</strong></td>
+            <td><strong>16-Oct-2026</strong></td>
+            <td><strong>23 Tests Vitest</strong></td>
+            <td><span class="badge-status done">Certificado</span></td>
+          </tr>
+          <tr style="background: #ecfdf5;">
+            <td><strong>GATE SUPERVISOR</strong></td>
+            <td><strong>★ Gate de Seguimiento — Revisión Formal del Supervisor Académico</strong></td>
+            <td><strong>16-Oct-2026</strong></td>
+            <td><strong>Calificación: 5.0 / 5.0 (5/5)</strong></td>
+            <td><span class="badge-status done">★ Aprobado 5/5</span></td>
+          </tr>
+
+          <!-- SPRINT 6 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 6: Benchmark Masivo, Calidad &amp; Piloto en Redacciones (17-Oct al 31-Oct) — 39 pts</td>
+          </tr>
+          <tr style="background: #faf4fe;">
+            <td><strong>TSK-6.1</strong></td>
+            <td><strong>Interfaz de Usuario para Notas Comunitarias y Calificación (CU01, CU02)</strong></td>
+            <td>03-Oct – 05-Oct</td>
+            <td>UI Notas Comunitarias</td>
+            <td><span class="badge-status done">✅ [Hecho]</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-6.2</strong></td>
+            <td>Benchmark Masivo con 500 Afirmaciones Fácticas Anotadas (REQ-11)</td>
+            <td>21-Oct – 31-Oct</td>
+            <td>Dataset Benchmark</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-6.3</strong></td>
+            <td>Auditoría de Neutralidad y Detección de Sesgo Político (REQ-17)</td>
+            <td>24-Oct – 31-Oct</td>
+            <td>Reporte Chi-cuadrado</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-6.4</strong></td>
+            <td>Evaluación Formal de Métrica F1 y Precisión de Verificación (REQ-24)</td>
+            <td>25-Oct – 31-Oct</td>
+            <td>Informe F1 Precision</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-6.5</strong></td>
+            <td>Prueba de Carga y Simulación de Flujo Continuo por 30 Días (REQ-21)</td>
+            <td>20-Oct – 31-Oct</td>
+            <td>Stress Testing Report</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-6.6</strong></td>
+            <td>Piloto Operativo con Redacción Periodística Aliada (50 Veredictos Auditados)</td>
+            <td>26-Oct – 31-Oct</td>
+            <td>Acta Piloto Redacción 1</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+
+          <!-- SPRINT 7 -->
+          <tr class="sprint-separator-row">
+            <td colspan="5">Sprint 7: CI/CD, Manuales, Traspaso &amp; Cierre Definitivo MVP (01-Nov al 15-Nov) — 24 pts</td>
+          </tr>
+          <tr style="background: #faf4fe;">
+            <td><strong>TSK-7.1</strong></td>
+            <td><strong>Pipeline de Integración y Despliegue Continuo (CI/CD) con GitHub Actions</strong></td>
+            <td>05-Oct – 06-Oct</td>
+            <td>.github/workflows/ci.yml</td>
+            <td><span class="badge-status done">✅ [Hecho]</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-7.2</strong></td>
+            <td>Onboarding y Capacitación Operativa en Redacciones Aliadas 2 y 3 (REQ-26)</td>
+            <td>01-Nov – 10-Nov</td>
+            <td>Guías de Onboarding</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-7.3</strong></td>
+            <td>Manuales Técnicos de Despliegue, Arquitectura y Manual de Usuario Final (REQ-27)</td>
+            <td>02-Nov – 12-Nov</td>
+            <td>Manuales Oficiales</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr>
+            <td><strong>TSK-7.4</strong></td>
+            <td>Retrospectiva Metodológica Final, Acta de Traspaso y Cierre de Proyecto (REQ-28)</td>
+            <td>06-Nov – 15-Nov</td>
+            <td>Acta Cierre Proyecto</td>
+            <td><span class="badge-status pending">⏳ Pendiente</span></td>
+          </tr>
+          <tr style="background: #fdf2f4;">
+            <td><strong>GATE 3</strong></td>
+            <td><strong>★ Gate 3 — Liberación Oficial y Despliegue Final MVP v1.0.0 (Cierre 14 Semanas)</strong></td>
+            <td><strong>16-Nov-2026</strong></td>
+            <td><strong>Release v1.0.0</strong></td>
+            <td><span class="badge-status pending">⏳ Hito Final</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tooltip Card Flotante -->
+    <div id="tooltip-card"></div>
+
+    <!-- Pie de Página -->
+    <footer class="footer">
+      <div>
+        <strong>DAGAZ Multi-Channel Fact-Checking Platform</strong> | Ingeniería de Software ISI-CORP 2026-II | 14 Semanas / 7 Sprints
+      </div>
+      <div>
+        <span>281 Puntos WBS Totales • 100% Requisitos Especificados • 149 Tests Automatizados</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let currentZoom = 1.0;
+    const svgElement = document.getElementById('gantt-svg');
+    const zoomText = document.getElementById('zoom-text');
+    const tooltip = document.getElementById('tooltip-card');
+    const viewport = document.getElementById('gantt-viewport');
+
+    function switchView(viewName) {
+      const btnSvg = document.getElementById('btn-view-svg');
+      const btnTable = document.getElementById('btn-view-table');
+      const svgViewport = document.getElementById('gantt-viewport');
+      const tableViewport = document.getElementById('wbs-table-viewport');
+      const zoomBar = document.getElementById('svg-zoom-bar');
+
+      if (viewName === 'svg') {
+        btnSvg.classList.add('active');
+        btnTable.classList.remove('active');
+        svgViewport.style.display = 'block';
+        tableViewport.classList.remove('active');
+        zoomBar.style.display = 'flex';
+      } else {
+        btnSvg.classList.remove('active');
+        btnTable.classList.add('active');
+        svgViewport.style.display = 'none';
+        tableViewport.classList.add('active');
+        zoomBar.style.display = 'none';
+      }
+    }
+
+    function applyZoom() {
+      svgElement.style.transform = `scale(${currentZoom})`;
+      zoomText.textContent = `${Math.round(currentZoom * 100)}%`;
+      if (currentZoom > 1.0) {
+        svgElement.style.maxWidth = 'none';
+        svgElement.style.width = `${1600 * currentZoom}px`;
+      } else {
+        svgElement.style.maxWidth = '100%';
+        svgElement.style.width = '100%';
+        svgElement.style.transform = 'none';
+      }
+    }
+
+    function zoomIn() {
+      if (currentZoom < 2.5) {
+        currentZoom += 0.15;
+        applyZoom();
+      }
+    }
+
+    function zoomOut() {
+      if (currentZoom > 0.6) {
+        currentZoom -= 0.15;
+        applyZoom();
+      }
+    }
+
+    function resetZoom() {
+      currentZoom = 1.0;
+      applyZoom();
+    }
+
+    function fitWidth() {
+      currentZoom = 1.0;
+      svgElement.style.maxWidth = '100%';
+      svgElement.style.width = '100%';
+      svgElement.style.transform = 'none';
+      zoomText.textContent = 'Auto';
+    }
+
+    function showTip(evt, id, name, dates, status) {
+      tooltip.innerHTML = `<strong>${id}: ${name}</strong><div style="color:#d1d5db; font-size:11.5px; margin-top:3px;">📅 ${dates}</div><div style="color:#a7f3d0; font-weight:700; margin-top:2px;">● ${status}</div>`;
+      tooltip.style.display = 'block';
+      moveTip(evt);
+    }
+
+    function moveTip(evt) {
+      const scrollX = window.scrollX || document.documentElement.scrollLeft;
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      tooltip.style.left = (evt.pageX + 14) + 'px';
+      tooltip.style.top = (evt.pageY + 14) + 'px';
+    }
+
+    document.addEventListener('mousemove', function(e) {
+      if (tooltip.style.display === 'block') {
+        const isInteractive = e.target.closest('.interactive-task');
+        if (!isInteractive) {
+          tooltip.style.display = 'none';
+        } else {
+          moveTip(e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

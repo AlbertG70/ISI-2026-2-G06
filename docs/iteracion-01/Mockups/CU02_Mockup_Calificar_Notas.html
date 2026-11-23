@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+    * { font-family: 'Caveat', cursive !important; }
+    body { background: #faf8f5; }
+    .napkin-border { border: 2px solid #333; border-radius: 4px; }
+    .sketch-line { border-bottom: 1.5px dashed #999; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: #d4d4d4; border: 1.5px solid #999; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+    .note-card { border: 1.5px solid #ddd; border-radius: 6px; padding: 14px; margin-bottom: 12px; background: #fefefe; transition: border-color 0.2s, background 0.2s; }
+    .note-card.rated-up { border-color: #16a34a; background: #f0fdf4; }
+    .note-card.rated-down { border-color: #dc2626; background: #fef2f2; }
+
+    .rate-btn { border: 1.5px solid #ccc; border-radius: 20px; padding: 5px 14px; font-size: 16px; cursor: pointer; background: #fafafa; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; }
+    .rate-btn:hover { background: #f0f0f0; border-color: #999; }
+    .rate-btn.active-up { background: #f0fdf4; border-color: #16a34a; color: #16a34a; font-weight: 600; }
+    .rate-btn.active-down { background: #fef2f2; border-color: #dc2626; color: #dc2626; font-weight: 600; }
+
+    .saved-badge { font-size: 13px; color: #16a34a; margin-left: 8px; display: none; }
+    .saved-badge.show { display: inline; }
+
+    .useful-bar { height: 6px; border-radius: 3px; background: #e5e7eb; margin-top: 8px; overflow: hidden; }
+    .useful-fill { height: 100%; background: #16a34a; border-radius: 3px; transition: width 0.4s ease; }
+
+    .filter-btn { border: 1.5px solid #bbb; border-radius: 4px; padding: 4px 12px; font-size: 15px; cursor: pointer; background: #fafafa; margin-right: 6px; }
+    .filter-btn.active { background: #333; color: #fff; border-color: #333; }
+  </style>
+</head>
+<body class="p-6">
+  <div style="max-width: 600px; margin: 0 auto;">
+
+    <p style="font-size: 22px; color: #555; margin-bottom: 12px; text-align: center;">
+      ✏️ Mockup Servilleta — CU02: Calificar Notas Complementarias
+    </p>
+
+    <div class="napkin-border" style="background: #fff; padding: 22px;">
+
+      <!-- Header DAGAZ -->
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <span style="font-size: 18px; color: #222; font-weight: 600; letter-spacing: 2px;">DAGAZ</span>
+        <span style="font-size: 14px; color: #aaa; margin-left: auto;">👤 Usuario123</span>
+      </div>
+
+      <div class="sketch-line" style="margin-bottom: 14px;"></div>
+
+      <!-- SECCIÓN 1: Noticia -->
+      <div style="border: 1.5px solid #ccc; border-radius: 6px; padding: 14px; margin-bottom: 16px; background: #fefefe;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+          <div style="flex: 1;">
+            <p style="font-size: 21px; color: #222; margin: 0 0 4px 0; font-weight: 600;">
+              📰 "Ciudad enfrenta crisis de agua potable"
+            </p>
+            <p style="font-size: 15px; color: #888; margin: 0 0 6px 0;">
+              El gobierno confirmó que las reservas de agua han disminuido un 40% respecto al año anterior...
+            </p>
+            <p style="font-size: 13px; color: #aaa; margin: 0;">Publicada el 1 Sep 2026 · Reuters</p>
+          </div>
+          <div style="border: 1.5px solid #16a34a; border-radius: 6px; padding: 6px 12px; text-align: center; background: #f0fdf4; min-width: 90px; flex-shrink: 0;">
+            <span style="font-size: 24px;">✅</span>
+            <p style="font-size: 15px; color: #16a34a; margin: 2px 0 0 0; font-weight: 600;">Verdadero</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: Notas para calificar -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <p style="font-size: 20px; color: #333; margin: 0; font-weight: 600;">💬 Notas de la comunidad</p>
+        <div>
+          <button class="filter-btn active" id="f-all" onclick="filter('all')">Todas</button>
+          <button class="filter-btn" id="f-up" onclick="filter('up')">👍 Útiles</button>
+          <button class="filter-btn" id="f-down" onclick="filter('down')">👎 No útiles</button>
+        </div>
+      </div>
+
+      <!-- Nota 1 -->
+      <div class="note-card" id="card-0" data-rating="none">
+        <div style="display: flex; gap: 10px; align-items: flex-start;">
+          <div class="avatar">👤</div>
+          <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between;">
+              <p style="margin: 0; font-size: 16px; color: #333; font-weight: 600;">Maria_R</p>
+              <span style="font-size: 13px; color: #bbb;">hace 2h</span>
+            </div>
+            <p style="margin: 4px 0 8px 0; font-size: 16px; color: #555;">
+              El dato del 40% coincide con el reporte del periódico local de ayer. Parece confiable.
+            </p>
+            <div class="useful-bar"><div class="useful-fill" id="bar-0" style="width: 75%;"></div></div>
+            <p style="font-size: 13px; color: #aaa; margin: 4px 0 8px 0;">6 de 8 adultos la encontraron útil</p>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button class="rate-btn" id="up-0" onclick="rateNote(0,'up')">👍 <span id="cnt-up-0">6</span> Útil</button>
+              <button class="rate-btn" id="down-0" onclick="rateNote(0,'down')">👎 <span id="cnt-down-0">2</span> No útil</button>
+              <span class="saved-badge" id="saved-0">✔ Calificación guardada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nota 2 -->
+      <div class="note-card" id="card-1" data-rating="none">
+        <div style="display: flex; gap: 10px; align-items: flex-start;">
+          <div class="avatar">👤</div>
+          <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between;">
+              <p style="margin: 0; font-size: 16px; color: #333; font-weight: 600;">AguaViva</p>
+              <span style="font-size: 13px; color: #bbb;">hace 4h</span>
+            </div>
+            <p style="margin: 4px 0 8px 0; font-size: 16px; color: #555;">
+              La fuente del gobierno no especifica la metodología del cálculo. Hay que tener cuidado.
+            </p>
+            <div class="useful-bar"><div class="useful-fill" id="bar-1" style="width: 45%;"></div></div>
+            <p style="font-size: 13px; color: #aaa; margin: 4px 0 8px 0;">3 de 7 adultos la encontraron útil</p>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button class="rate-btn" id="up-1" onclick="rateNote(1,'up')">👍 <span id="cnt-up-1">3</span> Útil</button>
+              <button class="rate-btn" id="down-1" onclick="rateNote(1,'down')">👎 <span id="cnt-down-1">4</span> No útil</button>
+              <span class="saved-badge" id="saved-1">✔ Calificación guardada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nota 3 -->
+      <div class="note-card" id="card-2" data-rating="none">
+        <div style="display: flex; gap: 10px; align-items: flex-start;">
+          <div class="avatar">👤</div>
+          <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between;">
+              <p style="margin: 0; font-size: 16px; color: #333; font-weight: 600;">User123</p>
+              <span style="font-size: 13px; color: #bbb;">hace 6h</span>
+            </div>
+            <p style="margin: 4px 0 8px 0; font-size: 16px; color: #555;">
+              Puedo confirmar, vivo en la zona y las restricciones de agua ya comenzaron esta semana.
+            </p>
+            <div class="useful-bar"><div class="useful-fill" id="bar-2" style="width: 90%;"></div></div>
+            <p style="font-size: 13px; color: #aaa; margin: 4px 0 8px 0;">9 de 10 adultos la encontraron útil</p>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button class="rate-btn" id="up-2" onclick="rateNote(2,'up')">👍 <span id="cnt-up-2">9</span> Útil</button>
+              <button class="rate-btn" id="down-2" onclick="rateNote(2,'down')">👎 <span id="cnt-down-2">1</span> No útil</button>
+              <span class="saved-badge" id="saved-2">✔ Calificación guardada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Anotaciones -->
+    <div style="margin-top: 14px; display: flex; justify-content: space-around; color: #aaa; font-size: 14px;">
+      <span>↑ Noticia leída ↑</span>
+      <span>↑ Decisión del adulto ↑</span>
+      <span>↑ Calificación guardada ↑</span>
+    </div>
+
+  </div>
+
+  <script>
+    const ratings = [null, null, null];
+
+    function rateNote(idx, type) {
+      const card = document.getElementById('card-' + idx);
+      const upBtn = document.getElementById('up-' + idx);
+      const downBtn = document.getElementById('down-' + idx);
+      const saved = document.getElementById('saved-' + idx);
+      const cntUp = document.getElementById('cnt-up-' + idx);
+      const cntDown = document.getElementById('cnt-down-' + idx);
+      const bar = document.getElementById('bar-' + idx);
+
+      const prev = ratings[idx];
+
+      // Revert previous
+      if (prev === 'up') {
+        upBtn.classList.remove('active-up');
+        cntUp.textContent = parseInt(cntUp.textContent) - 1;
+      } else if (prev === 'down') {
+        downBtn.classList.remove('active-down');
+        cntDown.textContent = parseInt(cntDown.textContent) - 1;
+      }
+
+      // Toggle off
+      if (prev === type) {
+        ratings[idx] = null;
+        card.classList.remove('rated-up', 'rated-down');
+        saved.classList.remove('show');
+        updateBar(idx);
+        return;
+      }
+
+      // Apply new
+      ratings[idx] = type;
+      if (type === 'up') {
+        upBtn.classList.add('active-up');
+        downBtn.classList.remove('active-down');
+        cntUp.textContent = parseInt(cntUp.textContent) + 1;
+        card.classList.add('rated-up');
+        card.classList.remove('rated-down');
+      } else {
+        downBtn.classList.add('active-down');
+        upBtn.classList.remove('active-up');
+        cntDown.textContent = parseInt(cntDown.textContent) + 1;
+        card.classList.add('rated-down');
+        card.classList.remove('rated-up');
+      }
+
+      saved.classList.add('show');
+      setTimeout(() => saved.classList.remove('show'), 2500);
+      updateBar(idx);
+    }
+
+    function updateBar(idx) {
+      const up = parseInt(document.getElementById('cnt-up-' + idx).textContent);
+      const down = parseInt(document.getElementById('cnt-down-' + idx).textContent);
+      const total = up + down;
+      const pct = total > 0 ? Math.round((up / total) * 100) : 0;
+      document.getElementById('bar-' + idx).style.width = pct + '%';
+    }
+
+    function filter(type) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('f-' + type).classList.add('active');
+      for (let i = 0; i < 3; i++) {
+        const card = document.getElementById('card-' + i);
+        if (type === 'all') {
+          card.style.display = 'block';
+        } else if (type === 'up') {
+          card.style.display = ratings[i] === 'up' ? 'block' : 'none';
+        } else {
+          card.style.display = ratings[i] === 'down' ? 'block' : 'none';
+        }
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "dagaz-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Capa Frontend y Presentación Móvil Responsiva para DAGAZ (Blade + Tailwind CSS v4)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "happy-dom": "^20.14.5",
+    "tailwindcss": "^4.0.0",
+    "vite": "^8.0.0",
+    "vitest": "^5.0.3"
+  }
+}

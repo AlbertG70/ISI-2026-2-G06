@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — REQ-13: Panel de Intervención Editorial Humana · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.15rem !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-campo { width: 100%; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.75rem 1rem; font-size: 1rem; outline: none; }
+    .dz-campo:focus { border-color: #312e81; box-shadow: 0 0 0 3px rgba(49,46,129,0.15); }
+    .dz-btn { min-height: 48px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.25rem; transition: all 0.15s ease; cursor: pointer; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-3xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · REQ-13 (Panel de Intervención Editorial Humana)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>Manual_Administrador_Revisor.md</code> & <code>01_Contexto_y_Metodologia_Dagaz.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisito:</strong> REQ-13 (8 pts)</div>
+      <div><strong>Auditoría:</strong> REQ-25 (Trazabilidad)</div>
+      <div><strong>Roles:</strong> Editor / Administrador</div>
+      <div><strong>Filosofía:</strong> Inteligencia Aumentada</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-3xl mx-auto w-full my-auto space-y-5">
+
+    <!-- Cabecera -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-indigo-950" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+          <span class="text-xs text-indigo-900 font-bold block">Consola Editorial Humana</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs bg-indigo-100 border border-indigo-300 text-indigo-950 px-3 py-1.5 rounded-lg font-bold">
+          ✍️ editor_periodista@dagaz.com (Rol: Editor)
+        </span>
+      </div>
+    </header>
+
+    <!-- Tarjeta de Contenido Bajo Revisión -->
+    <section class="dz-tarjeta p-5 bg-slate-50 border-slate-300 space-y-3">
+      <div class="flex justify-between items-center text-xs">
+        <span class="font-extrabold uppercase text-slate-500">Veredicto Automatizado Emitido por IA</span>
+        <span class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded border border-amber-300">Confianza Baja: 52%</span>
+      </div>
+
+      <blockquote class="border-l-4 border-slate-700 pl-4 py-1 text-base font-bold text-slate-900">
+        “Documento oficial filtrado anuncia cierre inminente de operaciones de refinería de Barrancabermeja por falta de crudo.”
+      </blockquote>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-white p-3 rounded-lg border border-slate-200">
+        <div><strong>Diagnóstico Inicial IA:</strong> Parcialmente Cierto (52%)</div>
+        <div><strong>Observación del Algoritmo:</strong> Confundió mantenimiento programado con paro técnico.</div>
+      </div>
+    </section>
+
+    <!-- Formulario de Intervención Humana (REQ-13) -->
+    <section class="dz-tarjeta p-6 border-2 border-indigo-700 bg-white space-y-4 shadow-md">
+      <div class="border-b border-slate-200 pb-3">
+        <h1 class="text-xl font-extrabold text-indigo-950 flex items-center gap-2">
+          <span>✍️</span> Rectificación y Sellado Humano (Supremacía Deontológica)
+        </h1>
+        <p class="text-xs text-slate-600 mt-1">
+          Al intervenir este veredicto, su firma profesional quedará registrada de forma inmutable en el registro de auditoría (REQ-25).
+        </p>
+      </div>
+
+      <!-- Banner de Notificación de Éxito -->
+      <div id="banner-rectificado" class="hidden p-4 rounded-xl border-2 border-indigo-800 bg-indigo-50 text-indigo-950 text-xs font-bold space-y-1">
+        <p class="text-sm">✔ Veredicto rectificado exitosamente y publicado con sello humano.</p>
+        <p class="text-[11px] text-indigo-800">
+          Trazabilidad: Operación #AUD-2026-9812 registrada con IP 181.129.40.12 · Hash SHA-256 verificado.
+        </p>
+      </div>
+
+      <form onsubmit="aplicarRectificacion(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Nuevo Veredicto Rectificado:</label>
+            <select id="rect-tipo" class="dz-campo text-sm font-bold text-red-800">
+              <option value="FALSO" selected>❌ Falso (Desmentido por Ecopetrol)</option>
+              <option value="VERDADERO">✅ Verdadero</option>
+              <option value="ENGANOSO">🟠 Engañoso / Descontextualizado</option>
+              <option value="PARCIAL">⚠️ Parcialmente Cierto</option>
+              <option value="NO_VERIFICABLE">❔ No Verificable</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Puntaje de Certeza Rectificado (%):</label>
+            <input type="number" id="rect-confianza" min="0" max="100" value="98" class="dz-campo text-sm font-extrabold text-indigo-950">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-xs text-slate-800 mb-1">
+            Motivo Editorial de la Intervención (Registro interno para consejo de gobernanza):
+          </label>
+          <input type="text" id="rect-motivo" class="dz-campo text-sm" value="Ecopetrol desmintió el documento en rueda de prensa a las 11:30 a.m. indicando que se trata de un mantenimiento de rutina ya programado.">
+          <p class="text-[11px] text-slate-500 mt-1">Mínimo 10 caracteres obligatorios.</p>
+        </div>
+
+        <div>
+          <label class="block font-bold text-xs text-slate-800 mb-1">
+            Explicación Ciudadana Rectificada (Visible para adultos mayores en pantalla):
+          </label>
+          <textarea id="rect-explicacion" rows="3" class="dz-campo text-sm resize-y">Ecopetrol y el Ministerio de Minas y Energía confirmaron que la refinería opera con normalidad. El documento que circula en redes sociales fue alterado y corresponde a una circular de mantenimiento preventivo de una caldera de junio de 2024.</textarea>
+          <p class="text-[11px] text-slate-500 mt-1">Mínimo 20 caracteres obligatorios en lenguaje claro y sin tecnicismos.</p>
+        </div>
+
+        <div class="pt-2 flex flex-col sm:flex-row justify-end items-center gap-3">
+          <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html" class="dz-btn bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs w-full sm:w-auto">
+            ✖ Descartar cambios
+          </a>
+          <button type="submit" class="dz-btn bg-indigo-900 hover:bg-indigo-950 text-white text-xs w-full sm:w-auto shadow-md">
+            ✍️ Sellar y Publicar Rectificación Editorial Humana
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Registro de Auditoría (REQ-25) -->
+    <section class="dz-tarjeta p-5 bg-slate-900 text-slate-300 space-y-2 text-xs">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+        <span class="font-bold text-amber-400">📋 Trazabilidad Inmutable (REQ-25 Auditoría)</span>
+        <span class="text-slate-500">Ley 1581 / Archivo para Reguladores</span>
+      </div>
+      <div class="font-mono space-y-1 text-[11px] text-slate-400">
+        <p>• ID Veredicto: <span class="text-white">ver-col-2026-0814</span></p>
+        <p>• Transición: <span class="text-amber-300">PARCIAL (52%)</span> ➔ <span class="text-green-400">FALSO (98%) [INTERVENIDO]</span></p>
+        <p>• Revisor Responsable: <span class="text-white">editor_periodista@dagaz.com</span></p>
+        <p>• Timestamp: <span class="text-white">2026-10-17T14:26:00-05:00</span></p>
+      </div>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html" class="underline font-bold">⬅ Volver a Resultado del Veredicto</a>
+      <a href="index.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Ir a la Galería Completa de Mockups ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-3xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function aplicarRectificacion(e) {
+      e.preventDefault();
+      document.getElementById('banner-rectificado').classList.remove('hidden');
+      alert('Veredicto rectificado exitosamente. El distintivo editorial ha sido sellado.');
+    }
+  </script>
+</body>
+</html>

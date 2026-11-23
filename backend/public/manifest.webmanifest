@@ -1,0 +1,18 @@
+{
+  "name": "DAGAZ — Verificación Ciudadana",
+  "short_name": "DAGAZ",
+  "description": "Plataforma de fact-checking y verificación ciudadana para adultos en Colombia.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf8f5",
+  "theme_color": "#1f2937",
+  "orientation": "portrait-primary",
+  "lang": "es-CO",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 580" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .step-box { fill: #fafafa; stroke: #666666; stroke-width: 1.5; }
+    .meta { font-size: 11px; fill: #555555; }
+    .title { font-size: 15px; font-weight: bold; text-anchor: middle; }
+    .btn-text { font-size: 12px; font-weight: bold; text-anchor: middle; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="560" class="frame" />
+
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-04: PROCESAMIENTO IA (/verificar)</text>
+
+  <!-- App Header -->
+  <g transform="translate(24, 48)">
+    <rect x="0" y="0" width="90" height="30" class="card" />
+    <text x="45" y="20" class="btn-text">[ DAGAZ ]</text>
+
+    <rect x="250" y="0" width="122" height="30" fill="#f0f0f0" stroke="#666666" stroke-width="1" />
+    <text x="311" y="20" font-size="11" class="btn-text">[ Estado: Activo ]</text>
+  </g>
+  <line x1="24" y1="86" x2="396" y2="86" stroke="#cccccc" />
+
+  <!-- Main Processing Card Hitbox -->
+  <g transform="translate(24, 102)">
+    <rect x="0" y="0" width="372" height="376" class="card" />
+
+    <!-- Progress Indicator Hitbox -->
+    <g transform="translate(86, 24)">
+      <rect x="0" y="0" width="200" height="42" class="step-box" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="100" y="26" class="btn-text">[ PROCESANDO CON IA... ]</text>
+    </g>
+
+    <text x="186" y="94" class="title">Analizando y Contrastando</text>
+    <text x="186" y="112" class="meta" text-anchor="middle">Descomponiendo afirmaciones contra fuentes oficiales</text>
+    <line x1="20" y1="126" x2="352" y2="126" stroke="#cccccc" stroke-dasharray="3,3" />
+
+    <!-- Checklist Hitboxes -->
+    <g transform="translate(20, 140)">
+      <rect x="0" y="0" width="332" height="216" class="step-box" />
+      <text x="14" y="24" font-size="12" font-weight="bold">ETAPAS SECUENCIALES:</text>
+      
+      <text x="14" y="56" font-size="12">[OK] 1. Normalizacion de entrada recibida</text>
+      <text x="14" y="90" font-size="12">[OK] 2. Descomposicion atomica de hechos</text>
+      <text x="14" y="126" font-size="12" font-weight="bold">[...] 3. Consultando Grafo 80 fuentes IFCN</text>
+      <text x="14" y="160" font-size="12" fill="#777777">[  ] 4. Ponderacion bayesiana de confianza</text>
+      <text x="14" y="194" font-size="12" fill="#777777">[  ] 5. Sintesis y emision de veredicto</text>
+    </g>
+  </g>
+
+  <!-- Bottom Nav Bar -->
+  <g transform="translate(24, 494)">
+    <rect x="0" y="0" width="372" height="56" class="nav-box" />
+
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="46" y="33" class="btn-text">[VERIFICAR]</text>
+    </g>
+
+    <g transform="translate(93, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Historial</text>
+    </g>
+
+    <g transform="translate(186, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Fuentes</text>
+    </g>
+
+    <g transform="translate(279, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Cuenta</text>
+    </g>
+  </g>
+</svg>

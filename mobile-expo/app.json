@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "DAGAZ",
+    "slug": "dagaz",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.isicorp.dagaz",
+      "infoPlist": {
+        "NSCameraUsageDescription": "DAGAZ necesita acceso a la cámara para capturar textos de noticias y procesarlos mediante OCR.",
+        "NSPhotoLibraryUsageDescription": "DAGAZ necesita acceso a su galería para seleccionar capturas de pantalla de cadenas de desinformación.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        }
+      }
+    },
+    "android": {
+      "package": "com.isicorp.dagaz",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png",
+        "backgroundColor": "#000000"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-image-picker"
+    ]
+  }
+}

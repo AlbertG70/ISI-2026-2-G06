@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 640" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .input-hitbox { fill: #fafafa; stroke: #666666; stroke-width: 1.5; }
+    .meta { font-size: 11px; fill: #555555; }
+    .label { font-size: 12px; font-weight: bold; }
+    .btn-text { font-size: 11px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 16px; font-weight: bold; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="620" class="frame" />
+
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-06: HISTORIAL DE NOTICIAS (/historial)</text>
+
+  <!-- Top Title & Action -->
+  <g transform="translate(24, 48)">
+    <text x="0" y="18" class="title">Historial de Noticias (CU04)</text>
+    <text x="0" y="34" class="meta">14 noticias verificadas | CU03 Guardados</text>
+
+    <!-- New verify button -->
+    <rect x="230" y="4" width="142" height="28" class="btn-hitbox" fill="#e5e7eb" />
+    <text x="301" y="22" class="btn-text">[ + Nueva verificacion ]</text>
+  </g>
+  <line x1="24" y1="90" x2="396" y2="90" stroke="#cccccc" />
+
+  <!-- Search & Filter Card Hitbox -->
+  <g transform="translate(24, 102)">
+    <rect x="0" y="0" width="372" height="68" class="card" />
+    
+    <g transform="translate(12, 12)">
+      <text x="0" y="10" class="label">Buscar palabras clave:</text>
+      <rect x="0" y="18" width="168" height="30" class="input-hitbox" />
+      <text x="10" y="38" font-size="11" fill="#777777">[ Input: Buscar ]</text>
+    </g>
+
+    <g transform="translate(192, 12)">
+      <text x="0" y="10" class="label">Filtrar por estado:</text>
+      <rect x="0" y="18" width="168" height="30" class="input-hitbox" />
+      <text x="10" y="38" font-size="11">[ Select: Todos ]</text>
+    </g>
+  </g>
+
+  <!-- List Items Hitboxes -->
+  <g transform="translate(24, 182)">
+    
+    <!-- Item 1: Falso & Guardada -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="372" height="136" class="card" />
+
+      <text x="12" y="20" font-size="12" font-weight="bold">"Urgente: Toque de queda decretado..."</text>
+      
+      <!-- Badges -->
+      <rect x="12" y="30" width="80" height="22" fill="#f0f0f0" stroke="#111111" stroke-width="1.5" />
+      <text x="52" y="45" font-size="10" font-weight="bold" text-anchor="middle">[ FALSO ]</text>
+
+      <text x="102" y="45" class="meta">Fecha: 14 oct 2026 | Guardada | 88%</text>
+
+      <!-- Accordion Snippet -->
+      <rect x="12" y="58" width="348" height="34" fill="#fafafa" stroke="#cccccc" stroke-width="1" />
+      <text x="20" y="78" class="meta">[ Resumen: Minsalud desmiente restricciones ]</text>
+
+      <!-- Actions -->
+      <g transform="translate(12, 98)">
+        <rect x="0" y="0" width="140" height="26" class="btn-hitbox" />
+        <text x="70" y="17" class="btn-text">[ Ver analisis completo ]</text>
+
+        <rect x="256" y="0" width="92" height="26" class="btn-hitbox" />
+        <text x="302" y="17" font-size="10" font-weight="bold" text-anchor="middle">[ Quitar ]</text>
+      </g>
+    </g>
+
+    <!-- Item 2: Verdadero -->
+    <g transform="translate(0, 146)">
+      <rect x="0" y="0" width="372" height="100" class="card" />
+
+      <text x="12" y="20" font-size="12" font-weight="bold">"CNE habilita nuevos puestos de votacion..."</text>
+      
+      <rect x="12" y="30" width="104" height="22" fill="#f0f0f0" stroke="#111111" stroke-width="1.5" />
+      <text x="64" y="45" font-size="10" font-weight="bold" text-anchor="middle">[ VERDADERO ]</text>
+
+      <text x="126" y="45" class="meta">Fecha: 12 oct 2026 | Conf. 96%</text>
+
+      <g transform="translate(12, 62)">
+        <rect x="0" y="0" width="108" height="26" class="btn-hitbox" />
+        <text x="54" y="17" class="btn-text">[ Ver detalle ]</text>
+
+        <rect x="256" y="0" width="92" height="26" class="btn-hitbox" />
+        <text x="302" y="17" font-size="10" font-weight="bold" text-anchor="middle">[ Quitar ]</text>
+      </g>
+    </g>
+
+    <!-- Pagination Hitbox -->
+    <g transform="translate(86, 258)">
+      <rect x="0" y="0" width="200" height="30" class="btn-hitbox" fill="#e5e7eb" />
+      <text x="100" y="19" class="btn-text">[ Cargar mas noticias ]</text>
+    </g>
+  </g>
+
+  <!-- Bottom Nav Bar (Historial Active) -->
+  <g transform="translate(24, 554)">
+    <rect x="0" y="0" width="372" height="56" class="nav-box" />
+
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Verificar</text>
+    </g>
+
+    <g transform="translate(93, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="46" y="33" class="btn-text">[HISTORIAL]</text>
+    </g>
+
+    <g transform="translate(186, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Fuentes</text>
+    </g>
+
+    <g transform="translate(279, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Cuenta</text>
+    </g>
+  </g>
+</svg>

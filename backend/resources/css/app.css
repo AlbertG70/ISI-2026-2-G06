@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+@source '../../frontend/views/**/*.blade.php';
+@source '../../frontend/src/js/**/*.js';
+
+/*
+|--------------------------------------------------------------------------
+| DAGAZ — Sistema de diseño (Mobile-First, Adultos +40, WCAG 2.1 AA)
+|--------------------------------------------------------------------------
+| - Tipografía base 18px con escala fluida (clamp).
+| - Áreas táctiles mínimas de 48px.
+| - Paleta de veredictos con contraste >= 4.5:1 sobre su fondo, siempre
+|   acompañada de icono + texto (nunca solo color).
+*/
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-tinta: #1a1a1a;
+    --color-tinta-suave: #4a4a4a;
+    --color-papel: #faf8f5;
+    --color-borde: #8a8a8a;
+    --color-marca: #1f2937;
+
+    /* Veredictos: texto (700/800) sobre fondo (50) => contraste AA */
+    --color-verdadero: #166534;
+    --color-verdadero-bg: #f0fdf4;
+    --color-parcial: #854d0e;
+    --color-parcial-bg: #fefce8;
+    --color-enganoso: #9a3412;
+    --color-enganoso-bg: #fff7ed;
+    --color-falso: #991b1b;
+    --color-falso-bg: #fef2f2;
+    --color-neutro: #374151;
+    --color-neutro-bg: #f3f4f6;
+}
+
+@layer base {
+    html {
+        font-size: 112.5%; /* 18px base */
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-papel text-tinta antialiased;
+        min-height: 100dvh;
+        line-height: 1.55;
+    }
+
+    h1 { font-size: clamp(1.45rem, 1.2rem + 1.2vw, 1.9rem); @apply font-semibold leading-tight; }
+    h2 { font-size: clamp(1.2rem, 1.05rem + 0.8vw, 1.45rem); @apply font-semibold leading-snug; }
+
+    :focus-visible {
+        outline: 3px solid #2563eb;
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    /* Contenedor principal: centrado y fluido, respeta notch/safe-areas */
+    .dz-contenedor {
+        @apply mx-auto w-full max-w-2xl px-4;
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .dz-tarjeta {
+        @apply rounded-xl border-2 border-tinta/80 bg-white p-4 sm:p-6;
+    }
+
+    .dz-btn-primario,
+    .dz-btn-secundario,
+    .dz-btn-peligro {
+        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 text-base font-semibold
+            transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+    }
+    .dz-btn-primario { @apply bg-marca text-white hover:bg-black; }
+    .dz-btn-secundario { @apply border-2 border-borde bg-white text-tinta hover:bg-neutro-bg; }
+    .dz-btn-peligro { @apply bg-falso text-white hover:bg-red-900; }
+
+    .dz-label { @apply mb-1 block font-semibold; }
+
+    .dz-campo {
+        @apply block min-h-12 w-full rounded-lg border-2 border-borde bg-white px-4 py-3 text-base text-tinta
+            placeholder:text-tinta-suave/70 focus:border-tinta focus:outline-none;
+    }
+
+    .dz-error { @apply mt-1 text-base font-medium text-falso; }
+
+    .dz-alerta { @apply rounded-lg border-2 px-4 py-3 text-base; }
+
+    /* Pestañas accesibles (role="tab") */
+    .dz-tab {
+        @apply min-h-12 flex-1 rounded-t-lg border-2 border-b-0 border-borde bg-neutro-bg px-2 text-base
+            font-medium text-tinta-suave;
+    }
+    .dz-tab[aria-selected='true'] { @apply border-tinta bg-white font-semibold text-tinta; }
+
+    .dz-skeleton { @apply animate-pulse rounded-lg bg-neutro-bg; }
+
+    .dz-spinner {
+        @apply inline-block h-5 w-5 animate-spin rounded-full border-[3px] border-current border-t-transparent;
+    }
+
+    /* Botones de filtro de notas (CU02) */
+    .dz-btn-filtro-nota {
+        @apply min-h-10 rounded-lg border-2 border-borde bg-white px-3 py-1.5 text-xs font-bold text-tinta
+            transition-colors hover:bg-neutro-bg;
+    }
+    .dz-btn-filtro-nota.active {
+        @apply border-tinta bg-tinta text-white;
+    }
+
+    /* Barra de utilidad de notas comunitarias (CU02) */
+    .dz-barra-progreso {
+        @apply h-2 w-full overflow-hidden rounded-full border border-borde/40 bg-neutro-bg;
+    }
+    .dz-barra-progreso-fill {
+        @apply h-full rounded-full bg-verdadero transition-all duration-300;
+    }
+}
+
+/* Escala de texto accesible para Adultos +40 */
+html[data-tamano-texto='grande'] {
+    font-size: 130%; /* ~20.8px base */
+}

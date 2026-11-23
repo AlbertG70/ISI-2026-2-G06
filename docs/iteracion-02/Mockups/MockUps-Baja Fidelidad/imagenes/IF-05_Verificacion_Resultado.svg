@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 740" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .input-hitbox { fill: #fafafa; stroke: #666666; stroke-width: 1.5; }
+    .meta { font-size: 11px; fill: #555555; }
+    .btn-text { font-size: 11px; font-weight: bold; text-anchor: middle; }
+    .label { font-size: 12px; font-weight: bold; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="720" class="frame" />
+
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-05: RESULTADO FORENSE (/verificar/{id})</text>
+
+  <!-- Top Action Bar Hitboxes -->
+  <g transform="translate(24, 46)">
+    <rect x="0" y="0" width="110" height="28" class="btn-hitbox" />
+    <text x="55" y="18" class="btn-text">[ Volver ]</text>
+
+    <rect x="180" y="0" width="94" height="28" class="btn-hitbox" />
+    <text x="227" y="18" class="btn-text">[ Compartir ]</text>
+
+    <rect x="280" y="0" width="92" height="28" class="btn-hitbox" />
+    <text x="326" y="18" class="btn-text">[ Guardar ]</text>
+  </g>
+  <line x1="24" y1="82" x2="396" y2="82" stroke="#cccccc" />
+
+  <!-- Content Cards -->
+  <g transform="translate(24, 94)">
+    
+    <!-- CARD 1: VEREDICTO -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="372" height="178" class="card" />
+
+      <text x="14" y="20" class="meta">CONTENIDO VERIFICADO:</text>
+      <text x="14" y="38" font-size="12" font-weight="bold">"Urgente: Toque de queda sanitario decretado..."</text>
+      
+      <!-- Verdict & Confidence Hitbox -->
+      <g transform="translate(14, 52)">
+        <rect x="0" y="0" width="220" height="42" fill="#ffffff" stroke="#111111" stroke-width="2" />
+        <text x="110" y="26" font-size="14" font-weight="bold" text-anchor="middle">[ VEREDICTO: FALSO ]</text>
+
+        <rect x="230" y="0" width="114" height="42" fill="#f0f0f0" stroke="#111111" stroke-width="1.5" />
+        <text x="287" y="26" class="btn-text">[ Conf. 88% ]</text>
+      </g>
+
+      <!-- Accordion Hitbox -->
+      <g transform="translate(14, 106)">
+        <rect x="0" y="0" width="344" height="58" class="card" fill="#fafafa" />
+        <text x="12" y="22" font-size="11" font-weight="bold">[ HITBOX: Por que este veredicto? ]</text>
+        <text x="12" y="42" class="meta">Las fuentes oficiales confirman que no existe decreto en 2026.</text>
+      </g>
+    </g>
+
+    <!-- CARD 2: FUENTES DE CONTRASTE -->
+    <g transform="translate(0, 188)">
+      <rect x="0" y="0" width="372" height="136" class="card" />
+      <text x="14" y="20" font-size="12" font-weight="bold">FUENTES DE CONTRASTE Y EVIDENCIAS:</text>
+      <line x1="14" y1="28" x2="358" y2="28" stroke="#eeeeee" />
+
+      <g transform="translate(14, 38)">
+        <text x="0" y="14" font-size="11" font-weight="bold">- Ministerio de Salud (95%) | Nivel 1</text>
+        <rect x="230" y="0" width="114" height="22" class="btn-hitbox" />
+        <text x="287" y="15" font-size="10" class="btn-text">[ Comunicado ]</text>
+      </g>
+
+      <g transform="translate(14, 76)">
+        <text x="0" y="14" font-size="11" font-weight="bold">- ColombiaCheck (92%) | Nivel 4 IFCN</text>
+        <rect x="230" y="0" width="114" height="22" class="btn-hitbox" />
+        <text x="287" y="15" font-size="10" class="btn-text">[ Chequeo ]</text>
+      </g>
+    </g>
+
+    <!-- CARD 3: NOTAS DE LA COMUNIDAD (CU01 / CU02) -->
+    <g transform="translate(0, 334)">
+      <rect x="0" y="0" width="372" height="210" class="card" />
+      <text x="14" y="20" font-size="12" font-weight="bold">NOTAS DE LA COMUNIDAD (CU01/CU02):</text>
+      
+      <!-- Filter Hitboxes -->
+      <g transform="translate(200, 8)">
+        <rect x="0" y="0" width="50" height="20" class="btn-hitbox" fill="#e5e7eb" />
+        <text x="25" y="14" font-size="10" class="btn-text">Todas</text>
+        <rect x="54" y="0" width="54" height="20" class="btn-hitbox" />
+        <text x="81" y="14" font-size="10" class="btn-text">Utiles</text>
+        <rect x="112" y="0" width="50" height="20" class="btn-hitbox" />
+        <text x="137" y="14" font-size="10" class="btn-text">No</text>
+      </g>
+      <line x1="14" y1="34" x2="358" y2="34" stroke="#eeeeee" />
+
+      <!-- Form Note Hitbox -->
+      <g transform="translate(14, 44)">
+        <rect x="0" y="0" width="344" height="54" class="input-hitbox" />
+        <text x="10" y="24" class="meta">| Input: Aportar contexto verificado (CU01)...</text>
+        <rect x="234" y="28" width="102" height="22" class="btn-hitbox" fill="#e5e7eb" />
+        <text x="285" y="43" font-size="10" class="btn-text">[ Publicar ]</text>
+      </g>
+
+      <!-- Note Item Hitbox -->
+      <g transform="translate(14, 110)">
+        <rect x="0" y="0" width="344" height="86" class="card" fill="#fafafa" />
+        <text x="10" y="18" font-size="11" font-weight="bold">Usuario: ca---- | Hace 2h | Utilidad: +14 votos</text>
+        <text x="10" y="36" class="meta">"El Ministro aclaro en rueda de prensa que es un montaje."</text>
+        
+        <!-- Vote Hitboxes -->
+        <g transform="translate(180, 50)">
+          <rect x="0" y="0" width="76" height="26" class="btn-hitbox" />
+          <text x="38" y="17" font-size="10" class="btn-text">[ Util (+1) ]</text>
+          
+          <rect x="82" y="0" width="76" height="26" class="btn-hitbox" />
+          <text x="120" y="17" font-size="10" class="btn-text">[ No util (-1) ]</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom Nav Bar -->
+  <g transform="translate(24, 654)">
+    <rect x="0" y="0" width="372" height="56" class="nav-box" />
+
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="46" y="33" class="btn-text">[VERIFICAR]</text>
+    </g>
+
+    <g transform="translate(93, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Historial</text>
+    </g>
+
+    <g transform="translate(186, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Fuentes</text>
+    </g>
+
+    <g transform="translate(279, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Cuenta</text>
+    </g>
+  </g>
+</svg>

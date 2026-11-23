@@ -1,0 +1,48 @@
+# ─── Control de versiones, IDEs y documentación ───────────────────────────────
+.git
+.github
+.idea
+.vscode
+.cursor
+*.log
+*.md
+*.ipynb
+docs/
+
+# ─── Otras aplicaciones del monorepo (no requeridas en runtime Laravel) ─────
+mobile/
+mobile-expo/
+database/
+tests/
+ingesta_noticias_colombia.py
+backend/Microservicios_Python/
+frontend/node_modules/
+frontend/dist/
+frontend/tests/
+
+# ─── Dependencias, artefactos locales y secretos del backend ──────────────────
+backend/vendor/
+backend/node_modules/
+backend/public/build/
+backend/public/hot
+backend/public/storage
+backend/public/fonts-manifest.dev.json
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/.phpunit*
+backend/phpunit.xml
+backend/tests/
+
+# ─── Cachés y almacenamiento temporal local ───────────────────────────────────
+backend/bootstrap/cache/*.php
+backend/storage/logs/*
+!backend/storage/logs/.gitignore
+backend/storage/framework/cache/*
+!backend/storage/framework/cache/.gitignore
+backend/storage/framework/sessions/*
+!backend/storage/framework/sessions/.gitignore
+backend/storage/framework/testing/*
+!backend/storage/framework/testing/.gitignore
+backend/storage/framework/views/*
+!backend/storage/framework/views/.gitignore

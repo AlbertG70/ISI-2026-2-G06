@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU06: Verificar Contenido (Entrada Multicanal) · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 120%; }
+    .text-large h1 { font-size: 2.15rem !important; }
+    .text-large .dz-campo { font-size: 1.25rem !important; }
+    .text-large .dz-btn { font-size: 1.25rem !important; min-height: 56px !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-tab { padding: 0.85rem 1.25rem; font-weight: 700; font-size: 1.05rem; cursor: pointer; border-bottom: 3px solid transparent; color: #4a4a4a; transition: all 0.15s ease; min-height: 48px; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .dz-tab.active { color: #1f2937; border-bottom-color: #1f2937; background: #ffffff; }
+    .dz-campo { width: 100%; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.85rem 1rem; font-size: 1.05rem; outline: none; transition: border-color 0.15s ease; }
+    .dz-campo:focus { border-color: #1f2937; box-shadow: 0 0 0 3px rgba(31,41,55,0.15); }
+    .dz-btn { min-height: 50px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.75rem; transition: all 0.15s ease; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; transform: translateY(-1px); }
+    .dz-btn-secundario { background: #ffffff; border: 2px solid #8a8a8a; color: #1a1a1a; }
+    .dz-btn-secundario:hover { background: #f3f4f6; }
+    .spinner { border: 3px solid #e5e7eb; border-top-color: #1f2937; border-radius: 50%; width: 22px; height: 22px; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-2xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU06 (Entrada Multicanal)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-01, REQ-02, REQ-03</div>
+      <div><strong>Canales:</strong> Texto, URL, OCR/STT</div>
+      <div><strong>Target:</strong> Adultos (+40)</div>
+      <div><strong>Límite:</strong> ≥10 caracteres</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal de la Aplicación -->
+  <main class="max-w-2xl mx-auto w-full my-auto space-y-4">
+
+    <!-- Barra de Navegación Superior -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+      </div>
+
+      <!-- Menú y Controles -->
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1" title="Ajustar tamaño de letra">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2.5 py-1 text-sm font-bold rounded bg-slate-900 text-white" aria-label="Texto normal">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2.5 py-1 text-sm font-bold rounded text-slate-700 hover:bg-slate-100" aria-label="Aumentar texto">A+</button>
+        </div>
+        <span class="text-xs bg-slate-100 border border-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg font-medium hidden sm:inline-block">
+          👤 adulto@dagaz.com
+        </span>
+      </div>
+    </header>
+
+    <!-- FASE 1: Formulario de Entrada de Contenido -->
+    <section id="panel-entrada" class="dz-tarjeta p-0 overflow-hidden">
+      <div class="p-6 pb-4 border-b border-slate-200">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Verificar Contenido</h1>
+        <p class="text-sm text-slate-600 mt-1">
+          Pegue una noticia, ingrese un enlace o cargue una imagen/audio para contrastarla contra más de 80 fuentes confiables.
+        </p>
+      </div>
+
+      <!-- Pestañas de Tipo de Entrada (WAI-ARIA Tabs) -->
+      <div role="tablist" class="flex border-b border-slate-300 bg-slate-50 px-2 pt-2 gap-1">
+        <button type="button" role="tab" id="tab-texto" onclick="selectTab('texto')" class="dz-tab active" aria-selected="true">
+          📝 Texto Directo
+        </button>
+        <button type="button" role="tab" id="tab-url" onclick="selectTab('url')" class="dz-tab" aria-selected="false">
+          🔗 Enlace Web / Red Social
+        </button>
+        <button type="button" role="tab" id="tab-archivo" onclick="selectTab('archivo')" class="dz-tab" aria-selected="false">
+          📁 Imagen (OCR) o Audio (STT)
+        </button>
+      </div>
+
+      <!-- Cuerpo del Formulario -->
+      <form id="form-verificar" onsubmit="iniciarProceso(event)" class="p-6 space-y-4">
+
+        <!-- Panel 1: Texto -->
+        <div id="campo-texto" class="space-y-1.5">
+          <label for="input-texto" class="block font-bold text-sm text-slate-800">
+            Texto de la cadena, titular o afirmación:
+          </label>
+          <textarea id="input-texto" rows="5" class="dz-campo resize-y" placeholder="Pegue aquí el texto de la cadena de WhatsApp o mensaje a contrastar...">El gobierno nacional anunció un subsidio extraordinario de vivienda para todos los mayores de 40 años a partir del próximo mes.</textarea>
+          <div class="flex justify-between items-center text-xs text-slate-500 pt-1">
+            <span>Mínimo 10 caracteres requeridos</span>
+            <span id="char-count">131 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Panel 2: URL (Oculto por defecto) -->
+        <div id="campo-url" class="space-y-1.5 hidden">
+          <label for="input-url" class="block font-bold text-sm text-slate-800">
+            Enlace de la noticia o publicación:
+          </label>
+          <input type="url" id="input-url" class="dz-campo" placeholder="https://www.ejemplo.com/noticia-o-comentario">
+          <p class="text-xs text-slate-500">Admite portales de noticias, publicaciones en X, Facebook o enlaces de video.</p>
+        </div>
+
+        <!-- Panel 3: Archivo (Oculto por defecto) -->
+        <div id="campo-archivo" class="space-y-3 hidden">
+          <label class="block font-bold text-sm text-slate-800">
+            Cargar captura de pantalla, meme o nota de voz:
+          </label>
+          <div class="border-2 border-dashed border-slate-300 hover:border-slate-800 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50" onclick="simularCargaArchivo()">
+            <div class="text-3xl mb-1">📂</div>
+            <p class="font-bold text-slate-800 text-sm">Haga clic o arrastre el archivo aquí</p>
+            <p class="text-xs text-slate-500 mt-1">Imágenes: PNG, JPG (OCR) · Audio: MP3, WAV, M4A (STT) · Máx 20 MB</p>
+            <div id="file-loaded-badge" class="mt-2 hidden inline-block bg-green-100 text-green-800 font-bold px-3 py-1 rounded-full text-xs border border-green-300">
+              ✔ Captura_WhatsApp_Panfleto.png cargada
+            </div>
+          </div>
+          <div>
+            <label for="contexto-archivo" class="block font-bold text-xs text-slate-700 mb-1">Contexto o pregunta sobre el archivo (opcional):</label>
+            <input type="text" id="contexto-archivo" class="dz-campo text-sm" placeholder="Ej: Me llegó en un grupo familiar diciendo que era de hoy...">
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex flex-col-reverse sm:flex-row justify-end items-center gap-3 pt-2">
+          <button type="button" onclick="limpiar()" class="dz-btn dz-btn-secundario w-full sm:w-auto">
+            ✖ Limpiar
+          </button>
+          <button type="submit" class="dz-btn dz-btn-primario w-full sm:w-auto shadow-md">
+            <span>🔍 Verificar Ahora</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- FASE 2: Pantalla de Procesamiento del Pipeline (Simulación) -->
+    <section id="panel-procesando" class="dz-tarjeta p-6 sm:p-8 space-y-5 hidden">
+      <div class="flex items-center gap-3">
+        <div class="spinner"></div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Analizando y contrastando contenido...</h2>
+          <p class="text-sm text-slate-600">Ejecutando el motor de verificación multicapa DAGAZ.</p>
+        </div>
+      </div>
+
+      <div class="space-y-3 pt-2 text-sm">
+        <div id="step-1" class="flex items-center gap-2.5 font-semibold text-slate-900">
+          <span class="text-base">⏳</span> Paso 1: Normalización multicanal y extracción de entidades...
+        </div>
+        <div id="step-2" class="flex items-center gap-2.5 text-slate-500">
+          <span class="text-base">⚪</span> Paso 2: Descomposición en afirmaciones atómicas (REQ-01, REQ-03)...
+        </div>
+        <div id="step-3" class="flex items-center gap-2.5 text-slate-500">
+          <span class="text-base">⚪</span> Paso 3: Búsqueda de evidencia en el Grafo de 80 Fuentes (REQ-05, REQ-20)...
+        </div>
+        <div id="step-4" class="flex items-center gap-2.5 text-slate-500">
+          <span class="text-base">⚪</span> Paso 4: Análisis de sesgo emocional y lenguaje sensacionalista (REQ-04)...
+        </div>
+        <div id="step-5" class="flex items-center gap-2.5 text-slate-500">
+          <span class="text-base">⚪</span> Paso 5: Ponderación matemática y síntesis del veredicto explicable...
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <span>Mockup siguiente:</span>
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Ver Pantalla de Veredicto y Resultado (CU06 / CU01 / CU02 / CU03) ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2.5 py-1 text-sm font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2.5 py-1 text-sm font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2.5 py-1 text-sm font-bold rounded bg-slate-900 text-white'
+        : 'px-2.5 py-1 text-sm font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function selectTab(tab) {
+      ['texto', 'url', 'archivo'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+        document.getElementById(`tab-${t}`).setAttribute('aria-selected', t === tab ? 'true' : 'false');
+        document.getElementById(`campo-${t}`).classList.toggle('hidden', t !== tab);
+      });
+    }
+
+    function simularCargaArchivo() {
+      document.getElementById('file-loaded-badge').classList.remove('hidden');
+    }
+
+    function limpiar() {
+      document.getElementById('input-texto').value = '';
+      document.getElementById('input-url').value = '';
+      document.getElementById('file-loaded-badge').classList.add('hidden');
+    }
+
+    function iniciarProceso(e) {
+      e.preventDefault();
+      document.getElementById('panel-entrada').classList.add('hidden');
+      document.getElementById('panel-procesando').classList.remove('hidden');
+
+      const steps = [
+        { id: 'step-1', icon: '✔', text: 'Paso 1: Normalización completada' },
+        { id: 'step-2', icon: '✔', text: 'Paso 2: Afirmación atómica aislada con éxito' },
+        { id: 'step-3', icon: '✔', text: 'Paso 3: Evidencias recuperadas en fuentes oficiales' },
+        { id: 'step-4', icon: '✔', text: 'Paso 4: Análisis de lenguaje y sesgo finalizado' },
+        { id: 'step-5', icon: '✔', text: 'Paso 5: Veredicto generado y sellado' },
+      ];
+
+      steps.forEach((step, index) => {
+        setTimeout(() => {
+          const el = document.getElementById(step.id);
+          el.className = 'flex items-center gap-2.5 font-bold text-green-700';
+          el.innerHTML = `<span class="text-base text-green-600">${step.icon}</span> ${step.text}`;
+          if (index < steps.length - 1) {
+            const nextEl = document.getElementById(steps[index + 1].id);
+            nextEl.className = 'flex items-center gap-2.5 font-semibold text-slate-900';
+            nextEl.innerHTML = `<span class="text-base">⏳</span> ` + nextEl.innerText.replace('⚪ ', '');
+          } else {
+            setTimeout(() => {
+              window.location.href = 'CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html';
+            }, 800);
+          }
+        }, (index + 1) * 700);
+      });
+    }
+  </script>
+</body>
+</html>

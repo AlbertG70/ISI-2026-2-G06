@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 640" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .btn-danger { fill: #f0f0f0; stroke: #111111; stroke-width: 2; cursor: pointer; }
+    .meta { font-size: 11px; fill: #555555; }
+    .label { font-size: 11px; font-weight: bold; }
+    .btn-text { font-size: 11px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 16px; font-weight: bold; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="620" class="frame" />
+
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-08: PERFIL Y HABEAS DATA (/perfil)</text>
+
+  <!-- Title Section -->
+  <g transform="translate(24, 48)">
+    <text x="0" y="18" class="title">Mi Cuenta - Ley 1581 de 2012</text>
+    <text x="0" y="34" class="meta">Garantias de Proteccion de Datos Personales</text>
+  </g>
+  <line x1="24" y1="90" x2="396" y2="90" stroke="#cccccc" />
+
+  <!-- Content Cards -->
+  <g transform="translate(24, 102)">
+    
+    <!-- CARD 1: DATOS TITULAR -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="372" height="90" class="card" />
+      <text x="12" y="20" font-size="12" font-weight="bold">DATOS DEL TITULAR:</text>
+      <line x1="12" y1="28" x2="358" y2="28" stroke="#eeeeee" />
+
+      <text x="12" y="48" class="label">CORREO: alberto.galvis@ejemplo.com</text>
+      <text x="12" y="68" class="meta">ROL: Ciudadano (+40) | REGISTRO: 15 sep 2026</text>
+    </g>
+
+    <!-- CARD 2: GARANTIAS LEY 1581 -->
+    <g transform="translate(0, 98)">
+      <rect x="0" y="0" width="372" height="254" class="card" />
+      <text x="12" y="20" font-size="12" font-weight="bold">GARANTIAS DE HABEAS DATA (LEY 1581):</text>
+      <line x1="12" y1="28" x2="358" y2="28" stroke="#eeeeee" />
+
+      <!-- Subcard 1: Portabilidad -->
+      <g transform="translate(12, 38)">
+        <rect x="0" y="0" width="348" height="88" fill="#fafafa" stroke="#999999" stroke-width="1.5" />
+        <text x="10" y="20" font-size="11" font-weight="bold">Portabilidad: Descargar copia de datos</text>
+        <text x="10" y="36" class="meta">Genera archivo estructurado JSON con su historial.</text>
+
+        <!-- Button Hitbox -->
+        <g transform="translate(10, 48)">
+          <rect x="0" y="0" width="220" height="32" class="btn-hitbox" fill="#e5e7eb" />
+          <text x="110" y="20" class="btn-text">[ BOTON: Descargar (.json) ]</text>
+        </g>
+      </g>
+
+      <!-- Subcard 2: Derecho al Olvido -->
+      <g transform="translate(12, 134)">
+        <rect x="0" y="0" width="348" height="106" fill="#ffffff" stroke="#111111" stroke-width="1.5" stroke-dasharray="3,3" />
+        <text x="10" y="20" font-size="11" font-weight="bold">Derecho al Olvido: Supresion Definitiva</text>
+        <text x="10" y="36" class="meta">Borra credenciales, desvincula historial y notas.</text>
+
+        <!-- Danger Button Hitbox -->
+        <g transform="translate(10, 52)">
+          <rect x="0" y="0" width="230" height="42" class="btn-danger" />
+          <text x="115" y="26" font-size="11" font-weight="bold" text-anchor="middle">[ BOTON: ELIMINAR MI CUENTA ]</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Logout Button Hitbox -->
+    <g transform="translate(36, 362)">
+      <rect x="0" y="0" width="300" height="42" class="btn-hitbox" />
+      <text x="150" y="26" class="btn-text">[ BOTON: Cerrar sesion en este equipo ]</text>
+    </g>
+  </g>
+
+  <!-- Bottom Nav Bar (Cuenta Active) -->
+  <g transform="translate(24, 554)">
+    <rect x="0" y="0" width="372" height="56" class="nav-box" />
+
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Verificar</text>
+    </g>
+
+    <g transform="translate(93, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Historial</text>
+    </g>
+
+    <g transform="translate(186, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Fuentes</text>
+    </g>
+
+    <g transform="translate(279, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="46" y="33" class="btn-text">[CUENTA]</text>
+    </g>
+  </g>
+</svg>

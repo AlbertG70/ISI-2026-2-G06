@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 640" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .input-hitbox { fill: #fafafa; stroke: #666666; stroke-width: 1.5; }
+    .meta { font-size: 11px; fill: #555555; }
+    .label { font-size: 12px; font-weight: bold; }
+    .btn-text { font-size: 11px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 16px; font-weight: bold; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="620" class="frame" />
+
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-07: GRAFO DE FUENTES (/fuentes)</text>
+
+  <!-- Title Section -->
+  <g transform="translate(24, 48)">
+    <text x="0" y="18" class="title">Grafo de Credibilidad (CU07)</text>
+    <text x="0" y="34" class="meta">Catalogo de 80 fuentes de noticias | REQ-08</text>
+  </g>
+  <line x1="24" y1="90" x2="396" y2="90" stroke="#cccccc" />
+
+  <!-- Filters Hitbox -->
+  <g transform="translate(24, 102)">
+    <rect x="0" y="0" width="372" height="64" class="card" />
+    <g transform="translate(12, 10)">
+      <text x="0" y="10" class="label">Buscar medio:</text>
+      <rect x="0" y="18" width="168" height="28" class="input-hitbox" />
+      <text x="10" y="36" font-size="11" fill="#777777">[ Input: Medio ]</text>
+    </g>
+
+    <g transform="translate(192, 10)">
+      <text x="0" y="10" class="label">Filtrar nivel:</text>
+      <rect x="0" y="18" width="168" height="28" class="input-hitbox" />
+      <text x="10" y="36" font-size="11">[ Select: Nivel 1-4 ]</text>
+    </g>
+  </g>
+
+  <!-- Legend Hitbox -->
+  <g transform="translate(24, 174)">
+    <rect x="0" y="0" width="372" height="28" fill="#fafafa" stroke="#cccccc" stroke-width="1" />
+    <text x="10" y="18" class="meta">[ Escala: >75% Alta | 40-75% Media | &lt;40% Baja | Certificada IFCN ]</text>
+  </g>
+
+  <!-- Source Cards Hitboxes -->
+  <g transform="translate(24, 210)">
+    
+    <!-- Source 1: Reuters -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="372" height="110" class="card" />
+
+      <text x="12" y="24" font-size="13" font-weight="bold">Reuters | Nivel 1 (Internacional)</text>
+      
+      <!-- Metric Hitbox -->
+      <rect x="286" y="10" width="74" height="24" class="btn-hitbox" />
+      <text x="323" y="26" font-size="11" font-weight="bold" text-anchor="middle">[ 98% ]</text>
+
+      <line x1="12" y1="46" x2="358" y2="46" stroke="#eeeeee" />
+
+      <!-- Citizen Rating Hitbox (CU07) -->
+      <text x="12" y="74" class="meta">Valoracion ciudadana:</text>
+      <g transform="translate(160, 58)">
+        <rect x="0" y="0" width="96" height="32" class="btn-hitbox" />
+        <text x="48" y="20" class="btn-text">[ Confiable ]</text>
+
+        <rect x="102" y="0" width="96" height="32" class="btn-hitbox" />
+        <text x="150" y="20" class="btn-text">[ No fiable ]</text>
+      </g>
+    </g>
+
+    <!-- Source 2: ColombiaCheck -->
+    <g transform="translate(0, 118)">
+      <rect x="0" y="0" width="372" height="110" class="card" />
+
+      <text x="12" y="24" font-size="13" font-weight="bold">ColombiaCheck | Nivel 4 (IFCN Fact-checker)</text>
+      
+      <rect x="286" y="10" width="74" height="24" class="btn-hitbox" />
+      <text x="323" y="26" font-size="11" font-weight="bold" text-anchor="middle">[ 94% ]</text>
+
+      <line x1="12" y1="46" x2="358" y2="46" stroke="#eeeeee" />
+
+      <!-- Voted state -->
+      <g transform="translate(12, 64)">
+        <rect x="0" y="0" width="220" height="26" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+        <text x="10" y="17" font-size="11" font-weight="bold">[ ESTADO: Calificacion guardada ]</text>
+      </g>
+    </g>
+
+    <!-- Source 3: El Espectador -->
+    <g transform="translate(0, 236)">
+      <rect x="0" y="0" width="372" height="98" class="card" />
+
+      <text x="12" y="24" font-size="13" font-weight="bold">El Espectador | Nivel 3 (Prensa Nacional)</text>
+      
+      <rect x="286" y="10" width="74" height="24" class="btn-hitbox" />
+      <text x="323" y="26" font-size="11" font-weight="bold" text-anchor="middle">[ 85% ]</text>
+
+      <line x1="12" y1="46" x2="358" y2="46" stroke="#eeeeee" />
+
+      <text x="12" y="70" class="meta">Valoracion ciudadana:</text>
+      <g transform="translate(160, 54)">
+        <rect x="0" y="0" width="96" height="32" class="btn-hitbox" />
+        <text x="48" y="20" class="btn-text">[ Confiable ]</text>
+
+        <rect x="102" y="0" width="96" height="32" class="btn-hitbox" />
+        <text x="150" y="20" class="btn-text">[ No fiable ]</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom Nav Bar (Fuentes Active) -->
+  <g transform="translate(24, 554)">
+    <rect x="0" y="0" width="372" height="56" class="nav-box" />
+
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Verificar</text>
+    </g>
+
+    <g transform="translate(93, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Historial</text>
+    </g>
+
+    <g transform="translate(186, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="46" y="33" class="btn-text">[FUENTES]</text>
+    </g>
+
+    <g transform="translate(279, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Cuenta</text>
+    </g>
+  </g>
+</svg>

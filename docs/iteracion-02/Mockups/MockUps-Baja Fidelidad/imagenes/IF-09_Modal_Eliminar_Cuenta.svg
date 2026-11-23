@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .modal-box { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .btn-danger { fill: #e5e7eb; stroke: #111111; stroke-width: 2; cursor: pointer; }
+    .input-hitbox { fill: #fafafa; stroke: #666666; stroke-width: 1.5; }
+    .meta { font-size: 11px; fill: #555555; }
+    .label { font-size: 11px; font-weight: bold; }
+    .btn-text { font-size: 11px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 15px; font-weight: bold; fill: #111111; text-anchor: middle; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  
+  <!-- Outer Mobile Screen Hitbox -->
+  <rect x="10" y="10" width="400" height="500" class="frame" />
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-09: MODAL SUPRESION DE CUENTA</text>
+
+  <!-- Semi-transparent backdrop overlay -->
+  <rect x="10" y="38" width="400" height="472" fill="#000000" opacity="0.25" />
+
+  <!-- Center Modal Window Hitbox (<dialog>) -->
+  <g transform="translate(36, 80)">
+    <rect x="0" y="0" width="348" height="380" class="modal-box" rx="6" />
+
+    <rect x="0" y="0" width="348" height="26" fill="#f0f0f0" stroke="#111111" stroke-width="1" rx="6" />
+    <text x="174" y="18" font-size="10" font-weight="bold" fill="#111111" text-anchor="middle">[ HITBOX: DIALOGO MODAL NATIVO &lt;dialog&gt; ]</text>
+
+    <!-- Warning Hitbox -->
+    <g transform="translate(114, 42)">
+      <rect x="0" y="0" width="120" height="36" class="btn-hitbox" stroke-dasharray="3,3" />
+      <text x="60" y="23" font-size="12" font-weight="bold" text-anchor="middle">[ ATENCION ]</text>
+    </g>
+
+    <!-- Modal Headings -->
+    <text x="174" y="112" class="title">Confirmar supresion definitiva?</text>
+    <text x="174" y="132" class="meta" text-anchor="middle">Esta accion es irreversible conforme a la</text>
+    <text x="174" y="148" class="meta" text-anchor="middle">Ley 1581 de 2012. Toda su informacion sera</text>
+    <text x="174" y="164" class="meta" text-anchor="middle">eliminada permanentemente de los servidores.</text>
+    
+    <line x1="16" y1="180" x2="332" y2="180" stroke="#cccccc" stroke-dasharray="3,3" />
+
+    <!-- Password Input Field Hitbox -->
+    <g transform="translate(16, 194)">
+      <text x="0" y="14" class="label">Ingrese contrasena para autorizar:</text>
+      <rect x="0" y="24" width="316" height="42" class="input-hitbox" />
+      <text x="12" y="50" font-size="11" fill="#666666">| Input: ****************</text>
+    </g>
+
+    <!-- Action Buttons Hitboxes -->
+    <g transform="translate(16, 290)">
+      <!-- Cancel -->
+      <rect x="0" y="0" width="100" height="46" class="btn-hitbox" />
+      <text x="50" y="28" class="btn-text">[ Cancelar ]</text>
+
+      <!-- Danger Delete (>=48px) -->
+      <rect x="110" y="0" width="206" height="46" class="btn-danger" />
+      <text x="213" y="28" font-size="11" font-weight="bold" fill="#111111" text-anchor="middle">[ Si, eliminar cuenta ]</text>
+    </g>
+
+    <text x="174" y="360" font-size="10" class="meta" text-anchor="middle">[ Foco accesible atrapado | Cierra con Esc ]</text>
+  </g>
+</svg>

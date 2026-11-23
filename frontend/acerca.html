@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAGAZ - Acerca del Proyecto | Detección de Desinformación</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dagaz-dark': '#1a1a2e',
+                        'dagaz-light': '#faf8f5',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-dagaz-light text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+    
+    <header x-data="{ mobileMenuOpen: false }" class="bg-dagaz-dark text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center gap-3" aria-label="Ir al inicio de DAGAZ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 22L20 2L4 2L20 22"></path>
+                            <path d="M4 2V22"></path>
+                            <path d="M20 2V22"></path>
+                        </svg>
+                        <span class="text-3xl font-bold tracking-wider uppercase">Dagaz</span>
+                    </a>
+                </div>
+                
+                <nav class="hidden md:flex space-x-6 items-center">
+                    <a href="index.html" class="text-xl font-medium px-4 py-2.5 rounded-lg text-white hover:bg-gray-800 transition-colors">Verificar</a>
+                    <a href="fuentes.html" class="text-xl font-medium px-4 py-2.5 rounded-lg text-white hover:bg-gray-800 transition-colors">Fuentes</a>
+                    <a href="acerca.html" class="text-xl font-bold px-4 py-2.5 rounded-lg bg-white text-dagaz-dark shadow transition-colors">Acerca de</a>
+                </nav>
+
+                <div class="md:hidden flex items-center">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-3 rounded-lg text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white min-h-[48px] min-w-[48px]" aria-label="Abrir menú principal">
+                        <svg x-show="!mobileMenuOpen" class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg x-show="mobileMenuOpen" style="display: none;" class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="mobileMenuOpen" style="display: none;" class="md:hidden border-t border-gray-700 bg-dagaz-dark">
+            <div class="px-4 pt-3 pb-6 space-y-2">
+                <a href="index.html" class="block px-4 py-4 rounded-lg text-xl font-medium text-white hover:bg-gray-800 min-h-[48px]">Verificar</a>
+                <a href="fuentes.html" class="block px-4 py-4 rounded-lg text-xl font-medium text-white hover:bg-gray-800 min-h-[48px]">Fuentes</a>
+                <a href="acerca.html" class="block px-4 py-4 rounded-lg text-xl font-bold bg-white text-dagaz-dark min-h-[48px]">Acerca de</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="bg-white rounded-3xl shadow-xl p-8 sm:p-12 border border-gray-200">
+            <h1 class="text-4xl sm:text-5xl font-black text-gray-900 mb-8 border-b pb-6">Acerca de DAGAZ</h1>
+            
+            <div class="space-y-12">
+                <!-- Propósito -->
+                <section>
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 flex items-center gap-3">
+                        <span>🇨🇴</span> ¿Qué es la plataforma DAGAZ?
+                    </h2>
+                    <p class="text-2xl leading-relaxed text-gray-700 font-normal">
+                        <strong>DAGAZ</strong> es una plataforma de verificación de hechos (<em>fact-checking</em>) concebida para mitigar el impacto de la desinformación, cadenas falsas y titulares engañosos en Colombia. 
+                        Está orientada con especial énfasis en la accesibilidad para <strong>Adultos Mayores</strong>, quienes a menudo reciben cadenas virales en WhatsApp, Telegram y redes sociales sin herramientas inmediatas para comprobar su veracidad.
+                    </p>
+                </section>
+
+                <!-- Cómo Funciona -->
+                <section class="bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">¿Cómo funciona la verificación?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="flex flex-col items-center text-center bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <div class="w-16 h-16 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-3xl font-black mb-4">1</div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Ingreso Multicanal</h3>
+                            <p class="text-xl text-gray-600">Pega el texto sospechoso, escribe el enlace web o adjunta una captura de pantalla.</p>
+                        </div>
+                        
+                        <div class="flex flex-col items-center text-center bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-3xl font-black mb-4">2</div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Cruce Vectorial (RAG)</h3>
+                            <p class="text-xl text-gray-600">El sistema extrae afirmaciones atómicas y busca evidencia semántica exacta en PostgreSQL pgvector.</p>
+                        </div>
+                        
+                        <div class="flex flex-col items-center text-center bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <div class="w-16 h-16 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-3xl font-black mb-4">3</div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Veredicto Explicable</h3>
+                            <p class="text-xl text-gray-600">Recibe una etiqueta clara (Verdadero/Falso/Engañoso) con puntaje de confianza y citas verificables.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Grafo Jerárquico de Fuentes -->
+                <section>
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Grafo Jerárquico de Credibilidad</h2>
+                    <p class="text-2xl text-gray-700 mb-6">
+                        Para prevenir sesgos y asegurar solidez, toda evidencia se contrasta contra fuentes clasificadas por niveles:
+                    </p>
+                    <div class="space-y-4">
+                        <div class="p-5 rounded-2xl border-l-8 border-green-600 bg-green-50">
+                            <h4 class="text-2xl font-bold text-green-900">Nivel 1: Agencias Internacionales y Multilaterales</h4>
+                            <p class="text-xl text-gray-700 mt-1">Reuters, AP, AFP, BBC, OMS, ONU, OCDE, EFE.</p>
+                        </div>
+                        <div class="p-5 rounded-2xl border-l-8 border-blue-600 bg-blue-50">
+                            <h4 class="text-2xl font-bold text-blue-900">Nivel 2: Prensa Regional Colombiana</h4>
+                            <p class="text-xl text-gray-700 mt-1">El Colombiano, El Heraldo, El País Cali, Vanguardia.</p>
+                        </div>
+                        <div class="p-5 rounded-2xl border-l-8 border-yellow-600 bg-yellow-50">
+                            <h4 class="text-2xl font-bold text-yellow-900">Nivel 3: Prensa Nacional Colombiana</h4>
+                            <p class="text-xl text-gray-700 mt-1">El Tiempo, El Espectador, Semana, Portafolio.</p>
+                        </div>
+                        <div class="p-5 rounded-2xl border-l-8 border-purple-600 bg-purple-50">
+                            <h4 class="text-2xl font-bold text-purple-900">Nivel 4: Verificadores Certificados IFCN</h4>
+                            <p class="text-xl text-gray-700 mt-1">ColombiaCheck, La Silla Vacía, AFP Factual, Chequeado.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Información del Equipo -->
+                <section class="border-t pt-8">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-3">Equipo y Marco Académico</h2>
+                    <p class="text-xl text-gray-700">
+                        Proyecto desarrollado por <strong>ISI-CORP (Periodo 2026-II)</strong>. 
+                        Diseñado bajo principios de código limpio, accesibilidad universal y rigor científico.
+                    </p>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-10 mt-auto border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
+            <span class="text-2xl font-bold tracking-wider uppercase mb-2 block">Dagaz</span>
+            <p class="text-lg text-gray-400">&copy; 2026 Proyecto DAGAZ. ISI-CORP.</p>
+        </div>
+    </footer>
+</body>
+</html>

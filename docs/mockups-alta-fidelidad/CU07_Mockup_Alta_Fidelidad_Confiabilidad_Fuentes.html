@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU07: Grafo de Credibilidad de Fuentes · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.2rem !important; }
+    .text-large .dz-btn { font-size: 1.15rem !important; min-height: 54px !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-campo { width: 100%; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.75rem 1rem; font-size: 1rem; outline: none; }
+    .dz-campo:focus { border-color: #1f2937; box-shadow: 0 0 0 3px rgba(31,41,55,0.15); }
+    .dz-btn { min-height: 48px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.25rem; transition: all 0.15s ease; cursor: pointer; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; }
+    .dz-tab { padding: 0.65rem 1rem; font-weight: 700; font-size: 0.95rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.15s ease; }
+    .dz-tab.active { background: #1f2937; color: #ffffff; }
+    .dz-tab:not(.active) { background: #f3f4f6; color: #4b5563; }
+    .dz-tab:not(.active):hover { background: #e5e7eb; color: #111827; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-3xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU07 (Grafo de Credibilidad de Fuentes)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-08, REQ-14, REQ-20</div>
+      <div><strong>Corpus:</strong> 80 fuentes oficiales</div>
+      <div><strong>Niveles:</strong> N1 a N4 jerárquicos</div>
+      <div><strong>Admin:</strong> Reclasificación de peso</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-3xl mx-auto w-full my-auto space-y-5">
+
+    <!-- Cabecera -->
+    <header class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+          <span class="text-xs text-slate-500 block">Grafo de Medios y Fuentes</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1 mr-2">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100">A+</button>
+        </div>
+        <button type="button" onclick="toggleAdminPanel()" class="dz-btn bg-indigo-900 text-white text-xs py-2 px-3 shadow-sm font-bold">
+          🛠️ Modo Admin
+        </button>
+      </div>
+    </header>
+
+    <!-- Explicación de Jerarquía de 4 Niveles -->
+    <section class="dz-tarjeta p-5 space-y-2">
+      <h1 class="text-2xl font-extrabold text-slate-900">Directorio y Grafo de Credibilidad (80 Fuentes)</h1>
+      <p class="text-sm text-slate-600">
+        DAGAZ pondera matemáticamente los veredictos dando mayor peso a organismos primarios, agencias internacionales y verificadores certificados por la IFCN.
+      </p>
+
+      <!-- Pestañas de Nivel (REQ-08, REQ-14, REQ-20) -->
+      <div class="flex flex-wrap gap-1.5 pt-2">
+        <button type="button" onclick="filtrarNivel('todos')" class="dz-tab active">Todas (80)</button>
+        <button type="button" onclick="filtrarNivel(1)" class="dz-tab">Nivel 1: Internacional / Oficial (15)</button>
+        <button type="button" onclick="filtrarNivel(2)" class="dz-tab">Nivel 2: Prensa Regional Colombia (25)</button>
+        <button type="button" onclick="filtrarNivel(3)" class="dz-tab">Nivel 3: Prensa Nacional (25)</button>
+        <button type="button" onclick="filtrarNivel(4)" class="dz-tab">Nivel 4: Fact-checkers IFCN (15)</button>
+      </div>
+    </section>
+
+    <!-- Lista de Fuentes de Alta Fidelidad -->
+    <section class="space-y-3">
+
+      <!-- Fuente 1 (Nivel 1) -->
+      <article class="fuente-card dz-tarjeta p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" data-nivel="1">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="relative w-[52px] h-[52px] flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-emerald-100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-emerald-700" stroke-dasharray="98, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-xs font-extrabold text-emerald-900">98%</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h2 class="font-extrabold text-slate-900 text-base">Reuters News Agency</h2>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">Nivel 1 · Internacional</span>
+            </div>
+            <p class="text-xs text-slate-500">https://www.reuters.com · Cobertura global certificada</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0">
+          <button type="button" onclick="votarFuente(this, 'confiable')" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800">
+            👍 Confiable (98%)
+          </button>
+          <button type="button" onclick="votarFuente(this, 'dudosa')" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs text-slate-600">
+            👎
+          </button>
+        </div>
+      </article>
+
+      <!-- Fuente 2 (Nivel 4: Fact-checker) -->
+      <article class="fuente-card dz-tarjeta p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" data-nivel="4">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="relative w-[52px] h-[52px] flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-blue-100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-blue-700" stroke-dasharray="96, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-xs font-extrabold text-blue-900">96%</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h2 class="font-extrabold text-slate-900 text-base">ColombiaCheck</h2>
+              <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full border border-blue-300">Nivel 4 · IFCN Signatario</span>
+            </div>
+            <p class="text-xs text-slate-500">https://colombiacheck.com · Verificación electoral y desinformación</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0">
+          <button type="button" onclick="votarFuente(this, 'confiable')" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800">
+            👍 Confiable (96%)
+          </button>
+          <button type="button" onclick="votarFuente(this, 'dudosa')" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs text-slate-600">
+            👎
+          </button>
+        </div>
+      </article>
+
+      <!-- Fuente 3 (Nivel 2: Prensa Regional) -->
+      <article class="fuente-card dz-tarjeta p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" data-nivel="2">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="relative w-[52px] h-[52px] flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-amber-100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-amber-700" stroke-dasharray="88, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-xs font-extrabold text-amber-900">88%</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h2 class="font-extrabold text-slate-900 text-base">El Colombiano (Medellín)</h2>
+              <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-300">Nivel 2 · Regional</span>
+            </div>
+            <p class="text-xs text-slate-500">https://www.elcolombiano.com · Prensa regional de Antioquia y Eje Cafetero</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0">
+          <button type="button" onclick="votarFuente(this, 'confiable')" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800">
+            👍 Confiable (88%)
+          </button>
+          <button type="button" onclick="votarFuente(this, 'dudosa')" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs text-slate-600">
+            👎
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <!-- Modal / Panel de Reclasificación de Administrador (FA1 CU07) -->
+    <section id="panel-admin" class="dz-tarjeta p-5 border-2 border-indigo-700 bg-indigo-50/50 space-y-3 hidden">
+      <div class="flex justify-between items-center border-b border-indigo-200 pb-2">
+        <h2 class="font-black text-indigo-950 text-base flex items-center gap-2">
+          🛠️ Reclasificación de Fuente por Administrador (CU07 · FA1)
+        </h2>
+        <button type="button" onclick="toggleAdminPanel()" class="text-xs font-bold text-indigo-900">✖ Cerrar</button>
+      </div>
+      <form onsubmit="guardarReclasificacion(event)" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Medio / Fuente:</label>
+            <input type="text" value="El Colombiano" class="dz-campo text-xs" readonly>
+          </div>
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Nivel Jerárquico:</label>
+            <select class="dz-campo text-xs">
+              <option value="1">Nivel 1: Internacional / Oficial</option>
+              <option value="2" selected>Nivel 2: Prensa Regional</option>
+              <option value="3">Nivel 3: Prensa Nacional</option>
+              <option value="4">Nivel 4: Fact-checker IFCN</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Índice Base (%):</label>
+            <input type="number" min="0" max="100" value="88" class="dz-campo text-xs">
+          </div>
+        </div>
+        <button type="submit" class="dz-btn text-xs bg-indigo-900 text-white font-bold py-2 px-4">
+          ✔ Actualizar Clasificación en Base de Datos
+        </button>
+      </form>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <a href="CU04_Mockup_Alta_Fidelidad_Historial_Noticias.html" class="underline font-bold">⬅ Volver a Historial</a>
+      <a href="index.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Ir a la Galería Completa de Mockups ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-3xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white'
+        : 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function filtrarNivel(nivel) {
+      document.querySelectorAll('.dz-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.querySelectorAll('.fuente-card').forEach(card => {
+        if (nivel === 'todos' || card.dataset.nivel === String(nivel)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function toggleAdminPanel() {
+      document.getElementById('panel-admin').classList.toggle('hidden');
+    }
+
+    function votarFuente(btn, tipo) {
+      alert(`Valoración registrada como '${tipo}'. Se actualizó el promedio comunitario.`);
+    }
+
+    function guardarReclasificacion(e) {
+      e.preventDefault();
+      alert('Clasificación de la fuente actualizada exitosamente por el administrador.');
+      toggleAdminPanel();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+name: DAGAZ CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "Backend-RAiden", "develop" ]
+  pull_request:
+    branches: [ "main", "Backend-RAiden" ]
+
+jobs:
+  backend-tests:
+    name: Backend Tests & Quality Gate (PHP 8.4 / Laravel 12)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo, pdo_sqlite, sqlite3, bcmath, curl, openssl, tokenizer
+          coverage: none
+
+      - name: Cache de Dependencias de Composer
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Instalar Dependencias de Composer
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
+      - name: Configurar Entorno Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Ejecutar Pruebas Automatizadas (PHPUnit)
+        run: php artisan test
+
+  frontend-tests:
+    name: Frontend Tests & Build (Node 22 / Vite 8 / Vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar Dependencias de Frontend
+        run: npm ci
+
+      - name: Ejecutar Pruebas Unitarias y de Aceptación (Vitest)
+        run: npm test -- --run
+
+      - name: Compilar Assets de Producción (Vite + Tailwind v4)
+        run: npm run build
+
+      - name: Guardar Artefactos de Frontend Dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          retention-days: 2
+
+  mobile-container:
+    name: Mobile Capacitor Sync Check (Android)
+    needs: frontend-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Descargar Artefactos Compilados de Frontend
+        uses: actions/download-artifact@v4.1.3
+        with:
+          name: frontend-dist
+          path: frontend/dist
+
+      - name: Instalar Dependencias de Mobile
+        working-directory: mobile
+        run: npm ci
+
+      - name: Sincronizar Contenedor Android (Capacitor Sync)
+        working-directory: mobile
+        run: npx cap sync android

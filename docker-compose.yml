@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      APP_NAME: DAGAZ
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY:-base64:VZCitFUpd9Bq2q7jhQNdGra2+qZMQQupYJ1JTk5kz4U=}
+      APP_URL: ${APP_URL:-http://localhost:8000}
+      APP_FORCE_HTTPS: ${APP_FORCE_HTTPS:-false}
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE:-dagaz}
+      DB_USERNAME: ${DB_USERNAME:-dagaz}
+      DB_PASSWORD: ${DB_PASSWORD:-dagaz_secret}
+      DB_SSLMODE: ${DB_SSLMODE:-prefer}
+      DB_URL: ${DB_URL:-}
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      TRUSTED_PROXIES: "*"
+      CORS_ALLOWED_ORIGINS: "*"
+      RUN_MIGRATIONS: "true"
+      RUN_SEEDERS: ${RUN_SEEDERS:-auto}
+      DAGAZ_IA_PROVEEDOR: ${DAGAZ_IA_PROVEEDOR:-openrouter}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DAGAZ_MULTI_MODELO_HABILITADO: ${DAGAZ_MULTI_MODELO_HABILITADO:-true}
+      OCR_SERVICE_URL: disabled
+      STT_SERVICE_URL: disabled
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-dagaz}
+      POSTGRES_USER: ${DB_USERNAME:-dagaz}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dagaz_secret}
+    volumes:
+      - dagaz_pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init-pgvector.sql:/docker-entrypoint-initdb.d/01-pgvector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-dagaz} -d ${DB_DATABASE:-dagaz}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  dagaz_pgdata:

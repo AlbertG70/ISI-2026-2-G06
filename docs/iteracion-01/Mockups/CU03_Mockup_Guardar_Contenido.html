@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+    * { font-family: 'Caveat', cursive !important; }
+    body { background: #faf8f5; }
+    .napkin-border { border: 2px solid #333; border-radius: 4px; }
+    .sketch-line { border-bottom: 1.5px dashed #999; }
+    .bookmark-icon { cursor: pointer; transition: transform 0.2s; }
+    .bookmark-icon:hover { transform: scale(1.15); }
+    .bookmark-icon.saved { color: #d97706; }
+    .source-link { text-decoration: underline; color: #2563eb; cursor: pointer; }
+    .source-link:hover { color: #1d4ed8; }
+  </style>
+</head>
+<body class="p-6">
+  <div style="max-width: 620px; margin: 0 auto;">
+
+    <!-- Titulo del mockup -->
+    <p style="font-size: 22px; color: #555; margin-bottom: 12px; text-align: center;">
+      ✏️ Mockup Servilleta — CU03: Guardar Contenido
+    </p>
+
+    <!-- Contenedor principal estilo servilleta -->
+    <div class="napkin-border" style="background: #fff; padding: 24px; position: relative;">
+
+      <!-- SECCION 1: Noticia calificada + Veredicto -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+        <div style="flex: 1;">
+          <p style="font-size: 26px; color: #222; margin: 0; font-weight: 600;">
+            📰 "Ciudad enfrenta crisis de agua potable"
+          </p>
+          <p style="font-size: 16px; color: #777; margin-top: 4px;">
+            El gobierno local confirmó que las reservas de agua han disminuido un 40% respecto al año anterior...
+          </p>
+        </div>
+        <!-- Veredicto -->
+        <div style="border: 2px solid #16a34a; border-radius: 8px; padding: 8px 14px; text-align: center; margin-left: 16px; background: #f0fdf4; min-width: 110px;">
+          <span style="font-size: 32px;">✅</span>
+          <p style="font-size: 18px; color: #16a34a; margin: 2px 0 0 0; font-weight: 600;">Verdadero</p>
+        </div>
+      </div>
+
+      <div class="sketch-line" style="margin: 12px 0;"></div>
+
+      <!-- SECCION 2: Fuentes -->
+      <div style="margin-bottom: 8px;">
+        <p style="font-size: 20px; color: #333; margin: 0 0 6px 0; font-weight: 600;">📎 Fuentes</p>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="font-size: 16px; margin-bottom: 4px;">
+            → <span class="source-link">Reuters — Informe hídrico 2026</span>
+          </li>
+          <li style="font-size: 16px; margin-bottom: 4px;">
+            → <span class="source-link">OMS — Datos de agua potable</span>
+          </li>
+          <li style="font-size: 16px; margin-bottom: 4px;">
+            → <span class="source-link">Gobierno Local — Comunicado oficial</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sketch-line" style="margin: 12px 0;"></div>
+
+      <!-- SECCION 3: Nota de comunidad -->
+      <div style="margin-bottom: 8px;">
+        <p style="font-size: 20px; color: #333; margin: 0 0 6px 0; font-weight: 600;">💬 Nota de Comunidad</p>
+        <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: #d4d4d4; border: 1.5px solid #999; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px;">👤</div>
+          <div>
+            <p style="font-size: 15px; color: #555; margin: 0;"><b>User123:</b> Puedo confirmar, vivo en la zona y las restricciones ya comenzaron.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: #d4d4d4; border: 1.5px solid #999; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px;">👤</div>
+          <div>
+            <p style="font-size: 15px; color: #555; margin: 0;"><b>Maria_R:</b> El dato del 40% coincide con lo reportado por el periódico local.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sketch-line" style="margin: 12px 0;"></div>
+
+      <!-- SECCION 4: Bookmark para guardar -->
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <p id="save-text" style="font-size: 18px; color: #888; margin: 0;">Guardar en historial</p>
+        <div id="bookmark-btn" class="bookmark-icon" onclick="toggleBookmark()" style="font-size: 40px; color: #aaa;">
+          🔖
+        </div>
+      </div>
+      <p id="saved-msg" style="display: none; text-align: right; font-size: 16px; color: #16a34a; margin: 6px 0 0 0;">
+        ✔ ¡Noticia guardada en el historial!
+      </p>
+
+    </div>
+
+    <!-- Anotaciones estilo sketch -->
+    <div style="margin-top: 16px; display: flex; justify-content: space-around; color: #aaa; font-size: 14px;">
+      <span>← Veredicto arriba →</span>
+      <span>← Fuentes al centro →</span>
+      <span>← Bookmark abajo →</span>
+    </div>
+
+  </div>
+
+  <script>
+    let saved = false;
+    function toggleBookmark() {
+      saved = !saved;
+      const btn = document.getElementById('bookmark-btn');
+      const msg = document.getElementById('saved-msg');
+      const txt = document.getElementById('save-text');
+      if (saved) {
+        btn.classList.add('saved');
+        btn.style.color = '#d97706';
+        msg.style.display = 'block';
+        txt.textContent = '¡Guardada!';
+        txt.style.color = '#16a34a';
+      } else {
+        btn.classList.remove('saved');
+        btn.style.color = '#aaa';
+        msg.style.display = 'none';
+        txt.textContent = 'Guardar en historial';
+        txt.style.color = '#888';
+      }
+    }
+  </script>
+</body>
+</html>

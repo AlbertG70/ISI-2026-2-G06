@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU06: Resultado del Veredicto y Evidencias · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.2rem !important; }
+    .text-large .dz-btn { font-size: 1.15rem !important; min-height: 54px !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-btn { min-height: 48px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.25rem; transition: all 0.15s ease; cursor: pointer; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; }
+    .dz-btn-secundario { background: #ffffff; border: 2px solid #8a8a8a; color: #1a1a1a; }
+    .dz-btn-secundario:hover { background: #f3f4f6; }
+    .dz-campo { width: 100%; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.75rem 1rem; font-size: 1rem; outline: none; }
+    .dz-campo:focus { border-color: #1f2937; box-shadow: 0 0 0 3px rgba(31,41,55,0.15); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-3xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU06 (Resultado) + CU01 + CU02 + CU03 + REQ-13
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-06, REQ-13, REQ-15</div>
+      <div><strong>Veredictos:</strong> Verdadero, Falso, Engañoso...</div>
+      <div><strong>Grafo:</strong> 80 fuentes (4 niveles)</div>
+      <div><strong>Colaborativo:</strong> Community Notes</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal de la Pantalla de Resultado -->
+  <main class="max-w-3xl mx-auto w-full my-auto space-y-6">
+
+    <!-- Navegación Superior y Acciones Rápidas -->
+    <header class="flex flex-wrap items-center justify-between gap-3">
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Entrada.html" class="inline-flex items-center gap-1.5 font-bold text-slate-800 hover:text-black py-2">
+        ← Nueva verificación
+      </a>
+
+      <!-- Selector Accesibilidad + Acciones CU03 -->
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1 mr-2">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100">A+</button>
+        </div>
+        <button type="button" onclick="compartir()" class="dz-btn dz-btn-primario text-sm py-2 px-3 shadow-sm" title="Compartir veredicto en WhatsApp o copiar enlace">
+          <span>📲</span> Compartir
+        </button>
+        <button type="button" id="btn-guardar" onclick="guardarNoticia()" class="dz-btn dz-btn-secundario text-sm py-2 px-3" title="Guardar en historial personal (CU03)">
+          ⭐ Guardar noticia
+        </button>
+      </div>
+    </header>
+
+    <!-- BLOQUE 1: Veredicto Central de Alta Fidelidad -->
+    <article class="dz-tarjeta p-6 sm:p-7 space-y-4">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Contenido Verificado</span>
+        <span class="text-xs text-slate-500">ID: <code>ver-col-2026-0814</code></span>
+      </div>
+
+      <blockquote class="border-l-4 border-slate-700 pl-4 py-1 text-lg font-semibold text-slate-900">
+        “El gobierno nacional anunció un subsidio extraordinario de vivienda para todos los mayores de 40 años a partir del próximo mes.”
+      </blockquote>
+
+      <p class="text-xs text-slate-500">
+        Verificado el 17 de octubre de 2026 a las 14:15 · Modelo de síntesis: Nemotron-3.5 RAG
+      </p>
+
+      <!-- Tarjeta del Veredicto (Falso / Desmentido Oficial) -->
+      <div id="card-veredicto" class="flex flex-wrap items-center gap-4 rounded-xl border-[3px] p-4 sm:p-5 border-red-800 bg-red-50 text-red-950 transition-colors">
+        <span class="text-5xl select-none" aria-hidden="true">❌</span>
+        <div class="min-w-0 flex-1">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-red-800 tracking-tight">Falso</h1>
+          <p class="mt-1 text-slate-800 text-base font-medium">Las fuentes oficiales de vivienda y presidencia desmienten este anuncio.</p>
+        </div>
+
+        <!-- Medidor Circular SVG de Confianza (72px) -->
+        <div class="flex flex-col items-center">
+          <div class="relative w-[72px] h-[72px] flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-red-200" stroke-width="3.5" stroke="currentColor" fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-red-700" stroke-dasharray="92, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-sm font-extrabold text-red-950">92%</span>
+          </div>
+          <span class="mt-1 text-xs font-bold text-slate-600 uppercase tracking-wide">Certeza</span>
+        </div>
+      </div>
+
+      <!-- Explicación Pedagógica para Adultos Mayores -->
+      <details class="rounded-xl border-2 border-slate-200 bg-slate-50/50 p-4" open>
+        <summary class="cursor-pointer font-bold text-slate-900 select-none flex items-center gap-2">
+          <span>ℹ️</span> ¿Por qué este veredicto? (Explicación detallada)
+        </summary>
+        <div class="mt-3 text-sm text-slate-800 leading-relaxed space-y-2">
+          <p>
+            El Ministerio de Vivienda, Ciudad y Territorio y el Departamento de Prosperidad Social confirmaron que <strong>no existe ningún decreto ni convocatoria abierta</strong> para dicho subsidio.
+          </p>
+          <p>
+            La cadena detectada utiliza el formato de suplantación de identidad institucional habitual en WhatsApp para recopilar datos personales mediante enlaces fraudulentos (phishing).
+          </p>
+        </div>
+      </details>
+
+      <!-- Insignia de Intervención Humana (REQ-13) -->
+      <div id="badge-intervenido" class="hidden inline-flex items-center gap-2 rounded-lg border-2 border-slate-900 bg-slate-900 text-white px-3.5 py-1.5 text-xs font-bold">
+        <span>✍️ Veredicto Intervenido y Rectificado por Revisor Humano (REQ-13)</span>
+      </div>
+    </article>
+
+    <!-- BLOQUE 2: Fuentes de Contraste y Evidencias (REQ-05 / REQ-20 / CU07) -->
+    <section class="dz-tarjeta p-6 space-y-4">
+      <div class="border-b-2 border-dashed border-slate-200 pb-3 flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+            <span>📎</span> Fuentes de Contraste y Evidencias
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Medios y organismos de control analizados en el Grafo de Credibilidad de 80 fuentes.
+          </p>
+        </div>
+
+        <!-- Interruptor para simular Estado de Cero Fuentes (Requerimiento reciente) -->
+        <button type="button" onclick="toggleEstadoFuentes()" class="text-xs font-semibold px-2.5 py-1 bg-amber-100 text-amber-900 rounded border border-amber-300">
+          🔄 Alternar estado sin fuentes
+        </button>
+      </div>
+
+      <!-- Lista Normal de Fuentes -->
+      <ul id="lista-fuentes-normal" class="space-y-3">
+        <!-- Fuente 1: MinVivienda (Nivel 1 Oficial) -->
+        <li class="flex items-start gap-3 border-b border-dashed border-slate-200 pb-3">
+          <div class="relative w-[52px] h-[52px] flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-emerald-100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-emerald-700" stroke-dasharray="98, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-xs font-bold text-emerald-900">98%</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <p class="font-bold text-slate-900">Ministerio de Vivienda, Ciudad y Territorio</p>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-300">Nivel 1 · Oficial</span>
+            </div>
+            <p class="mt-1 text-sm italic text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-200">
+              «El Ministerio alerta a la ciudadanía sobre mensajes fraudulentos que circulan en redes anunciando subsidios extraordinarios no existentes.»
+            </p>
+            <a href="https://minvivienda.gov.co" target="_blank" class="mt-1.5 inline-flex items-center text-xs font-bold text-blue-800 hover:underline">
+              Abrir fuente oficial ↗
+            </a>
+          </div>
+        </li>
+
+        <!-- Fuente 2: ColombiaCheck (Nivel 4 Fact-checker IFCN) -->
+        <li class="flex items-start gap-3">
+          <div class="relative w-[52px] h-[52px] flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-emerald-100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-emerald-700" stroke-dasharray="96, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span class="absolute text-xs font-bold text-emerald-900">96%</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <p class="font-bold text-slate-900">ColombiaCheck (Verificador IFCN)</p>
+              <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full border border-blue-300">Nivel 4 · Fact-checker</span>
+            </div>
+            <p class="mt-1 text-sm italic text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-200">
+              «Chequeo: Es falso que se entregará bono habitacional de emergencia para mayores de 40 años.»
+            </p>
+            <a href="https://colombiacheck.com" target="_blank" class="mt-1.5 inline-flex items-center text-xs font-bold text-blue-800 hover:underline">
+              Abrir chequeo periodístico ↗
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Tarjeta Especial: Estado Sin Fuentes Relacionadas (Requerimiento de Negocio) -->
+      <div id="lista-fuentes-vacia" class="hidden rounded-xl border-2 border-amber-300 bg-amber-50 p-4 text-amber-950 shadow-sm">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl select-none" aria-hidden="true">⚠️</span>
+          <div class="space-y-1">
+            <p class="font-bold text-base leading-snug">
+              No se encontró ninguna noticia o fuente relacionada a este tema, este veredicto es posiblemente falso, pues ningún organismo de control se ha pronunciado aún.
+            </p>
+            <p class="text-xs font-semibold text-amber-800">
+              Nota importante: Todavía no existen noticias, reportes ni evidencias oficiales sobre este tema en nuestra base de datos ni en el grafo de medios de comunicación.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOQUE 3: Notas de la Comunidad (CU01 / CU02) -->
+    <section class="dz-tarjeta p-6 space-y-4">
+      <div class="border-b-2 border-dashed border-slate-200 pb-3 flex flex-wrap justify-between items-center gap-2">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+            <span>💬</span> Notas de la Comunidad (2)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Contexto adicional aportado por ciudadanos y calificado colectivamente.
+          </p>
+        </div>
+
+        <!-- Filtros de Notas (CU02) -->
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-300 text-xs font-bold">
+          <button type="button" class="px-2.5 py-1 bg-white text-slate-900 rounded shadow-sm">Todas</button>
+          <button type="button" class="px-2.5 py-1 text-slate-600 hover:text-black">👍 Útiles</button>
+          <button type="button" class="px-2.5 py-1 text-slate-600 hover:text-black">👎 No útiles</button>
+        </div>
+      </div>
+
+      <!-- Formulario para Redactar Nota Complementaria (CU01) -->
+      <form onsubmit="publicarNota(event)" class="rounded-xl border-2 border-slate-300 bg-slate-50 p-4 space-y-3">
+        <label for="nota-texto" class="block font-bold text-sm text-slate-800">
+          ¿Tiene información o contexto adicional verificado para sumar a esta noticia?
+        </label>
+        <textarea id="nota-texto" rows="3" class="dz-campo text-sm" placeholder="Aporte enlaces oficiales o datos objetivos (mínimo 20 caracteres)..."></textarea>
+        <div class="flex justify-between items-center text-xs text-slate-500">
+          <span>Respete las normas de respeto y veracidad. Se prohíbe lenguaje ofensivo.</span>
+          <span id="char-nota">0 / 2000</span>
+        </div>
+        <div class="flex justify-end gap-2 pt-1">
+          <button type="reset" class="dz-btn dz-btn-secundario text-xs py-2 px-3">✖ Cancelar</button>
+          <button type="submit" class="dz-btn dz-btn-primario text-xs py-2 px-4 shadow">📤 Publicar Nota</button>
+        </div>
+      </form>
+
+      <!-- Lista de Notas Existentes con Votación (CU02) -->
+      <div class="space-y-3 pt-2">
+        <article class="p-4 rounded-xl border border-slate-200 bg-white space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span class="font-bold text-slate-800">👤 ca••••••@gmail.com</span>
+            <span>Hace 2 horas · 14 votos útiles</span>
+          </div>
+          <p class="text-sm text-slate-800">
+            En la página oficial de MinVivienda hay una advertencia explícita sobre esta misma cadena en su sección de avisos a la ciudadanía: www.minvivienda.gov.co/alertas-fraude
+          </p>
+          <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-xs">
+            <span class="text-green-700 font-bold">Consenso útil: 93%</span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="votar(this, 1)" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold">
+                👍 Útil (14)
+              </button>
+              <button type="button" onclick="votar(this, -1)" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold">
+                👎 No útil (1)
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- BLOQUE 4: Panel Editorial Humano (REQ-13) -->
+    <section class="dz-tarjeta p-6 border-2 border-indigo-700 bg-indigo-50/40 space-y-4">
+      <div class="flex items-center justify-between border-b border-indigo-200 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">✍️</span>
+          <h2 class="text-lg font-black text-indigo-950">Panel de Intervención Humana Editorial (REQ-13)</h2>
+        </div>
+        <span class="text-xs bg-indigo-200 text-indigo-900 font-bold px-2.5 py-1 rounded">Rol: Editor / Admin</span>
+      </div>
+      <p class="text-xs text-indigo-900">
+        Permite a periodistas y revisores autorizados rectificar la calificación automatizada cuando exista evidencia de último minuto.
+      </p>
+
+      <form onsubmit="intervenir(event)" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Clasificación Rectificada:</label>
+            <select id="editorial-tipo" class="dz-campo text-sm">
+              <option value="FALSO" selected>Falso</option>
+              <option value="VERDADERO">Verdadero</option>
+              <option value="ENGANOSO">Engañoso</option>
+              <option value="PARCIAL">Parcialmente Cierto</option>
+              <option value="NO_VERIFICABLE">No Verificable</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-xs text-slate-800 mb-1">Puntaje de Certeza (%):</label>
+            <input type="number" id="editorial-confianza" min="0" max="100" value="98" class="dz-campo text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-xs text-slate-800 mb-1">Motivo Editorial de la Intervención:</label>
+          <input type="text" id="editorial-motivo" class="dz-campo text-sm" value="Confirmación directa telefónica con sala de prensa de Presidencia de la República.">
+        </div>
+
+        <button type="submit" class="dz-btn text-xs bg-indigo-900 text-white hover:bg-indigo-950 font-bold">
+          ✍️ Guardar Rectificación Editorial y Sellar Veredicto
+        </button>
+      </form>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Entrada.html" class="underline font-bold">⬅ Volver a Entrada</a>
+      <a href="CU04_Mockup_Alta_Fidelidad_Historial_Noticias.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Ver Historial de Noticias (CU04) ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-3xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Sistema de Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white'
+        : 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function toggleEstadoFuentes() {
+      const normal = document.getElementById('lista-fuentes-normal');
+      const vacia = document.getElementById('lista-fuentes-vacia');
+      normal.classList.toggle('hidden');
+      vacia.classList.toggle('hidden');
+    }
+
+    function guardarNoticia() {
+      const btn = document.getElementById('btn-guardar');
+      btn.textContent = '✔ Guardada en Historial';
+      btn.className = 'dz-btn text-sm py-2 px-3 bg-green-700 text-white';
+      alert('Noticia guardada exitosamente en su historial personal.');
+    }
+
+    function compartir() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+        alert('¡Enlace de verificación copiado al portapapeles para compartir por WhatsApp o redes!');
+      }
+    }
+
+    function publicarNota(e) {
+      e.preventDefault();
+      const txt = document.getElementById('nota-texto').value.trim();
+      if (txt.length < 20) {
+        alert('La nota debe tener al menos 20 caracteres objetivos.');
+        return;
+      }
+      alert('¡Gracias! Su nota comunitaria ha sido publicada exitosamente.');
+      document.getElementById('nota-texto').value = '';
+    }
+
+    function votar(btn, val) {
+      btn.classList.add('bg-blue-100', 'text-blue-900');
+      alert(val === 1 ? 'Voto de utilidad registrado.' : 'Voto registrado.');
+    }
+
+    function intervenir(e) {
+      e.preventDefault();
+      document.getElementById('badge-intervenido').classList.remove('hidden');
+      alert('Veredicto rectificado formalmente por la redacción editorial humana.');
+    }
+  </script>
+</body>
+</html>

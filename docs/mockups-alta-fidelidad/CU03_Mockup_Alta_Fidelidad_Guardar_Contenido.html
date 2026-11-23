@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU03: Guardar Contenidos y Marcadores · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.15rem !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-btn { min-height: 48px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.25rem; transition: all 0.15s ease; cursor: pointer; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; }
+    .dz-btn-secundario { background: #ffffff; border: 2px solid #8a8a8a; color: #1a1a1a; }
+    .dz-btn-secundario:hover { background: #f3f4f6; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-2xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU03 (Guardar Contenidos y Compartir)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-12, REQ-15</div>
+      <div><strong>Actor:</strong> Adulto Mayor (+40)</div>
+      <div><strong>Persistencia:</strong> Tabla <code>historial</code></div>
+      <div><strong>Evita:</strong> Duplicación de guardado</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-2xl mx-auto w-full my-auto space-y-4">
+
+    <!-- Cabecera -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1 mr-2">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100">A+</button>
+        </div>
+        <span class="text-xs bg-slate-100 border border-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg font-medium">
+          👤 adulto@dagaz.com
+        </span>
+      </div>
+    </header>
+
+    <!-- Noticia Verificada con Botones de Acción de CU03 -->
+    <section class="dz-tarjeta p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900">Guardar Noticia en Favoritos (CU03)</h1>
+          <p class="text-xs text-slate-600 mt-0.5">Almacene este veredicto para consultarlo sin conexión o compartirlo rápidamente.</p>
+        </div>
+      </div>
+
+      <!-- Notificación Flotante de Confirmación -->
+      <div id="toast-guardado" class="hidden p-4 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-950 font-bold text-sm flex items-center justify-between shadow-sm">
+        <span class="flex items-center gap-2">
+          <span class="text-xl">⭐</span> Noticia guardada exitosamente en su historial personal.
+        </span>
+        <a href="CU04_Mockup_Alta_Fidelidad_Historial_Noticias.html" class="text-xs underline text-emerald-800 hover:text-emerald-950">
+          Ir al Historial ➔
+        </a>
+      </div>
+
+      <!-- Resumen de la Noticia -->
+      <div class="p-4 rounded-xl border-2 border-red-200 bg-red-50/50 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300">❌ Veredicto: Falso (92%)</span>
+          <span class="text-xs text-slate-500">17 Oct 2026</span>
+        </div>
+        <p class="font-bold text-slate-900 text-base">
+          “El gobierno nacional anunció un subsidio extraordinario de vivienda para todos los mayores de 40 años a partir del próximo mes.”
+        </p>
+        <p class="text-xs text-slate-600">
+          Desmentido por MinVivienda y Prosperidad Social. Cadena fraudulenta de WhatsApp.
+        </p>
+      </div>
+
+      <!-- Botones de Acción Interactivos (CU03 + Compartir) -->
+      <div class="space-y-3 pt-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" id="btn-guardar-principal" onclick="ejecutarGuardado()" class="dz-btn dz-btn-primario text-sm shadow">
+            <span id="star-icon">⭐</span> <span id="star-text">Guardar en Favoritos</span>
+          </button>
+          <button type="button" onclick="compartirWhatsApp()" class="dz-btn bg-emerald-700 text-white hover:bg-emerald-800 text-sm shadow">
+            <span>📲</span> Compartir en WhatsApp
+          </button>
+        </div>
+
+        <button type="button" onclick="copiarEnlace()" class="dz-btn dz-btn-secundario text-xs w-full">
+          📋 Copiar Enlace y Resumen al Portapapeles
+        </button>
+      </div>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html" class="underline font-bold">⬅ Volver a Resultado</a>
+      <a href="CU04_Mockup_Alta_Fidelidad_Historial_Noticias.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Ver Historial (CU04) ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white'
+        : 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function ejecutarGuardado() {
+      const btn = document.getElementById('btn-guardar-principal');
+      const star = document.getElementById('star-icon');
+      const text = document.getElementById('star-text');
+      const toast = document.getElementById('toast-guardado');
+
+      btn.className = 'dz-btn text-sm bg-emerald-700 text-white cursor-default';
+      star.textContent = '✔';
+      text.textContent = 'Guardada en mi Historial';
+      btn.disabled = true;
+
+      toast.classList.remove('hidden');
+    }
+
+    function compartirWhatsApp() {
+      const texto = encodeURIComponent('🔍 *DAGAZ — Fact-Checking*\nVeredicto: FALSO (92% certeza)\n"El gobierno anunció subsidio de vivienda..."\nDesmentido por MinVivienda. Verifique antes de reenviar en: https://dagaz.com.co/ver-col-2026-0814');
+      window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
+    }
+
+    function copiarEnlace() {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText('https://dagaz.com.co/ver-col-2026-0814');
+        alert('Enlace copiado al portapapeles.');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# ─── Sistema Operativo ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Variables de Entorno y Credenciales Sensibles ────────────────────────────
+.env
+.env.*
+*.env
+*.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+
+# ─── IDEs / Editores ─────────────────────────────────────────────────────────
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+
+# ─── Backend (Laravel / PHP) ─────────────────────────────────────────────────
+backend/vendor/
+backend/node_modules/
+backend/.phpunit.result.cache
+backend/.phpunit.cache/
+backend/storage/*.key
+backend/storage/pail/
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/testing/*
+backend/storage/framework/views/*
+!backend/storage/framework/cache/.gitignore
+!backend/storage/framework/sessions/.gitignore
+!backend/storage/framework/testing/.gitignore
+!backend/storage/framework/views/.gitignore
+backend/storage/logs/*
+!backend/storage/logs/.gitignore
+backend/public/build/
+backend/public/hot
+backend/public/storage
+backend/*.log
+
+# ─── Microservicios Python ───────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+backend/Microservicios_Python/__pycache__/
+backend/Microservicios_Python/**/__pycache__/
+
+# ─── Frontend & Mobile ─────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+mobile/node_modules/
+mobile/ios/App/App/public/
+mobile/ios/capacitor-cordova-ios-plugins/
+

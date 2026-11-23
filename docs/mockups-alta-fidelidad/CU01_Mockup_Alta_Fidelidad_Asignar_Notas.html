@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU01: Asignar Notas Complementarias · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.15rem !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-campo { width: 100%; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.85rem 1rem; font-size: 1rem; outline: none; }
+    .dz-campo:focus { border-color: #1f2937; box-shadow: 0 0 0 3px rgba(31,41,55,0.15); }
+    .dz-btn { min-height: 48px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.25rem; transition: all 0.15s ease; cursor: pointer; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; }
+    .dz-btn-secundario { background: #ffffff; border: 2px solid #8a8a8a; color: #1a1a1a; }
+    .dz-btn-secundario:hover { background: #f3f4f6; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-2xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU01 (Asignar Notas Complementarias)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-12, REQ-23</div>
+      <div><strong>Actor:</strong> Adulto Mayor (+40)</div>
+      <div><strong>Límites:</strong> 20 a 2.000 caracteres</div>
+      <div><strong>Seguridad:</strong> Sanitización XSS / SQLi</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-2xl mx-auto w-full my-auto space-y-4">
+
+    <!-- Cabecera -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1 mr-2">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100">A+</button>
+        </div>
+        <span class="text-xs bg-slate-100 border border-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg font-medium">
+          👤 ca••••••@gmail.com
+        </span>
+      </div>
+    </header>
+
+    <!-- Contexto: Noticia Verificada Sobre la Cual se Agrega la Nota -->
+    <section class="dz-tarjeta p-5 space-y-2 bg-slate-50 border-slate-300">
+      <span class="text-xs font-extrabold uppercase text-slate-500 tracking-wider">Noticia Verificada Asociada</span>
+      <h1 class="text-lg font-extrabold text-slate-900">
+        “Crisis en el abastecimiento de agua en Bogotá: embalse de Chingaza por debajo del 40%”
+      </h1>
+      <div class="flex items-center gap-2 text-xs font-bold">
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">✅ Veredicto: Verdadero (88% certeza)</span>
+        <span class="text-slate-500">Publicado: 16 Oct 2026</span>
+      </div>
+    </section>
+
+    <!-- Formulario Principal de CU01 -->
+    <section class="dz-tarjeta p-6 space-y-4">
+      <div>
+        <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+          <span>✍️</span> Aportar Nota Complementaria (CU01)
+        </h2>
+        <p class="text-xs text-slate-600 mt-1">
+          Las notas comunitarias permiten a la ciudadanía sumar contexto, enlaces oficiales o rectificaciones objetivas.
+        </p>
+      </div>
+
+      <!-- Alertas de Flujos Alternativos (FA1 / FA2) -->
+      <div id="alerta-error" class="hidden p-3.5 rounded-lg border-2 border-red-600 bg-red-50 text-red-900 text-xs font-bold flex items-start gap-2">
+        <span class="text-base">⚠️</span>
+        <span id="alerta-error-msg"></span>
+      </div>
+
+      <div id="alerta-exito" class="hidden p-3.5 rounded-lg border-2 border-green-600 bg-green-50 text-green-900 text-xs font-bold flex items-start gap-2">
+        <span class="text-base">✔</span>
+        <span>Nota comunitaria publicada exitosamente. Su aporte ya es visible para calificación colectiva (CU02).</span>
+      </div>
+
+      <form onsubmit="guardarNota(event)" class="space-y-3">
+        <div>
+          <label for="contenido-nota" class="block font-bold text-sm text-slate-800 mb-1">
+            Redacte su aporte o contexto verificado:
+          </label>
+          <textarea id="contenido-nota" rows="4" oninput="actualizarContador()" class="dz-campo resize-y" placeholder="Indique enlaces a portales oficiales (.gov.co, agencias de noticias) o datos comprobables (mínimo 20 caracteres)...">La Empresa de Acueducto de Bogotá (EAAB) emitió un boletín técnico actualizado hoy a las 8:00 a.m. confirmando que el nivel del embalse se ubica en 43.8% y que el turno 4 de racionamiento se mantendrá según el cronograma oficial disponible en www.acueducto.com.co/chingaza.</textarea>
+        </div>
+
+        <div class="flex flex-wrap justify-between items-center text-xs text-slate-500 gap-2">
+          <span class="flex items-center gap-1">
+            🔒 Sanitización activa contra caracteres prohibidos (&lt;, &gt;, {, }, \, |).
+          </span>
+          <span id="char-counter" class="font-bold text-slate-700">267 / 2000 caracteres</span>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="cancelar()" class="dz-btn dz-btn-secundario text-xs py-2 px-3">
+            ✖ Cancelar
+          </button>
+          <button type="submit" class="dz-btn dz-btn-primario text-xs py-2 px-4 shadow">
+            📤 Publicar Nota Complementaria
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Botones de Demostración de Flujos Alternativos -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex flex-wrap justify-between items-center gap-2">
+      <span class="font-bold">Simular casos de prueba de la especificación:</span>
+      <div class="flex gap-2">
+        <button type="button" onclick="probarFA1()" class="underline font-medium hover:text-amber-950">FA1: Nota muy corta (&lt;20 car.)</button>
+        <span>·</span>
+        <button type="button" onclick="probarFA2()" class="underline font-medium hover:text-amber-950">FA2: Texto con scripts &lt;script&gt;</button>
+      </div>
+    </nav>
+  </main>
+
+  <footer class="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Sistema de Detección de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white'
+        : 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function actualizarContador() {
+      const len = document.getElementById('contenido-nota').value.length;
+      document.getElementById('char-counter').textContent = `${len} / 2000 caracteres`;
+    }
+
+    function guardarNota(e) {
+      e.preventDefault();
+      const txt = document.getElementById('contenido-nota').value.trim();
+      const errorBox = document.getElementById('alerta-error');
+      const exitoBox = document.getElementById('alerta-exito');
+      const errorMsg = document.getElementById('alerta-error-msg');
+
+      errorBox.classList.add('hidden');
+      exitoBox.classList.add('hidden');
+
+      if (txt.length < 20) {
+        errorBox.classList.remove('hidden');
+        errorMsg.textContent = 'FA1 (Error): La nota debe tener al menos 20 caracteres con contenido sustantivo.';
+        return;
+      }
+
+      if (/[<>{}\\\|]/.test(txt)) {
+        errorBox.classList.remove('hidden');
+        errorMsg.textContent = 'FA2 (Error de Seguridad): La nota contiene caracteres no permitidos (<, >, {, }, \\, |) por prevención de inyección de código.';
+        return;
+      }
+
+      exitoBox.classList.remove('hidden');
+    }
+
+    function probarFA1() {
+      document.getElementById('contenido-nota').value = 'Muy corta';
+      actualizarContador();
+      guardarNota(new Event('submit'));
+    }
+
+    function probarFA2() {
+      document.getElementById('contenido-nota').value = 'Nota sospechosa con <script>alert("xss")</script> y código {malicioso}';
+      actualizarContador();
+      guardarNota(new Event('submit'));
+    }
+
+    function cancelar() {
+      document.getElementById('contenido-nota').value = '';
+      actualizarContador();
+    }
+  </script>
+</body>
+</html>

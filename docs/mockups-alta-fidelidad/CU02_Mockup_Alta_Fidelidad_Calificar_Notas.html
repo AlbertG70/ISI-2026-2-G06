@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU02: Calificar Notas de la Comunidad · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.15rem !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-btn { min-height: 44px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; padding: 0.5rem 1rem; transition: all 0.15s ease; cursor: pointer; }
+    .dz-btn-vote { background: #f3f4f6; border: 2px solid #d1d5db; color: #1f2937; }
+    .dz-btn-vote:hover { background: #e5e7eb; border-color: #9ca3af; }
+    .dz-btn-vote.active-up { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+    .dz-btn-vote.active-down { background: #fee2e2; border-color: #dc2626; color: #b91c1c; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-2xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU02 (Calificar Notas Complementarias)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-12, REQ-23</div>
+      <div><strong>Actor:</strong> Adulto Mayor (+40)</div>
+      <div><strong>Regla:</strong> Sin autocalificación</div>
+      <div><strong>Consenso:</strong> Algoritmo de utilidad</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-2xl mx-auto w-full my-auto space-y-4">
+
+    <!-- Cabecera -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1 mr-2">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100">A+</button>
+        </div>
+        <span class="text-xs bg-slate-100 border border-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg font-medium">
+          👤 adulto@dagaz.com
+        </span>
+      </div>
+    </header>
+
+    <!-- Noticia Contexto -->
+    <section class="dz-tarjeta p-4 bg-slate-50 border-slate-300 space-y-1">
+      <span class="text-[11px] font-extrabold uppercase text-slate-500">Noticia Evaluada</span>
+      <h1 class="text-base font-bold text-slate-900">“Racionamiento de agua en Bogotá: turnos y recomendaciones oficiales”</h1>
+      <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 inline-block">
+        ✅ Verdadero · 94% certeza
+      </span>
+    </section>
+
+    <!-- Calificación Colectiva de Notas -->
+    <section class="dz-tarjeta p-6 space-y-5">
+      <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-200 pb-3">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+            <span>🤝</span> Calificación de Notas Comunitarias (CU02)
+          </h2>
+          <p class="text-xs text-slate-600 mt-0.5">Evalúe si las notas de otros ciudadanos son útiles, objetivas y están bien fundamentadas.</p>
+        </div>
+
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-300 text-xs font-bold">
+          <button type="button" class="px-2.5 py-1 bg-white text-slate-900 rounded shadow-sm">Todas (2)</button>
+          <button type="button" class="px-2.5 py-1 text-slate-600 hover:text-black">👍 Útiles</button>
+          <button type="button" class="px-2.5 py-1 text-slate-600 hover:text-black">👎 No útiles</button>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Nota 1: Alta Utilidad -->
+      <article class="p-4 rounded-xl border-2 border-slate-200 bg-white space-y-3">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold text-slate-800 flex items-center gap-1.5">
+            <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px] font-extrabold">CM</span>
+            ca••••••@gmail.com
+          </span>
+          <span class="text-slate-500">Hace 3 horas</span>
+        </div>
+
+        <p class="text-sm text-slate-800 leading-relaxed">
+          Para conocer el turno específico por barrio, la Alcaldía habilitó el mapa oficial interactivo con georreferenciación en: bogota.gov.co/racionamiento-agua
+        </p>
+
+        <!-- Barra de Consenso y Votación -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-100">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="text-green-800">Consenso útil: 92%</span>
+            <span class="text-slate-500" id="votos-total-1">25 votos</span>
+          </div>
+          <!-- Barra de Progreso Visual -->
+          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <div id="barra-fill-1" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 92%"></div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-xs text-slate-500">¿Esta nota le resultó útil?</span>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btn-up-1" onclick="votar(1, true)" class="dz-btn dz-btn-vote text-xs">
+              <span>👍</span> Útil (<span id="count-up-1">23</span>)
+            </button>
+            <button type="button" id="btn-down-1" onclick="votar(1, false)" class="dz-btn dz-btn-vote text-xs">
+              <span>👎</span> No útil (<span id="count-down-1">2</span>)
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Tarjeta de Nota 2: Nota propia (Demostración de Regla de Negocio) -->
+      <article class="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2 opacity-90">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold text-slate-800">
+            👤 adulto@dagaz.com <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.5 rounded ml-1">Su nota</span>
+          </span>
+          <span class="text-slate-500">Hace 1 hora</span>
+        </div>
+        <p class="text-sm text-slate-700">
+          Recomiendo revisar también el boletín del IDEAM sobre el fenómeno de El Niño.
+        </p>
+        <div class="flex items-center justify-between pt-1 border-t border-slate-200 text-xs">
+          <span class="text-slate-500 italic">🔒 No puede calificar su propia nota (Regla CU02).</span>
+          <div class="flex gap-2">
+            <button class="dz-btn text-xs bg-slate-100 text-slate-400 cursor-not-allowed" disabled>👍 (5)</button>
+            <button class="dz-btn text-xs bg-slate-100 text-slate-400 cursor-not-allowed" disabled>👎 (0)</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <a href="CU01_Mockup_Alta_Fidelidad_Asignar_Notas.html" class="underline font-bold">⬅ Volver a Redactar Nota</a>
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Volver a la Pantalla de Veredicto ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white'
+        : 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    let votoActivo = null;
+
+    function votar(notaId, esUtil) {
+      const btnUp = document.getElementById(`btn-up-${notaId}`);
+      const btnDown = document.getElementById(`btn-down-${notaId}`);
+      const countUp = document.getElementById(`count-up-${notaId}`);
+      const countDown = document.getElementById(`count-down-${notaId}`);
+
+      let u = 23;
+      let d = 2;
+
+      if (esUtil) {
+        btnUp.className = 'dz-btn dz-btn-vote text-xs active-up';
+        btnDown.className = 'dz-btn dz-btn-vote text-xs';
+        u += 1;
+      } else {
+        btnDown.className = 'dz-btn dz-btn-vote text-xs active-down';
+        btnUp.className = 'dz-btn dz-btn-vote text-xs';
+        d += 1;
+      }
+
+      countUp.textContent = u;
+      countDown.textContent = d;
+      document.getElementById(`votos-total-${notaId}`).textContent = `${u + d} votos`;
+      const pct = Math.round((u / (u + d)) * 100);
+      document.getElementById(`barra-fill-${notaId}`).style.width = `${pct}%`;
+    }
+  </script>
+</body>
+</html>

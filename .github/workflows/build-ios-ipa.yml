@@ -1,0 +1,80 @@
+name: Build iOS IPA (Sideloadly)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "Frontend-Raiden", "main" ]
+    paths:
+      - 'mobile-expo/**'
+      - '.github/workflows/build-ios-ipa.yml'
+
+jobs:
+  build-ipa:
+    name: Compilar DAGAZ.ipa para Sideloadly (macOS)
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: mobile-expo
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: mobile-expo/package-lock.json
+
+      - name: Instalar Dependencias de mobile-expo
+        run: npm ci
+
+      - name: Generar Proyecto Nativo iOS (Expo Prebuild + CocoaPods)
+        run: npx expo prebuild --platform ios --clean
+
+      - name: Compilar Binario iOS Release (Sin Firma para Sideloadly)
+        run: |
+          cd ios
+          WORKSPACE=$(ls -d *.xcworkspace | head -n 1)
+          SCHEME="${WORKSPACE%.xcworkspace}"
+          echo "Compilando workspace=$WORKSPACE scheme=$SCHEME"
+          xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build
+
+      - name: Empaquetar archivo DAGAZ.ipa
+        run: |
+          APP_PATH=$(find ios/build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: No se encontró el paquete .app compilado"
+            exit 1
+          fi
+          echo "Empaquetando $APP_PATH"
+          rm -rf Payload DAGAZ.ipa
+          mkdir -p Payload
+          cp -a "$APP_PATH" Payload/
+          zip -r -y DAGAZ.ipa Payload
+          ls -lh DAGAZ.ipa
+
+      - name: Subir Artefacto DAGAZ.ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: DAGAZ-iOS-Sideloadly-IPA
+          path: mobile-expo/DAGAZ.ipa
+          retention-days: 14

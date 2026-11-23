@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+    * { font-family: 'Caveat', cursive !important; }
+    body { background: #faf8f5; }
+    .napkin-border { border: 2px solid #333; border-radius: 4px; }
+    .sketch-line { border-bottom: 1.5px dashed #999; }
+    .source-card { border: 1.5px solid #bbb; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; background: #fff; transition: box-shadow 0.2s; }
+    .source-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    /* Indicador circular */
+    .trust-ring { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+    .trust-ring svg { transform: rotate(-90deg); }
+    .trust-ring .percent { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 15px; font-weight: 600; color: #333; }
+    .trust-ring .star { position: absolute; top: -4px; right: -4px; font-size: 16px; }
+
+    /* Botones de calificación */
+    .rate-btn { border: 1.5px solid #bbb; border-radius: 4px; padding: 5px 12px; font-size: 16px; cursor: pointer; background: #fafafa; transition: all 0.15s; }
+    .rate-btn:hover { background: #eee; }
+    .rate-btn.selected-up { background: #f0fdf4; border-color: #16a34a; color: #16a34a; }
+    .rate-btn.selected-down { background: #fef2f2; border-color: #dc2626; color: #dc2626; }
+
+    .saved-msg { font-size: 14px; color: #16a34a; margin-top: 6px; display: none; }
+    .saved-msg.show { display: block; }
+  </style>
+</head>
+<body class="p-6">
+  <div style="max-width: 580px; margin: 0 auto;">
+
+    <!-- Titulo -->
+    <p style="font-size: 22px; color: #555; margin-bottom: 12px; text-align: center;">
+      ✏️ Mockup Servilleta — CU07: Confiabilidad de Fuentes
+    </p>
+
+    <!-- Contenedor principal -->
+    <div class="napkin-border" style="background: #fff; padding: 22px;">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;">
+        <svg width="32" height="32" viewBox="0 0 100 100">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <span style="font-size: 22px; color: #222; font-weight: 600; letter-spacing: 2px;">DAGAZ</span>
+      </div>
+      <p style="text-align: center; font-size: 16px; color: #999; margin: 0 0 10px 0;">👤 Sesión activa: <b style="color:#555">Usuario123</b></p>
+
+      <div class="sketch-line" style="margin-bottom: 14px;"></div>
+
+      <p style="font-size: 24px; color: #222; margin: 0 0 4px 0; font-weight: 600;">📡 Fuentes de Información</p>
+      <p style="font-size: 15px; color: #999; margin: 0 0 14px 0;">Selecciona una fuente y califica su confiabilidad</p>
+
+      <!-- Fuente 1: Reuters — Alta confianza, verificada -->
+      <div class="source-card" id="card-0">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="trust-ring">
+            <svg width="56" height="56" viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="13.6" stroke-linecap="round" id="ring-0"/>
+            </svg>
+            <span class="percent" id="pct-0">91%</span>
+            <span class="star" title="Verificada a nivel mundial">⭐</span>
+          </div>
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">Reuters</p>
+            <p style="font-size: 14px; color: #999; margin: 2px 0 0 0;">Agencia de noticias internacional · ⭐ Verificada mundialmente</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px; align-items: center;">
+          <span style="font-size: 15px; color: #888;">Tu calificación:</span>
+          <button class="rate-btn" onclick="rate(0,'up',this)">👍 Confiable</button>
+          <button class="rate-btn" onclick="rate(0,'down',this)">👎 No confiable</button>
+        </div>
+        <p class="saved-msg" id="msg-0">✔ Calificación guardada</p>
+      </div>
+
+      <!-- Fuente 2: Wikipedia — Media confianza -->
+      <div class="source-card" id="card-1">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="trust-ring">
+            <svg width="56" height="56" viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#ca8a04" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="52.8" stroke-linecap="round" id="ring-1"/>
+            </svg>
+            <span class="percent" id="pct-1">65%</span>
+          </div>
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">Wikipedia</p>
+            <p style="font-size: 14px; color: #999; margin: 2px 0 0 0;">Enciclopedia colaborativa · Editable por usuarios</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px; align-items: center;">
+          <span style="font-size: 15px; color: #888;">Tu calificación:</span>
+          <button class="rate-btn" onclick="rate(1,'up',this)">👍 Confiable</button>
+          <button class="rate-btn" onclick="rate(1,'down',this)">👎 No confiable</button>
+        </div>
+        <p class="saved-msg" id="msg-1">✔ Calificación guardada</p>
+      </div>
+
+      <!-- Fuente 3: Blog Anónimo — Baja confianza -->
+      <div class="source-card" id="card-2">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="trust-ring">
+            <svg width="56" height="56" viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#dc2626" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="120.6" stroke-linecap="round" id="ring-2"/>
+            </svg>
+            <span class="percent" id="pct-2">20%</span>
+          </div>
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">BlogVerdad.net</p>
+            <p style="font-size: 14px; color: #999; margin: 2px 0 0 0;">Blog independiente · Sin verificación editorial</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px; align-items: center;">
+          <span style="font-size: 15px; color: #888;">Tu calificación:</span>
+          <button class="rate-btn" onclick="rate(2,'up',this)">👍 Confiable</button>
+          <button class="rate-btn" onclick="rate(2,'down',this)">👎 No confiable</button>
+        </div>
+        <p class="saved-msg" id="msg-2">✔ Calificación guardada</p>
+      </div>
+
+      <!-- Fuente 4: AP News — Alta, verificada -->
+      <div class="source-card" id="card-3">
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <div class="trust-ring">
+            <svg width="56" height="56" viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+              <circle cx="28" cy="28" r="24" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="7.5" stroke-linecap="round" id="ring-3"/>
+            </svg>
+            <span class="percent" id="pct-3">95%</span>
+            <span class="star" title="Verificada a nivel mundial">⭐</span>
+          </div>
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">AP News</p>
+            <p style="font-size: 14px; color: #999; margin: 2px 0 0 0;">Agencia de prensa · ⭐ Verificada mundialmente</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px; align-items: center;">
+          <span style="font-size: 15px; color: #888;">Tu calificación:</span>
+          <button class="rate-btn" onclick="rate(3,'up',this)">👍 Confiable</button>
+          <button class="rate-btn" onclick="rate(3,'down',this)">👎 No confiable</button>
+        </div>
+        <p class="saved-msg" id="msg-3">✔ Calificación guardada</p>
+      </div>
+
+    </div>
+
+    <!-- Leyenda -->
+    <div style="margin-top: 14px; padding: 8px 14px; border: 1px solid #ddd; border-radius: 4px; background: #fff;">
+      <p style="font-size: 16px; color: #555; margin: 0 0 4px 0; font-weight: 600;">Leyenda:</p>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 15px; color: #777;">
+        <span>🟢 Alta confianza (>75%)</span>
+        <span>🟡 Media (40-75%)</span>
+        <span>🔴 Baja (<40%)</span>
+        <span>⭐ Verificada mundialmente</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function rate(index, type, btn) {
+      // Reset siblings
+      const card = document.getElementById('card-' + index);
+      card.querySelectorAll('.rate-btn').forEach(b => {
+        b.classList.remove('selected-up', 'selected-down');
+      });
+
+      // Apply selection
+      if (type === 'up') {
+        btn.classList.add('selected-up');
+      } else {
+        btn.classList.add('selected-down');
+      }
+
+      // Show saved message
+      const msg = document.getElementById('msg-' + index);
+      msg.classList.add('show');
+      setTimeout(() => { msg.classList.remove('show'); }, 2500);
+    }
+  </script>
+</body>
+</html>

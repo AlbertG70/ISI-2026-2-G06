@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU04: Historial de Contenidos · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 118%; }
+    .text-large h1 { font-size: 2.2rem !important; }
+    .text-large .dz-btn { font-size: 1.15rem !important; min-height: 54px !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-campo { width: 100%; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.75rem 1rem; font-size: 1rem; outline: none; }
+    .dz-campo:focus { border-color: #1f2937; box-shadow: 0 0 0 3px rgba(31,41,55,0.15); }
+    .dz-btn { min-height: 48px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1.25rem; transition: all 0.15s ease; cursor: pointer; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad -->
+  <aside class="max-w-3xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU04 (Historial de Contenidos)
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-slate-300">
+      <div><strong>Requisitos:</strong> REQ-12, REQ-15</div>
+      <div><strong>Actor:</strong> Adulto Mayor (+40)</div>
+      <div><strong>Funcionalidad:</strong> Filtros y Búsqueda</div>
+      <div><strong>Excepciones:</strong> FA1 Historial Vacío</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal -->
+  <main class="max-w-3xl mx-auto w-full my-auto space-y-5">
+
+    <!-- Cabecera -->
+    <header class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+          <span class="text-xs text-slate-500 block">Historial Ciudadano</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1 mr-2">
+          <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white">A</button>
+          <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100">A+</button>
+        </div>
+        <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Entrada.html" class="dz-btn dz-btn-primario text-sm py-2 px-3 shadow-sm">
+          <span>🔍</span> Verificar Noticia
+        </a>
+      </div>
+    </header>
+
+    <!-- Barra de Filtros y Búsqueda -->
+    <section class="dz-tarjeta p-4 sm:p-5 space-y-3">
+      <div class="flex flex-col sm:flex-row gap-2 justify-between items-stretch sm:items-center">
+        <div class="relative flex-1">
+          <input type="search" id="input-busqueda" oninput="filtrar()" class="dz-campo text-sm pl-9" placeholder="Buscar en mi historial por palabra clave...">
+          <span class="absolute left-3 top-3 text-slate-400 select-none">🔎</span>
+        </div>
+
+        <!-- Filtros Rápidos -->
+        <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 text-xs font-bold">
+          <button type="button" onclick="setFiltro('todos')" class="filtro-btn px-3 py-2 rounded-lg bg-slate-900 text-white flex-shrink-0">Todos (4)</button>
+          <button type="button" onclick="setFiltro('FALSO')" class="filtro-btn px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 flex-shrink-0">❌ Falsos</button>
+          <button type="button" onclick="setFiltro('VERDADERO')" class="filtro-btn px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 flex-shrink-0">✅ Verdaderos</button>
+          <button type="button" onclick="setFiltro('ENGANOSO')" class="filtro-btn px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 flex-shrink-0">🟠 Engañosos</button>
+          <button type="button" onclick="toggleVacio()" class="px-2.5 py-1.5 rounded-lg border border-amber-400 bg-amber-50 text-amber-900 flex-shrink-0">Simular FA1 vacío</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lista de Contenidos en Historial -->
+    <section id="contenedor-historial" class="space-y-3">
+
+      <!-- Tarjeta 1: Falso -->
+      <article class="tarjeta-historial dz-tarjeta p-5 hover:border-slate-800 transition-all cursor-pointer" data-tipo="FALSO" onclick="irDetalle()">
+        <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-red-700 bg-red-50 text-red-800 px-3 py-0.5 text-xs font-extrabold">
+            <span>❌</span> Falso · 92% Certeza
+          </span>
+          <span class="text-xs text-slate-500">17 Oct 2026 · 14:15</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+          “El gobierno nacional anunció un subsidio extraordinario de vivienda para todos los mayores de 40 años...”
+        </h2>
+        <p class="text-xs text-slate-600 mt-2 line-clamp-2">
+          Desmentido oficial por MinVivienda y Prosperidad Social. Formato clásico de phishing por WhatsApp.
+        </p>
+        <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+          <span>📎 2 fuentes contrastadas</span>
+          <span class="text-blue-800 font-bold hover:underline">Ver análisis completo ➔</span>
+        </div>
+      </article>
+
+      <!-- Tarjeta 2: Verdadero -->
+      <article class="tarjeta-historial dz-tarjeta p-5 hover:border-slate-800 transition-all cursor-pointer" data-tipo="VERDADERO" onclick="irDetalle()">
+        <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-emerald-700 bg-emerald-50 text-emerald-800 px-3 py-0.5 text-xs font-extrabold">
+            <span>✅</span> Verdadero · 96% Certeza
+          </span>
+          <span class="text-xs text-slate-500">16 Oct 2026 · 09:30</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+          “Alcaldía Mayor de Bogotá decreta alerta ambiental y medidas de restricción vehicular por calidad del aire...”
+        </h2>
+        <p class="text-xs text-slate-600 mt-2 line-clamp-2">
+          Confirmado en decreto oficial y monitoreo satelital de la Secretaría Distrital de Ambiente.
+        </p>
+        <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+          <span>📎 4 fuentes de Nivel 1 y 2</span>
+          <span class="text-blue-800 font-bold hover:underline">Ver análisis completo ➔</span>
+        </div>
+      </article>
+
+      <!-- Tarjeta 3: Engañoso -->
+      <article class="tarjeta-historial dz-tarjeta p-5 hover:border-slate-800 transition-all cursor-pointer" data-tipo="ENGANOSO" onclick="irDetalle()">
+        <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-orange-700 bg-orange-50 text-orange-800 px-3 py-0.5 text-xs font-extrabold">
+            <span>🟠</span> Engañoso · 78% Certeza
+          </span>
+          <span class="text-xs text-slate-500">14 Oct 2026 · 18:40</span>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+          “Video muestra colapso total de la vía al Llano por intensas lluvias de esta mañana...”
+        </h2>
+        <p class="text-xs text-slate-600 mt-2 line-clamp-2">
+          El video corresponde a un derrumbe ocurrido en junio de 2023. Detectado mediante cotejo histórico de Archive.org.
+        </p>
+        <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+          <span>📎 Archive.org (REQ-10)</span>
+          <span class="text-blue-800 font-bold hover:underline">Ver análisis completo ➔</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Estado Vacío (FA1: Historial Vacío) -->
+    <section id="estado-vacio" class="dz-tarjeta p-10 text-center space-y-3 hidden">
+      <div class="text-5xl select-none" aria-hidden="true">📭</div>
+      <h2 class="text-xl font-extrabold text-slate-900">Su historial de verificaciones está vacío</h2>
+      <p class="text-sm text-slate-600 max-w-md mx-auto">
+        Aún no ha realizado ninguna consulta ni guardado noticias. Puede verificar su primer mensaje de WhatsApp o enlace en cualquier momento.
+      </p>
+      <div class="pt-2">
+        <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Entrada.html" class="dz-btn dz-btn-primario text-sm shadow">
+          <span>🔍</span> Verificar mi primera noticia
+        </a>
+      </div>
+    </section>
+
+    <!-- Barra de Navegación de Mockups -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex justify-between items-center">
+      <a href="CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html" class="underline font-bold">⬅ Volver a Resultado</a>
+      <a href="CU07_Mockup_Alta_Fidelidad_Confiabilidad_Fuentes.html" class="font-bold underline text-blue-800 hover:text-blue-950">
+        Ver Grafo de Credibilidad de Fuentes (CU07) ➔
+      </a>
+    </nav>
+  </main>
+
+  <footer class="max-w-3xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Detección y Verificación de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2 py-0.5 text-xs font-bold rounded bg-slate-900 text-white'
+        : 'px-2 py-0.5 text-xs font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function setFiltro(tipo) {
+      document.querySelectorAll('.filtro-btn').forEach(btn => {
+        btn.className = 'filtro-btn px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 flex-shrink-0';
+      });
+      event.target.className = 'filtro-btn px-3 py-2 rounded-lg bg-slate-900 text-white flex-shrink-0';
+
+      document.querySelectorAll('.tarjeta-historial').forEach(card => {
+        if (tipo === 'todos' || card.dataset.tipo === tipo) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function filtrar() {
+      const q = document.getElementById('input-busqueda').value.toLowerCase();
+      document.querySelectorAll('.tarjeta-historial').forEach(card => {
+        const txt = card.innerText.toLowerCase();
+        card.classList.toggle('hidden', !txt.includes(q));
+      });
+    }
+
+    function toggleVacio() {
+      document.getElementById('contenedor-historial').classList.toggle('hidden');
+      document.getElementById('estado-vacio').classList.toggle('hidden');
+    }
+
+    function irDetalle() {
+      window.location.href = 'CU06_Mockup_Alta_Fidelidad_Verificar_Resultado.html';
+    }
+  </script>
+</body>
+</html>

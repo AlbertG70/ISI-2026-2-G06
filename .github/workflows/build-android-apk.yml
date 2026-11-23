@@ -1,0 +1,107 @@
+name: Build Android APK (Expo / React Native)
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_url:
+        description: 'URL opcional del backend por defecto (ej. https://tu-backend.up.railway.app)'
+        required: false
+        default: ''
+  push:
+    branches: [ "Frontend-Raiden", "main" ]
+    paths:
+      - 'mobile-expo/**'
+      - '.github/workflows/build-android-apk.yml'
+
+jobs:
+  build-apk:
+    name: Compilar DAGAZ.apk para Android (Ubuntu)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile-expo
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_PUBLIC_API_URL: ${{ inputs.api_url || vars.EXPO_PUBLIC_API_URL || '' }}
+
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: mobile-expo/package-lock.json
+
+      - name: Configurar Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache de Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-expo-${{ hashFiles('mobile-expo/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-expo-
+
+      - name: Instalar Dependencias de mobile-expo
+        run: npm ci
+
+      - name: Generar Proyecto Nativo Android (Expo Prebuild)
+        run: npx expo prebuild --platform android --clean
+
+      - name: Habilitar tráfico HTTP local (usesCleartextTraffic) para pruebas en red Wi-Fi
+        run: |
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if ! grep -q 'android:usesCleartextTraffic' "$MANIFEST"; then
+            sed -i 's/<application /<application android:usesCleartextTraffic="true" /' "$MANIFEST"
+          fi
+          grep -n 'application' "$MANIFEST" | head -n 5
+
+      - name: Compilar APK Standalone Release (DAGAZ.apk)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+
+      - name: Verificar firma y preparar archivo DAGAZ.apk
+        run: |
+          APK_PATH=$(find android/app/build/outputs/apk/release -maxdepth 1 -name "*.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: No se encontró el archivo .apk compilado"
+            exit 1
+          fi
+          APKSIGNER=$(find "${ANDROID_HOME:-$ANDROID_SDK_ROOT}/build-tools" -name "apksigner" | sort -V | tail -n 1)
+          if [ -n "$APKSIGNER" ]; then
+            if ! "$APKSIGNER" verify "$APK_PATH" >/dev/null 2>&1; then
+              echo "APK sin firma detectado; firmando con debug.keystore para instalación directa..."
+              KEYSTORE="android/app/debug.keystore"
+              if [ ! -f "$KEYSTORE" ]; then
+                keytool -genkeypair -v -storetype PKCS12 -keystore "$KEYSTORE" \
+                  -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
+                  -storepass android -keypass android \
+                  -dname "CN=DAGAZ Debug,O=ISI-CORP,C=CO"
+              fi
+              "$APKSIGNER" sign --ks "$KEYSTORE" --ks-key-alias androiddebugkey \
+                --ks-pass pass:android --key-pass pass:android "$APK_PATH"
+            fi
+            "$APKSIGNER" verify --print-certs "$APK_PATH" | head -n 5
+          fi
+          echo "Empaquetando $APK_PATH -> mobile-expo/DAGAZ.apk"
+          cp "$APK_PATH" DAGAZ.apk
+          ls -lh DAGAZ.apk
+
+      - name: Subir Artefacto DAGAZ.apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: DAGAZ-Android-APK
+          path: mobile-expo/DAGAZ.apk
+          retention-days: 14

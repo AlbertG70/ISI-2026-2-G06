@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+    * { font-family: 'Caveat', cursive !important; }
+    body { background: #faf8f5; }
+    .napkin-border { border: 2px solid #333; border-radius: 4px; }
+    .sketch-line { border-bottom: 1.5px dashed #999; }
+    .card { border: 1.5px solid #bbb; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; background: #fff; cursor: pointer; transition: box-shadow 0.2s; }
+    .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .badge-true { border: 1.5px solid #16a34a; background: #f0fdf4; color: #16a34a; }
+    .badge-false { border: 1.5px solid #dc2626; background: #fef2f2; color: #dc2626; }
+    .badge-pending { border: 1.5px solid #ca8a04; background: #fefce8; color: #ca8a04; }
+    .badge { border-radius: 6px; padding: 4px 10px; font-size: 15px; font-weight: 600; display: inline-block; }
+    .detail-panel { display: none; margin-top: 10px; padding: 10px 0 0 0; border-top: 1.5px dashed #ccc; }
+    .detail-panel.open { display: block; }
+    .source-link { text-decoration: underline; color: #2563eb; cursor: pointer; font-size: 15px; }
+    .btn-detail { background: none; border: 1.5px solid #888; border-radius: 4px; padding: 4px 10px; font-size: 15px; cursor: pointer; color: #555; }
+    .btn-detail:hover { background: #f3f3f3; }
+    .btn-delete { background: none; border: 1.5px solid #dc2626; border-radius: 4px; padding: 4px 10px; font-size: 15px; cursor: pointer; color: #dc2626; }
+    .btn-delete:hover { background: #fef2f2; }
+  </style>
+</head>
+<body class="p-6">
+  <div style="max-width: 640px; margin: 0 auto;">
+
+    <!-- Titulo del mockup -->
+    <p style="font-size: 22px; color: #555; margin-bottom: 12px; text-align: center;">
+      ✏️ Mockup Servilleta — CU04: Mostrar Historial de Contenido
+    </p>
+
+    <!-- Contenedor principal -->
+    <div class="napkin-border" style="background: #fff; padding: 20px;">
+
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <p style="font-size: 26px; color: #222; margin: 0; font-weight: 600;">📋 Historial de Noticias</p>
+        <p style="font-size: 16px; color: #999; margin: 0;">3 noticias guardadas</p>
+      </div>
+
+      <div class="sketch-line" style="margin-bottom: 14px;"></div>
+
+      <!-- Tarjeta 1 - Verdadero -->
+      <div class="card" id="card-1">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">📰 "Ciudad enfrenta crisis de agua potable"</p>
+            <p style="font-size: 14px; color: #aaa; margin: 4px 0 0 0;">🗓 28 Ago 2026 · Guardada</p>
+          </div>
+          <div class="badge badge-true">✅ Verdadero</div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button class="btn-detail" onclick="toggleDetail(1, event)">👁 Ver detalle</button>
+          <button class="btn-delete" onclick="removeCard(1, event)">🗑 Eliminar</button>
+        </div>
+        <!-- Panel expandible -->
+        <div class="detail-panel" id="detail-1">
+          <p style="font-size: 16px; color: #555; margin: 0 0 6px 0;">El gobierno confirmó la reducción del 40% en reservas...</p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 4px 0; font-weight: 600;">📎 Fuentes:</p>
+          <p style="margin: 0 0 2px 10px;"><span class="source-link">Reuters — Informe hídrico</span></p>
+          <p style="margin: 0 0 8px 10px;"><span class="source-link">OMS — Datos agua potable</span></p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 4px 0; font-weight: 600;">💬 Nota de comunidad:</p>
+          <p style="font-size: 15px; color: #777; margin: 0 0 0 10px;">👤 User123: "Confirmo, las restricciones ya comenzaron."</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2 - Falso -->
+      <div class="card" id="card-2">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">📰 "Vacuna causa efectos secundarios graves"</p>
+            <p style="font-size: 14px; color: #aaa; margin: 4px 0 0 0;">🗓 25 Ago 2026 · Guardada</p>
+          </div>
+          <div class="badge badge-false">❌ Falso</div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button class="btn-detail" onclick="toggleDetail(2, event)">👁 Ver detalle</button>
+          <button class="btn-delete" onclick="removeCard(2, event)">🗑 Eliminar</button>
+        </div>
+        <div class="detail-panel" id="detail-2">
+          <p style="font-size: 16px; color: #555; margin: 0 0 6px 0;">No existen estudios que respalden esta afirmación...</p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 4px 0; font-weight: 600;">📎 Fuentes:</p>
+          <p style="margin: 0 0 2px 10px;"><span class="source-link">OMS — Seguridad de vacunas</span></p>
+          <p style="margin: 0 0 8px 10px;"><span class="source-link">CDC — Reporte 2026</span></p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 4px 0; font-weight: 600;">💬 Nota de comunidad:</p>
+          <p style="font-size: 15px; color: #777; margin: 0 0 0 10px;">👤 DoctorM: "Información desmentida por múltiples estudios."</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3 - No confirmado -->
+      <div class="card" id="card-3">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="flex: 1;">
+            <p style="font-size: 20px; color: #222; margin: 0; font-weight: 600;">📰 "Nuevo mineral descubierto en Marte"</p>
+            <p style="font-size: 14px; color: #aaa; margin: 4px 0 0 0;">🗓 20 Ago 2026 · Guardada</p>
+          </div>
+          <div class="badge badge-pending">⚠ No confirmado</div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button class="btn-detail" onclick="toggleDetail(3, event)">👁 Ver detalle</button>
+          <button class="btn-delete" onclick="removeCard(3, event)">🗑 Eliminar</button>
+        </div>
+        <div class="detail-panel" id="detail-3">
+          <p style="font-size: 16px; color: #555; margin: 0 0 6px 0;">La NASA aún no ha emitido un comunicado oficial...</p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 4px 0; font-weight: 600;">📎 Fuentes:</p>
+          <p style="margin: 0 0 2px 10px;"><span class="source-link">NASA — Pendiente de confirmación</span></p>
+          <p style="margin: 0 0 8px 10px;"><span class="source-link">Nature — Artículo preliminar</span></p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 4px 0; font-weight: 600;">💬 Nota de comunidad:</p>
+          <p style="font-size: 15px; color: #777; margin: 0 0 0 10px;">👤 AstroFan: "Suena interesante pero falta la fuente oficial."</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Anotaciones -->
+    <div style="margin-top: 14px; display: flex; justify-content: space-around; color: #aaa; font-size: 14px;">
+      <span>← Tarjetas con veredicto →</span>
+      <span>← Clic para expandir →</span>
+      <span>← Eliminar del historial →</span>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleDetail(id, event) {
+      event.stopPropagation();
+      const panel = document.getElementById('detail-' + id);
+      panel.classList.toggle('open');
+    }
+    function removeCard(id, event) {
+      event.stopPropagation();
+      const card = document.getElementById('card-' + id);
+      card.style.transition = 'opacity 0.3s, transform 0.3s';
+      card.style.opacity = '0';
+      card.style.transform = 'translateX(40px)';
+      setTimeout(() => { card.style.display = 'none'; }, 300);
+    }
+  </script>
+</body>
+</html>

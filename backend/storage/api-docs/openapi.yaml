@@ -1,0 +1,1318 @@
+openapi: 3.1.0
+info:
+  title: DAGAZ API
+  description: |
+    API REST v1 de la Plataforma DAGAZ — Sistema de Detección de Desinformación y Verificación Multicanal.
+    
+    **Autenticación:** Bearer Token (Laravel Sanctum). Obtener token vía `/api/v1/auth/login`.
+    
+    **Cobertura de Casos de Uso:**
+    - CU05: Autenticación y Credenciales
+    - CU06: Verificar Contenidos (núcleo multicanal)
+    - CU03: Guardar Contenidos
+    - CU04: Historial de Contenidos
+    - CU01: Notas Complementarias
+    - CU02: Calificar Notas
+    - CU07: Gestión del Grafo de Credibilidad de Fuentes
+    
+    **Motor de Base de Datos:** MariaDB 10.11+ (InnoDB, utf8mb4_unicode_ci, UUID v4)
+    
+    **Stack Backend:** PHP 8.4 + Laravel 12 | **Organización:** ISI-CORP (2026-II)
+  version: 0.0.24
+  contact:
+    name: ISI-CORP
+    email: dagaz@example.com
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Servidor de Desarrollo Local
+
+tags:
+  - name: auth
+    description: CU05 — Autenticación y gestión de sesiones
+  - name: verificacion
+    description: CU06 — Verificación multicanal de contenidos
+  - name: historial
+    description: CU03/CU04 — Guardar y consultar historial personal
+  - name: notas
+    description: CU01/CU02 — Notas comunitarias y calificación
+  - name: fuentes
+    description: CU07 — Grafo de credibilidad de fuentes
+  - name: admin
+    description: Endpoints exclusivos para administradores
+  - name: auditoria
+    description: TSK-4.6 / REQ-25 — Exportación de expedientes de auditoría forense para reguladores y medios
+  - name: public-partners
+    description: TSK-4.2 / REQ-16 — Endpoints REST M2M para redacciones asociadas (API Key)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token obtenido en /auth/login
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API Key provista a la redacción socia (TSK-4.2 / REQ-16)
+
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id_usuario:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+          example: "adulto@dagaz.com"
+        rol:
+          type: string
+          enum: [adulto, admin, editor]
+          example: "adulto"
+        fecha_creacion:
+          type: string
+          format: date-time
+        es_administrador:
+          type: boolean
+
+    Contenido:
+      type: object
+      properties:
+        id_contenido:
+          type: string
+          format: uuid
+        tipo_entrada:
+          type: string
+          enum: [texto, url, imagen, audio, video]
+        contenido_original:
+          type: string
+        url_origen:
+          type: string
+          nullable: true
+        estado:
+          type: string
+          enum: [pendiente, procesando, completado, error]
+        fecha_subida:
+          type: string
+          format: date-time
+
+    Veredicto:
+      type: object
+      properties:
+        id_veredicto:
+          type: string
+          format: uuid
+        tipo_veredicto:
+          type: string
+          enum: [Verdadero, Falso, Engañoso, "No verificado"]
+        nivel_confiabilidad:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          example: 85.50
+        explicacion:
+          type: string
+          example: "Con una confiabilidad del 85.50%, este contenido es consistente con Reuters y AP."
+        fecha_emision:
+          type: string
+          format: date-time
+        fuentes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FuenteVeredicto'
+
+    Fuente:
+      type: object
+      properties:
+        id_fuente:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+          example: "Reuters"
+        url_sitio:
+          type: string
+          format: uri
+          example: "https://reuters.com"
+        tipo_fuente:
+          type: string
+          enum: [OFICIAL, PERIODISTICO, ACADEMICO, RED_SOCIAL, OTRO]
+          example: "OFICIAL"
+        clasificacion:
+          type: string
+          example: "Fuente Oficial"
+        nivel:
+          type: integer
+          enum: [1, 2, 3, 4]
+          example: 1
+          description: "Nivel de jerarquía del grafo: 1=Internacional/Multilateral, 2=Regional Colombia, 3=Nacional Colombia, 4=Fact-Checker IFCN/Control"
+        nivel_etiqueta:
+          type: string
+          example: "Nivel 1: Internacional / Agencia Multilateral"
+        indice_credibilidad:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          example: 98.50
+        fecha_registro:
+          type: string
+          format: date-time
+
+    FuenteVeredicto:
+      allOf:
+        - $ref: '#/components/schemas/Fuente'
+        - type: object
+          properties:
+            peso_en_veredicto:
+              type: number
+              format: float
+              example: 1.0
+            cita_contraste:
+              type: string
+              nullable: true
+
+    Nota:
+      type: object
+      properties:
+        id_nota:
+          type: string
+          format: uuid
+        contenido_nota:
+          type: string
+        calificacion:
+          type: number
+          format: float
+          minimum: -1
+          maximum: 5
+          example: 3.5
+        fecha_creacion:
+          type: string
+          format: date-time
+        autor:
+          type: string
+          format: email
+
+    ErrorResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+security:
+  - BearerAuth: []
+
+paths:
+  # ─── CU05: Autenticación ────────────────────────────────────────────────────
+  /auth/register:
+    post:
+      tags: [auth]
+      summary: Registrar nuevo usuario
+      description: CU05 — Registra un nuevo usuario con rol 'adulto' por defecto. No requiere autenticación.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, password_confirmation]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                password_confirmation:
+                  type: string
+                rol:
+                  type: string
+                  enum: [adulto, editor]
+                  default: adulto
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+                  token:
+                    type: string
+                  tipo_token:
+                    type: string
+                    example: Bearer
+        '422':
+          description: Validación fallida (email duplicado, password no coincide)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Iniciar sesión
+      description: CU05 — Autentica credenciales y retorna token Bearer. FA1 si credenciales incorrectas.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: adulto@dagaz.com
+                password:
+                  type: string
+                  example: adulto1234
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+                  token:
+                    type: string
+                  tipo_token:
+                    type: string
+        '422':
+          description: FA1 — Credenciales incorrectas
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      summary: Cerrar sesión
+      description: Revoca el token Bearer activo.
+      responses:
+        '200':
+          description: Sesión cerrada exitosamente
+        '401':
+          description: No autenticado
+
+  /auth/perfil:
+    get:
+      tags: [auth]
+      summary: Obtener perfil del usuario autenticado
+      responses:
+        '200':
+          description: Perfil del usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+
+  # ─── CU06: Verificación ─────────────────────────────────────────────────────
+  /verificacion:
+    post:
+      tags: [verificacion]
+      summary: Verificar contenido multicanal
+      description: |
+        CU06 — Núcleo de DAGAZ. Procesa texto, URL, imagen, audio o video
+        y emite un veredicto estructurado con trazabilidad de fuentes.
+        
+        Flujos alternativos:
+        - FA1: Video → OCR + STT → texto
+        - FA2: URL red social → scraping → texto
+        - FA3: Imagen → OCR → texto
+        - FA4: Audio → STT → texto
+        - FA5: Sin fuentes → "No verificado"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [tipo_entrada]
+              properties:
+                tipo_entrada:
+                  type: string
+                  enum: [texto, url, imagen, audio, video]
+                contenido_original:
+                  type: string
+                  minLength: 10
+                  description: Texto directo (requerido si no hay url_origen)
+                url_origen:
+                  type: string
+                  format: uri
+                  description: URL de la fuente (requerido si no hay contenido_original)
+                archivo:
+                  type: string
+                  format: binary
+                  description: Imagen, audio o video a procesar (máx 20MB)
+      responses:
+        '200':
+          description: Veredicto emitido exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensaje:
+                    type: string
+                  contenido:
+                    $ref: '#/components/schemas/Contenido'
+                  proceso:
+                    type: object
+                    properties:
+                      id_proceso:
+                        type: string
+                        format: uuid
+                      score_confiabilidad:
+                        type: number
+                      proveedor_ia:
+                        type: string
+                  veredicto:
+                    $ref: '#/components/schemas/Veredicto'
+                  fuentes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FuenteVeredicto'
+        '503':
+          description: Servicio de verificación no disponible
+
+  /verificacion/archive/consultar:
+    get:
+      tags: [verificacion]
+      summary: Consultar capturas históricas en Archive.org / Wayback Machine (REQ-10)
+      description: TSK-3.2 & REQ-10 — Consulta la disponibilidad de snapshots históricos de una URL mediante la API pública de Wayback Machine y CDX.
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+            example: https://semana.com/noticia-reciclada
+        - name: limite
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Registro histórico obtenido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  disponible:
+                    type: boolean
+                  url_mas_cercana:
+                    type: string
+                    nullable: true
+                  timestamp:
+                    type: string
+                    nullable: true
+                  total_capturas:
+                    type: integer
+                  capturas:
+                    type: array
+                    items:
+                      type: object
+        '422':
+          description: URL inválida o ausente
+
+  /verificacion/archive/descontextualizacion:
+    post:
+      tags: [verificacion]
+      summary: Detectar descontextualización histórica (REQ-10)
+      description: TSK-3.2 & REQ-10 — Audita si una noticia fue publicada originalmente hace meses o años (reciclaje temporal anacrónico).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: https://eltiempo.com/noticia-vieja
+                fecha_reclamada:
+                  type: string
+                  format: date
+                  example: 2026-09-01
+      responses:
+        '200':
+          description: Diagnóstico de descontextualización histórica
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  descontextualizado:
+                    type: boolean
+                  antiguedad_dias:
+                    type: integer
+                  primera_captura:
+                    type: string
+                    nullable: true
+                  ultima_captura:
+                    type: string
+                    nullable: true
+                  total_capturas:
+                    type: integer
+                  nivel_riesgo:
+                    type: string
+                    enum: [BAJO, MEDIO, ALTO, CRITICO]
+                  diagnostico:
+                    type: string
+                  evidencia_wayback_url:
+                    type: string
+                    nullable: true
+
+  /verificacion/interlingue/detectar:
+    post:
+      tags: [verificacion]
+      summary: Detectar idioma y grado de bilingüismo (REQ-19)
+      description: TSK-4.4 & REQ-19 — Detecta si el contenido está en español, inglés o es mixto (cadenas de desinformación con anglicismos o préstamos léxicos).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [texto]
+              properties:
+                texto:
+                  type: string
+                  minLength: 3
+                  maxLength: 10000
+                  example: "Breaking news: Confirman nuevo caso de deepfake detectado por MIT researchers en redes."
+      responses:
+        '200':
+          description: Resultado de la detección del idioma
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deteccion:
+                    type: object
+                    properties:
+                      idioma_detectado:
+                        type: string
+                        enum: [es, en, mixto, desconocido]
+                      confianza:
+                        type: number
+                        format: float
+                        example: 0.85
+                      es_mixto:
+                        type: boolean
+                      conteo_palabras:
+                        type: integer
+                      detalles:
+                        type: object
+        '422':
+          description: Validación fallida
+
+  /verificacion/interlingue/traducir:
+    post:
+      tags: [verificacion]
+      summary: Traducir texto bilingüe ES/EN (REQ-19)
+      description: TSK-4.4 & REQ-19 — Traducción bidireccional entre español e inglés preservando entidades nombradas y tecnicismos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [texto]
+              properties:
+                texto:
+                  type: string
+                  minLength: 3
+                  maxLength: 10000
+                  example: "Study by Johns Hopkins shows vaccine is safe."
+                idioma_origen:
+                  type: string
+                  enum: [es, en, auto]
+                  default: auto
+                idioma_destino:
+                  type: string
+                  enum: [es, en]
+                  default: es
+      responses:
+        '200':
+          description: Texto traducido exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  resultado:
+                    type: object
+                    properties:
+                      texto_traducido:
+                        type: string
+                      idioma_origen:
+                        type: string
+                      idioma_destino:
+                        type: string
+                      metodo:
+                        type: string
+                        enum: [ai_driver, glossary_heuristic]
+        '422':
+          description: Parámetros inválidos
+
+  /verificacion/interlingue/distorsion:
+    post:
+      tags: [verificacion]
+      summary: Analizar distorsión semántica y sensacionalismo en traducción (REQ-19)
+      description: TSK-4.4 & REQ-19 — Detecta si al traducir una afirmación en inglés al español se añadieron adjetivos alarmistas, certezas absolutas falsas o atribución apócrifa a instituciones.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [texto_origen, texto_traducido]
+              properties:
+                texto_origen:
+                  type: string
+                  minLength: 3
+                  maxLength: 10000
+                  example: "Preliminary trials show promising early signs in mice according to researchers."
+                texto_traducido:
+                  type: string
+                  minLength: 3
+                  maxLength: 10000
+                  example: "URGENTE: La OMS confirma la cura definitiva y milagrosa del cáncer."
+                idioma_origen:
+                  type: string
+                  enum: [es, en]
+                  default: en
+                idioma_destino:
+                  type: string
+                  enum: [es, en]
+                  default: es
+      responses:
+        '200':
+          description: Diagnóstico de distorsión semántica
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analisis:
+                    type: object
+                    properties:
+                      distorsion_detectada:
+                        type: boolean
+                      score_distorsion:
+                        type: number
+                        format: float
+                      sensacionalismo_agregado:
+                        type: boolean
+                      distorsion_certeza:
+                        type: boolean
+                      atribucion_institucional_falsa:
+                        type: boolean
+                      terminos_alarmistas_agregados:
+                        type: array
+                        items:
+                          type: string
+                      explicacion:
+                        type: string
+        '422':
+          description: Validación fallida
+
+  /verificacion/{idContenido}:
+    get:
+      tags: [verificacion]
+      summary: Obtener resultado de verificación
+      description: Recupera el resultado completo de un proceso de verificación previo.
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Resultado de verificación con veredicto y notas
+        '404':
+          description: Contenido no encontrado
+
+  # ─── CU03/CU04: Historial ───────────────────────────────────────────────────
+  /historial:
+    get:
+      tags: [historial]
+      summary: Consultar historial del usuario (CU04)
+      description: Lista cronológica descendente de contenidos verificados con badges de veredicto. FA1 si historial vacío.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Lista de historial paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  historial:
+                    type: array
+                  total:
+                    type: integer
+                  pagina_actual:
+                    type: integer
+                  ultima_pagina:
+                    type: integer
+
+  /historial/{idContenido}:
+    post:
+      tags: [historial]
+      summary: Guardar contenido verificado (CU03)
+      description: CU03 — Registra un contenido verificado en el historial personal del usuario.
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Noticia guardada exitosamente
+        '404':
+          description: Contenido no encontrado
+        '500':
+          description: FA1 — Fallo de persistencia
+
+  # ─── CU01/CU02: Notas ───────────────────────────────────────────────────────
+  /contenidos/{idContenido}/notas:
+    get:
+      tags: [notas]
+      summary: Listar notas de un contenido
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de notas ordenadas por calificación descendente
+    post:
+      tags: [notas]
+      summary: Agregar nota comunitaria (CU01)
+      description: |
+        CU01 — Agrega una nota de contexto o desmentido a un contenido verificado.
+        FA1: Nota en blanco rechazada. FA2: Inyecciones de código rechazadas.
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [contenido_nota]
+              properties:
+                contenido_nota:
+                  type: string
+                  minLength: 20
+                  maxLength: 2000
+      responses:
+        '201':
+          description: Nota publicada exitosamente
+        '422':
+          description: Nota inválida (vacía, muy corta, o con contenido malicioso)
+
+  /notas/{idNota}/calificar:
+    patch:
+      tags: [notas]
+      summary: Calificar nota comunitaria (CU02)
+      description: CU02 — Votar la utilidad de una nota (-1.0 a 5.0). No se puede votar la propia nota.
+      parameters:
+        - name: idNota
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [calificacion]
+              properties:
+                calificacion:
+                  type: number
+                  minimum: -1
+                  maximum: 5
+                  example: 4.0
+      responses:
+        '200':
+          description: Calificación registrada
+        '422':
+          description: Error de validación (calificación fuera de rango o propia nota)
+
+  # ─── CU07: Fuentes ──────────────────────────────────────────────────────────
+  /fuentes:
+    get:
+      tags: [fuentes]
+      summary: Listar fuentes del grafo de credibilidad (CU07 / REQ-14 / REQ-20)
+      description: Catálogo del Grafo de Credibilidad de 80 fuentes organizadas en 4 niveles de jerarquía.
+      parameters:
+        - name: tipo_fuente
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [OFICIAL, PERIODISTICO, ACADEMICO, RED_SOCIAL, OTRO]
+        - name: nivel
+          in: query
+          required: false
+          description: "Filtrar por nivel de jerarquía (1: Internacional, 2: Regional Colombia, 3: Nacional Colombia, 4: Fact-Checkers IFCN/Control)"
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4]
+        - name: buscar
+          in: query
+          required: false
+          description: "Búsqueda por nombre o fragmento del medio"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de fuentes del grafo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fuentes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Fuente'
+                  total:
+                    type: integer
+                  rol_usuario:
+                    type: string
+
+    post:
+      tags: [fuentes, admin]
+      summary: Registrar nueva fuente (solo admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nombre, url_sitio, tipo_fuente, indice_credibilidad]
+              properties:
+                nombre:
+                  type: string
+                url_sitio:
+                  type: string
+                  format: uri
+                tipo_fuente:
+                  type: string
+                  enum: [OFICIAL, PERIODISTICO, ACADEMICO, RED_SOCIAL, OTRO]
+                indice_credibilidad:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+      responses:
+        '201':
+          description: Fuente registrada exitosamente
+        '403':
+          description: Acceso denegado (no administrador)
+
+  /fuentes/{idFuente}/valorar:
+    patch:
+      tags: [fuentes]
+      summary: Valorar confiabilidad de una fuente (CU07 - Usuario)
+      parameters:
+        - name: idFuente
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [calificacion]
+              properties:
+                calificacion:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+      responses:
+        '200':
+          description: Valoración registrada
+
+  /fuentes/{idFuente}/clasificar:
+    patch:
+      tags: [fuentes, admin]
+      summary: Reclasificar fuente (CU07 FA1 - solo Admin)
+      description: CU07 FA1 — Solo administradores pueden cambiar el nivel y metadatos de la fuente.
+      parameters:
+        - name: idFuente
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tipo_fuente:
+                  type: string
+                  enum: [OFICIAL, PERIODISTICO, ACADEMICO, RED_SOCIAL, OTRO]
+                indice_credibilidad:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                nombre:
+                  type: string
+                url_sitio:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Fuente actualizada
+        '403':
+          description: Acceso denegado
+
+  # ─── Admin ──────────────────────────────────────────────────────────────────
+  /admin/logs-api:
+    get:
+      tags: [admin]
+      summary: Consultar logs de auditoría de APIs externas
+      description: Telemetría de todas las llamadas a LLMs, OCR y servicios externos.
+      parameters:
+        - name: servicio
+          in: query
+          schema:
+            type: string
+            enum: [OpenAI, Gemini, Anthropic, Whisper, "Archive.org", Local]
+        - name: codigo_respuesta
+          in: query
+          schema:
+            type: integer
+            example: 500
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de logs de auditoría paginada
+        '403':
+          description: Acceso denegado (no administrador)
+
+  /admin/circuit-breaker:
+    get:
+      tags: [admin]
+      summary: Consultar estado y métricas del Circuit Breaker (TSK-4.3 / REQ-18)
+      description: Monitorea el consumo de tokens/hora y presupuesto diario en USD de las APIs de LLM.
+      responses:
+        '200':
+          description: Métricas del Circuit Breaker
+        '403':
+          description: Acceso denegado
+
+  /admin/circuit-breaker/reset:
+    post:
+      tags: [admin]
+      summary: Restablecer manualmente el Circuit Breaker (TSK-4.3 / REQ-18)
+      description: Restablece el circuito a estado CLOSED y reinicia contadores temporales.
+      responses:
+        '200':
+          description: Circuito restablecido exitosamente
+        '403':
+          description: Acceso denegado
+
+  # ─── Panel Editorial Humano (TSK-3.7 & REQ-13) ─────────────────────────────
+  /veredictos/{idVeredicto}/intervenir:
+    post:
+      tags: [admin, verificacion]
+      summary: Intervención humana / revisión editorial sobre veredicto
+      description: Permite a un editor o administrador rectificar o corregir un veredicto automatizado.
+      parameters:
+        - name: idVeredicto
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tipo_veredicto, explicacion, nivel_confiabilidad, motivo_intervencion]
+              properties:
+                tipo_veredicto:
+                  type: string
+                  enum: [VERDADERO, FALSO, ENGAÑOSO, PARCIAL, NO_VERIFICABLE]
+                explicacion:
+                  type: string
+                  minLength: 20
+                nivel_confiabilidad:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                motivo_intervencion:
+                  type: string
+                  minLength: 10
+      responses:
+        '200':
+          description: Veredicto corregido exitosamente
+        '403':
+          description: Acceso denegado (requiere rol admin o editor)
+        '404':
+          description: Veredicto no encontrado
+
+  # ─── Hábeas Data (Ley 1581 de 2012 / TSK-4.5) ──────────────────────────────
+  /auth/datos-personales:
+    get:
+      tags: [auth]
+      summary: Descargar datos personales (Ley 1581 de 2012)
+      description: Exporta toda la información personal almacenada del titular en formato JSON.
+      responses:
+        '200':
+          description: Datos personales exportados
+        '401':
+          description: No autenticado
+
+  /auth/cuenta:
+    delete:
+      tags: [auth]
+      summary: Derecho al olvido y supresión de cuenta (Ley 1581 de 2012)
+      description: Elimina la cuenta, revoca credenciales y borra en cascada los registros asociados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Cuenta suprimida exitosamente
+        '422':
+          description: Contraseña incorrecta
+
+  # ─── API Pública v1 para Redacciones Socias (TSK-4.2 & REQ-16) ─────────────
+  /public/verificar:
+    post:
+      tags: [public-partners]
+      summary: Verificar contenido para redacciones socias (REQ-16)
+      description: TSK-4.2 & REQ-16 — Endpoint REST para verificar afirmaciones desde salas de prensa aliadas mediante autenticación con API Key.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tipo_entrada]
+              properties:
+                tipo_entrada:
+                  type: string
+                  enum: [TEXTO, URL, IMAGEN_OCR, RED_SOCIAL]
+                contenido_original:
+                  type: string
+                  minLength: 10
+                  maxLength: 10000
+                url_origen:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Veredicto editorial emitido
+          headers:
+            X-Partner-Id:
+              schema:
+                type: string
+              description: Identificador del socio autenticado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version_api:
+                    type: string
+                  socio:
+                    type: object
+                  solicitud:
+                    type: object
+                  veredicto:
+                    type: object
+                  fuentes_contraste:
+                    type: array
+                    items:
+                      type: object
+                  analisis_avanzado:
+                    type: object
+        '401':
+          description: API Key ausente en la cabecera X-API-KEY
+        '403':
+          description: API Key inválida o revocada
+        '429':
+          description: Límite de tasa (Rate Limit) excedido para el socio
+
+  /public/veredictos/{idContenido}:
+    get:
+      tags: [public-partners]
+      summary: Consultar veredicto emitido previamente (REQ-16)
+      description: Permite a una sala de prensa consultar el veredicto y contraste de fuentes por UUID de contenido.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Veredicto obtenido exitosamente
+        '401':
+          description: No autenticado
+        '404':
+          description: Contenido no encontrado
+
+  /public/fuentes:
+    get:
+      tags: [public-partners]
+      summary: Consultar Grafo de Credibilidad para redacciones socias (REQ-16 / REQ-20)
+      description: Acceso al catálogo de 80 fuentes del grafo con filtros por nivel de jerarquía (1 a 4) y búsqueda.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: nivel
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4]
+        - name: buscar
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de fuentes del grafo para redacciones socias
+
+  /public/health:
+    get:
+      tags: [public-partners]
+      summary: Health check y disponibilidad del servicio para partners
+      description: Diagnóstico de latencia, SLA y estado del servicio de API para redacciones.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Servicio operacional
+
+  /auditoria/veredictos/{idContenido}:
+    get:
+      tags: [auditoria]
+      summary: Exportar expediente de auditoría forense individual (TSK-4.6 / REQ-25)
+      description: |
+        Genera el expediente de auditoría forense con trazabilidad de procesos, fuentes,
+        intervenciones editoriales e integridad criptográfica SHA-256 para reguladores y medios.
+        Soporta los formatos `json`, `json-ld` (ClaimReview) y `csv`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: formato
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [json, json-ld, csv]
+            default: json
+      responses:
+        '200':
+          description: Expediente de auditoría generado exitosamente
+        '401':
+          description: No autenticado
+        '403':
+          description: No posee rol de editor o admin
+        '404':
+          description: Contenido no encontrado
+
+  /auditoria/expedientes:
+    get:
+      tags: [auditoria]
+      summary: Exportación masiva de expedientes de auditoría para reguladores (TSK-4.6 / REQ-25)
+      description: |
+        Exporta lotes de auditoría filtrables por rango de fechas (desde/hasta), tipo de veredicto
+        y tipo de entrada en formato JSON estructurado o CSV tabular descargable con UTF-8 BOM.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: desde
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: hasta
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tipo_veredicto
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [VERDADERO, FALSO, ENGAÑOSO, PARCIAL, NO_VERIFICABLE]
+        - name: formato
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [json, csv]
+            default: json
+        - name: limite
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Lote de auditoría o archivo CSV descargable
+
+  /auditoria/claim-review/{idContenido}:
+    get:
+      tags: [auditoria]
+      summary: Obtener esquema Schema.org ClaimReview JSON-LD (TSK-4.6 / REQ-25)
+      description: Entrega el metadato estandarizado ClaimReview v1.0 para indexación en Google Fact Check Tools e IFCN.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ClaimReview JSON-LD retornado
+
+  /public/auditoria/{idContenido}:
+    get:
+      tags: [public-partners, auditoria]
+      summary: Exportar expediente de auditoría para redacciones socias (REQ-16 / REQ-25)
+      description: Acceso al expediente de auditoría forense para redacciones aliadas autenticadas con API Key.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: formato
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [json, json-ld, csv]
+            default: json
+      responses:
+        '200':
+          description: Expediente de auditoría para socio
+
+  /public/claim-review/{idContenido}:
+    get:
+      tags: [public-partners, auditoria]
+      summary: Obtener ClaimReview JSON-LD para redacciones socias (REQ-16 / REQ-25)
+      description: Acceso al formato Schema.org ClaimReview para publicación en plataformas aliadas con API Key.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: idContenido
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ClaimReview JSON-LD para socio
+

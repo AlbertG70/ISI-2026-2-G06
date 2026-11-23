@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>DAGAZ — Plataforma de Verificación de Información</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <style>
+        :root {
+            --font-base: 18px;
+            --bg-color: #faf8f5;
+            --text-color: #1f2937;
+            --text-muted: #4b5563;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --success-bg: #f0fdf4;
+            --success-border: #22c55e;
+            --success-text: #166534;
+            --danger-bg: #fef2f2;
+            --danger-border: #ef4444;
+            --danger-text: #991b1b;
+            --warning-bg: #fffbeb;
+            --warning-border: #f59e0b;
+            --warning-text: #92400e;
+        }
+        body.text-large {
+            --font-base: 21px;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 1.5rem 1rem;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: var(--font-base);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            text-align: center;
+        }
+        .logo {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 0.875rem;
+            font-weight: 700;
+            padding: 0.3rem 0.85rem;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 1.35rem;
+            margin: 0 0 0.5rem 0;
+            color: #111827;
+            font-weight: 800;
+        }
+        p {
+            line-height: 1.55;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+        .server-box {
+            background-color: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin: 1.25rem 0;
+            text-align: left;
+        }
+        .server-box label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .server-input {
+            flex: 1;
+            padding: 0.75rem 0.9rem;
+            font-size: 0.95em;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+        }
+        .server-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+        .pill {
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 0.8em;
+            font-weight: 600;
+            padding: 0.35rem 0.65rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .pill:hover, .pill:focus {
+            background: #cbd5e1;
+            color: #0f172a;
+        }
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.88em;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .status-checking {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-text);
+        }
+        .status-online {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success-text);
+        }
+        .status-offline {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: var(--danger-text);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.05em;
+            min-height: 54px;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .btn:hover, .btn:focus {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        .btn-check {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 44px;
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+        }
+        .controls {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            color: #6b7280;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 1rem;
+        }
+        .size-toggle {
+            background: none;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            color: #1f2937;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <main class="container" role="main">
+        <div class="logo">
+            <span>🛡️</span> <span>DAGAZ</span>
+        </div>
+        <div class="badge">Fact-Checking Ciudadano · Modo Autónomo</div>
+        <h1>Verificación de Información</h1>
+        <p>
+            Compruebe noticias, audios y cadenas virales contra más de 80 fuentes oficiales y periodísticas de Colombia.
+        </p>
+
+        <section class="server-box" aria-label="Configuración de Servidor Backend">
+            <label for="server-url">Dirección del Servidor DAGAZ en su Red:</label>
+            <div class="input-group">
+                <input type="url" 
+                       id="server-url" 
+                       class="server-input" 
+                       placeholder="http://192.168.1.14:8000" 
+                       autocomplete="off" 
+                       spellcheck="false" />
+            </div>
+
+            <div class="pills" role="group" aria-label="Servidores rápidos sugeridos">
+                <button type="button" class="pill" data-ip="http://192.168.1.14:8000">📱 Wi-Fi Local (192.168.1.14)</button>
+                <button type="button" class="pill" data-ip="http://10.0.2.2:8000">💻 Emulador (10.0.2.2)</button>
+                <button type="button" class="pill" data-ip="http://localhost:8000">🌐 Localhost</button>
+            </div>
+
+            <div id="status-indicator" class="status-badge status-checking" role="status">
+                <span id="status-dot">🟡</span>
+                <span id="status-msg">Comprobando conexión con su backend...</span>
+            </div>
+        </section>
+
+        <button type="button" id="btn-iniciar" class="btn">
+            🚀 Iniciar Verificación DAGAZ
+        </button>
+
+        <div class="controls">
+            <span>Accesibilidad (+40 años)</span>
+            <button id="btn-tamano" class="size-toggle" aria-label="Ajustar tamaño de letra">A / A+</button>
+        </div>
+    </main>
+
+    <script>
+        // Gestión del tamaño de fuente accesible (+40)
+        const btnTamano = document.getElementById('btn-tamano');
+        const fuenteGuardada = localStorage.getItem('dagaz_tamano_fuente');
+        if (fuenteGuardada === 'grande') {
+            document.body.classList.add('text-large');
+        }
+        btnTamano.addEventListener('click', () => {
+            const esGrande = document.body.classList.toggle('text-large');
+            localStorage.setItem('dagaz_tamano_fuente', esGrande ? 'grande' : 'normal');
+        });
+
+        // Configuración y persistencia del servidor backend
+        const DEFAULT_URL = 'http://192.168.1.14:8000';
+        const serverInput = document.getElementById('server-url');
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusDot = document.getElementById('status-dot');
+        const statusMsg = document.getElementById('status-msg');
+        const btnIniciar = document.getElementById('btn-iniciar');
+
+        const guardada = localStorage.getItem('dagaz_server_url') || DEFAULT_URL;
+        serverInput.value = guardada;
+
+        function normalizar(url) {
+            let u = (url || '').trim().replace(/\/+$/, '');
+            if (u && !/^https?:\/\//i.test(u)) {
+                u = 'http://' + u;
+            }
+            return u;
+        }
+
+        async function verificarConexion(url) {
+            const target = normalizar(url);
+            statusIndicator.className = 'status-badge status-checking';
+            statusDot.textContent = '🟡';
+            statusMsg.textContent = 'Comprobando conexión con ' + target + '...';
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+            try {
+                // Intento de conexión al servidor backend Laravel
+                await fetch(target + '/api/v1/fuentes', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal,
+                    mode: 'cors'
+                });
+                clearTimeout(timeoutId);
+                statusIndicator.className = 'status-badge status-online';
+                statusDot.textContent = '🟢';
+                statusMsg.textContent = 'Servidor activo en su red. Listo para verificar.';
+                localStorage.setItem('dagaz_server_url', target);
+            } catch (err) {
+                clearTimeout(timeoutId);
+                statusIndicator.className = 'status-badge status-offline';
+                statusDot.textContent = '🔴';
+                statusMsg.textContent = 'Sin respuesta del servidor. Verifique que "php artisan serve" esté corriendo en su PC.';
+            }
+        }
+
+        // Eventos de botones rápidos de servidor
+        document.querySelectorAll('.pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                serverInput.value = pill.dataset.ip;
+                localStorage.setItem('dagaz_server_url', pill.dataset.ip);
+                verificarConexion(pill.dataset.ip);
+            });
+        });
+
+        serverInput.addEventListener('change', () => {
+            const lim = normalizar(serverInput.value);
+            serverInput.value = lim;
+            localStorage.setItem('dagaz_server_url', lim);
+            verificarConexion(lim);
+        });
+
+        // Iniciar navegación a la aplicación en vivo
+        btnIniciar.addEventListener('click', () => {
+            const target = normalizar(serverInput.value) || DEFAULT_URL;
+            localStorage.setItem('dagaz_server_url', target);
+            // Redirige a la pantalla principal de verificación de DAGAZ
+            window.location.href = target + '/verificar';
+        });
+
+        // Verificación inicial automática
+        verificarConexion(guardada);
+    </script>
+</body>
+</html>

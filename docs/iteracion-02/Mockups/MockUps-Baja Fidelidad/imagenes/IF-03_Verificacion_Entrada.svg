@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 660" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .btn-primary { fill: #e5e7eb; stroke: #111111; stroke-width: 2; cursor: pointer; }
+    .input-hitbox { fill: #fafafa; stroke: #444444; stroke-width: 1.5; }
+    .tab-active { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .tab-inactive { fill: #f0f0f0; stroke: #cccccc; stroke-width: 1; }
+    .meta { font-size: 11px; fill: #555555; }
+    .label { font-size: 12px; font-weight: bold; }
+    .btn-text { font-size: 12px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 16px; font-weight: bold; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="640" class="frame" />
+
+  <!-- Top System Header -->
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-03: VERIFICACION (/verificar)</text>
+
+  <!-- App Header Bar Hitbox -->
+  <g transform="translate(24, 48)">
+    <!-- Logo -->
+    <rect x="0" y="0" width="90" height="32" class="card" />
+    <text x="45" y="21" class="btn-text">[ DAGAZ ]</text>
+
+    <!-- Font Size Controls -->
+    <rect x="220" y="2" width="30" height="28" class="btn-hitbox" />
+    <text x="235" y="21" class="btn-text">A</text>
+    <rect x="254" y="2" width="34" height="28" class="btn-hitbox" />
+    <text x="271" y="21" class="btn-text">A+</text>
+
+    <!-- Salir Button -->
+    <rect x="300" y="2" width="68" height="28" class="btn-hitbox" />
+    <text x="334" y="21" class="btn-text">[ Salir ]</text>
+  </g>
+  <line x1="24" y1="88" x2="396" y2="88" stroke="#cccccc" />
+
+  <!-- Page Title -->
+  <g transform="translate(24, 102)">
+    <text x="0" y="18" class="title">Verificar Contenido (CU06)</text>
+    <text x="0" y="34" class="meta">Contraste contra base de 80 fuentes oficiales</text>
+  </g>
+
+  <!-- Ingestion Card Hitbox -->
+  <g transform="translate(24, 150)">
+    <rect x="0" y="0" width="372" height="400" class="card" />
+
+    <!-- Tabs Hitboxes -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="124" height="38" class="tab-active" />
+      <text x="62" y="24" class="btn-text">[ Texto ]</text>
+
+      <rect x="124" y="0" width="124" height="38" class="tab-inactive" />
+      <text x="186" y="24" font-size="11" fill="#777777" text-anchor="middle">Enlace</text>
+
+      <rect x="248" y="0" width="124" height="38" class="tab-inactive" />
+      <text x="310" y="24" font-size="11" fill="#777777" text-anchor="middle">Archivo</text>
+      
+      <line x1="0" y1="38" x2="372" y2="38" stroke="#111111" stroke-width="1.5" />
+    </g>
+
+    <!-- Form Content -->
+    <g transform="translate(18, 56)">
+      <text x="0" y="14" class="label">Texto o mensaje recibido:</text>
+      
+      <!-- Textarea Hitbox -->
+      <rect x="0" y="24" width="336" height="180" class="input-hitbox" />
+      <text x="12" y="48" font-size="12" fill="#333333">| "Urgente: El Ministerio de Salud acaba</text>
+      <text x="12" y="68" font-size="12" fill="#333333">| de decretar toque de queda sanitario en</text>
+      <text x="12" y="88" font-size="12" fill="#333333">| todo el pais a partir del viernes..."</text>
+      
+      <text x="336" y="222" font-size="11" class="meta" text-anchor="end">168 / 5000 car.</text>
+
+      <!-- Action Buttons Hitboxes -->
+      <g transform="translate(0, 246)">
+        <rect x="0" y="0" width="110" height="48" class="btn-hitbox" />
+        <text x="55" y="29" class="btn-text">[ Limpiar ]</text>
+
+        <rect x="122" y="0" width="214" height="48" class="btn-primary" />
+        <text x="229" y="29" class="btn-text">[ VERIFICAR AHORA (h=48) ]</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom Nav Bar Hitboxes (Fixed 56px) -->
+  <g transform="translate(24, 574)">
+    <rect x="0" y="0" width="372" height="56" class="nav-box" />
+
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="46" y="33" class="btn-text">[VERIFICAR]</text>
+    </g>
+
+    <g transform="translate(93, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Historial</text>
+    </g>
+
+    <g transform="translate(186, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Fuentes</text>
+    </g>
+
+    <g transform="translate(279, 0)">
+      <rect x="0" y="0" width="93" height="56" fill="#ffffff" stroke="#cccccc" stroke-width="0.5" />
+      <text x="46" y="33" font-size="11" fill="#555555" text-anchor="middle">Cuenta</text>
+    </g>
+  </g>
+</svg>

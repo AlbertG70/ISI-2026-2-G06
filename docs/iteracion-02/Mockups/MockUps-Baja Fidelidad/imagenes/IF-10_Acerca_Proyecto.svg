@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 640" width="100%" height="100%">
+  <style>
+    text { font-family: 'Consolas', 'Courier New', monospace; fill: #111111; }
+    .frame { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .card { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
+    .btn-hitbox { fill: #f0f0f0; stroke: #111111; stroke-width: 1.5; cursor: pointer; }
+    .meta { font-size: 11px; fill: #555555; }
+    .btn-text { font-size: 11px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 15px; font-weight: bold; }
+    .nav-box { fill: #ffffff; stroke: #111111; stroke-width: 1.5; }
+  </style>
+
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <rect x="10" y="10" width="400" height="620" class="frame" />
+
+  <rect x="10" y="10" width="400" height="28" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+  <text x="20" y="28" class="meta">PANTALLA MOVIL | IF-10: ACERCA DE DAGAZ (/acerca.html)</text>
+
+  <!-- Top Nav Bar Hitbox -->
+  <g transform="translate(24, 48)">
+    <rect x="0" y="0" width="372" height="40" class="card" fill="#f0f0f0" />
+    <text x="50" y="25" font-size="12" font-weight="bold" fill="#111111">[ DAGAZ ]</text>
+    
+    <g transform="translate(150, 6)">
+      <rect x="0" y="0" width="70" height="28" class="btn-hitbox" fill="#ffffff" />
+      <text x="35" y="18" class="btn-text">Verificar</text>
+
+      <rect x="76" y="0" width="66" height="28" class="btn-hitbox" fill="#ffffff" />
+      <text x="109" y="18" class="btn-text">Fuentes</text>
+
+      <rect x="148" y="0" width="68" height="28" class="btn-hitbox" fill="#e5e7eb" stroke="#111111" stroke-width="1.5" />
+      <text x="182" y="18" class="btn-text">[Acerca]</text>
+    </g>
+  </g>
+  <line x1="24" y1="98" x2="396" y2="98" stroke="#cccccc" />
+
+  <!-- Content Cards -->
+  <g transform="translate(24, 110)">
+    
+    <!-- Hero Box Hitbox -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="372" height="106" class="card" />
+      <text x="14" y="24" class="title">Acerca de DAGAZ (REQ-27)</text>
+      <text x="14" y="46" font-size="12" font-weight="bold">Tecnologia civica contra la desinformacion</text>
+      <text x="14" y="66" class="meta">Plataforma ciudadana para adultos (+40 anos) y medios.</text>
+      
+      <!-- Verified Badge Hitbox -->
+      <rect x="14" y="76" width="160" height="20" fill="#f0f0f0" stroke="#111111" stroke-width="1" />
+      <text x="94" y="90" font-size="10" font-weight="bold" text-anchor="middle">[ Grafo 80 Fuentes IFCN ]</text>
+    </g>
+
+    <!-- Methodology Pillars Hitbox -->
+    <g transform="translate(0, 118)">
+      <rect x="0" y="0" width="372" height="248" class="card" />
+      <text x="14" y="22" font-size="12" font-weight="bold">PILARES METODOLOGICOS DEL FACT-CHECKING:</text>
+      <line x1="14" y1="30" x2="358" y2="30" stroke="#eeeeee" />
+
+      <g transform="translate(14, 40)">
+        <rect x="0" y="0" width="344" height="42" fill="#fafafa" stroke="#999999" stroke-width="1" />
+        <text x="10" y="18" font-size="11" font-weight="bold">1. Descomposicion atomica de afirmaciones</text>
+        <text x="10" y="32" class="meta">Aislamiento de hechos objetivos frente a opiniones.</text>
+      </g>
+
+      <g transform="translate(14, 88)">
+        <rect x="0" y="0" width="344" height="42" fill="#fafafa" stroke="#999999" stroke-width="1" />
+        <text x="10" y="18" font-size="11" font-weight="bold">2. Grafo de 80 fuentes de noticias IFCN</text>
+        <text x="10" y="32" class="meta">Contraste con agencias, entes oficiales y chequeadores.</text>
+      </g>
+
+      <g transform="translate(14, 136)">
+        <rect x="0" y="0" width="344" height="42" fill="#fafafa" stroke="#999999" stroke-width="1" />
+        <text x="10" y="18" font-size="11" font-weight="bold">3. Ponderacion bayesiana y transparencia</text>
+        <text x="10" y="32" class="meta">Calculo de confianza 0-100% con trazabilidad completa.</text>
+      </g>
+
+      <g transform="translate(14, 184)">
+        <rect x="0" y="0" width="344" height="42" fill="#fafafa" stroke="#999999" stroke-width="1" />
+        <text x="10" y="18" font-size="11" font-weight="bold">4. Participacion ciudadana y notas de contexto</text>
+        <text x="10" y="32" class="meta">Aporte colectivo supervisado por revisores humanos.</text>
+      </g>
+    </g>
+
+    <!-- Standards & Legal Card Hitbox -->
+    <g transform="translate(0, 376)">
+      <rect x="0" y="0" width="372" height="114" class="card" />
+      <text x="14" y="22" font-size="12" font-weight="bold">ESTANDARES Y CUMPLIMIENTO:</text>
+      <line x1="14" y1="30" x2="358" y2="30" stroke="#eeeeee" />
+
+      <text x="14" y="50" font-size="11" font-weight="bold">[ WCAG 2.1 AA ] Accesibilidad para adultos (+40)</text>
+      <text x="14" y="66" class="meta">Botones minimos de 48px y tipografia legible de 18px.</text>
+
+      <text x="14" y="88" font-size="11" font-weight="bold">[ LEY 1581 / 2012 ] Proteccion de Datos Personales</text>
+      <text x="14" y="102" class="meta">Garantias plenas de Habeas Data y derecho al olvido.</text>
+    </g>
+
+    <!-- Footer Text -->
+    <text x="186" y="504" font-size="10" class="meta" text-anchor="middle">ISI-CORP - Universidad de Cartagena - Periodo 2026-II</text>
+  </g>
+</svg>

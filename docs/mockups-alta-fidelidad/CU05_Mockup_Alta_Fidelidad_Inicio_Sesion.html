@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mockup Alta Fidelidad — CU05: Inicio de Sesión y Autenticación · DAGAZ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; background-color: #faf8f5; color: #1a1a1a; }
+    .text-large { font-size: 125%; }
+    .text-large h1 { font-size: 2.25rem !important; }
+    .text-large .dz-campo { font-size: 1.25rem !important; min-height: 58px !important; }
+    .text-large .dz-btn { font-size: 1.25rem !important; min-height: 58px !important; }
+    .dz-tarjeta { background: #ffffff; border: 2px solid rgba(26,26,26,0.15); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .dz-campo { width: 100%; min-height: 50px; border-radius: 0.5rem; border: 2px solid #8a8a8a; padding: 0.75rem 1rem; font-size: 1.05rem; outline: none; transition: border-color 0.15s ease; }
+    .dz-campo:focus { border-color: #1f2937; box-shadow: 0 0 0 3px rgba(31,41,55,0.15); }
+    .dz-btn { min-height: 50px; border-radius: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; transition: all 0.15s ease; }
+    .dz-btn-primario { background: #1f2937; color: #ffffff; }
+    .dz-btn-primario:hover { background: #0f172a; transform: translateY(-1px); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6 transition-all duration-200">
+
+  <!-- Barra de Especificación y Trazabilidad (Referencia de Documentación) -->
+  <aside class="max-w-2xl mx-auto w-full mb-4 bg-slate-900 text-slate-100 rounded-xl p-3.5 text-xs shadow-md">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2 mb-2">
+      <span class="font-bold tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
+        📌 Mockup Alta Fidelidad · CU05
+      </span>
+      <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+        Doc: <code>02_Especificacion_Casos_de_Uso.md</code>
+      </span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-300">
+      <div><strong>Actor Principal:</strong> Adulto Mayor (+40), Admin</div>
+      <div><strong>Requisitos:</strong> REQ-12, REQ-27</div>
+      <div><strong>Accesibilidad:</strong> WCAG 2.1 AA / Botones ≥48px</div>
+    </div>
+  </aside>
+
+  <!-- Contenedor Principal de la Aplicación -->
+  <main class="max-w-md mx-auto w-full my-auto space-y-4">
+
+    <!-- Cabecera y Selector de Accesibilidad -->
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg width="34" height="34" viewBox="0 0 100 100" class="text-slate-900" aria-hidden="true">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <span class="text-2xl font-black tracking-widest text-slate-900">DAGAZ</span>
+      </div>
+
+      <!-- Control de Tamaño de Letra (A / A+) -->
+      <div class="flex items-center gap-1 bg-white border-2 border-slate-300 rounded-lg p-1" title="Ajustar tamaño de letra para lectura cómoda">
+        <button type="button" id="btn-font-normal" onclick="setFontSize(false)" class="px-2.5 py-1 text-sm font-bold rounded bg-slate-900 text-white" aria-label="Tamaño normal de texto">A</button>
+        <button type="button" id="btn-font-large" onclick="setFontSize(true)" class="px-2.5 py-1 text-sm font-bold rounded text-slate-700 hover:bg-slate-100" aria-label="Aumentar tamaño de texto">A+</button>
+      </div>
+    </header>
+
+    <!-- Tarjeta de Login -->
+    <section class="dz-tarjeta p-6 sm:p-8 space-y-5">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Iniciar Sesión</h1>
+        <p class="text-sm text-slate-600 mt-1">Acceda para verificar noticias, calificar notas comunitarias y guardar su historial.</p>
+      </div>
+
+      <!-- Alerta de Validación Dinámica (FA1 / FA2) -->
+      <div id="login-alert" class="hidden p-3.5 rounded-lg border-2 border-red-600 bg-red-50 text-red-900 text-sm font-medium flex items-start gap-2" role="alert">
+        <span class="text-lg">⚠️</span>
+        <span id="login-alert-msg">Credenciales incorrectas. Verifique su correo o contraseña.</span>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-4" novalidate>
+        <div>
+          <label for="email" class="block font-bold text-sm text-slate-800 mb-1">Correo electrónico:</label>
+          <input type="email" id="email" class="dz-campo" placeholder="ejemplo@correo.com" required value="adulto@dagaz.com" autocomplete="email">
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label for="password" class="block font-bold text-sm text-slate-800">Contraseña:</label>
+            <button type="button" onclick="togglePass()" class="text-xs font-semibold text-blue-700 hover:underline">👁️ Mostrar</button>
+          </div>
+          <input type="password" id="password" class="dz-campo" placeholder="••••••••" required value="adulto1234" autocomplete="current-password">
+        </div>
+
+        <button type="submit" id="btn-submit" class="dz-btn dz-btn-primario w-full shadow">
+          <span>Ingresar a DAGAZ</span> ➔
+        </button>
+      </form>
+
+      <div class="border-t border-slate-200 pt-4 text-center space-y-2">
+        <p class="text-sm text-slate-600">
+          ¿Aún no tiene cuenta?
+          <a href="#" class="font-bold text-blue-800 hover:underline ml-1">Regístrese gratis aquí</a>
+        </p>
+        <p class="text-xs text-slate-500">
+          🔒 Protegido bajo la Ley Estatutaria 1581 de 2012 de Hábeas Data en Colombia.
+        </p>
+      </div>
+    </section>
+
+    <!-- Enlaces Rápidos de Demostración del Mockup -->
+    <nav class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex flex-wrap justify-between items-center gap-2">
+      <span class="font-bold">Probar flujo alternativo:</span>
+      <div class="flex gap-2">
+        <button type="button" onclick="simularError(1)" class="underline hover:text-amber-950 font-medium">FA1: Error clave</button>
+        <span>·</span>
+        <button type="button" onclick="simularError(2)" class="underline hover:text-amber-950 font-medium">FA2: No registrado</button>
+        <span>·</span>
+        <button type="button" onclick="simularExito()" class="underline hover:text-green-800 font-bold text-green-700">Ingreso exitoso</button>
+      </div>
+    </nav>
+  </main>
+
+  <!-- Pie de Página Institucional -->
+  <footer class="max-w-2xl mx-auto w-full text-center text-xs text-slate-500 pt-6">
+    <p>DAGAZ © 2026 · Proyecto Académico ISI-2026-2-G06 · Sistema de Detección de Desinformación</p>
+  </footer>
+
+  <script>
+    function setFontSize(isLarge) {
+      document.body.classList.toggle('text-large', isLarge);
+      document.getElementById('btn-font-normal').className = isLarge
+        ? 'px-2.5 py-1 text-sm font-bold rounded text-slate-700 hover:bg-slate-100'
+        : 'px-2.5 py-1 text-sm font-bold rounded bg-slate-900 text-white';
+      document.getElementById('btn-font-large').className = isLarge
+        ? 'px-2.5 py-1 text-sm font-bold rounded bg-slate-900 text-white'
+        : 'px-2.5 py-1 text-sm font-bold rounded text-slate-700 hover:bg-slate-100';
+    }
+
+    function togglePass() {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    }
+
+    function simularError(tipo) {
+      const alert = document.getElementById('login-alert');
+      const msg = document.getElementById('login-alert-msg');
+      alert.classList.remove('hidden', 'bg-green-50', 'border-green-600', 'text-green-900');
+      alert.classList.add('bg-red-50', 'border-red-600', 'text-red-900');
+      msg.textContent = tipo === 1 
+        ? 'FA1: Contraseña incorrecta. Por favor intente nuevamente o restablezca su acceso.' 
+        : 'FA2: El correo no se encuentra registrado. Pulse en "Regístrese gratis aquí" para crear su cuenta.';
+    }
+
+    function simularExito() {
+      const alert = document.getElementById('login-alert');
+      const msg = document.getElementById('login-alert-msg');
+      alert.classList.remove('hidden', 'bg-red-50', 'border-red-600', 'text-red-900');
+      alert.classList.add('bg-green-50', 'border-green-600', 'text-green-900');
+      msg.textContent = '✔ Credenciales validadas. Redirigiendo a Verificar Contenido (CU06)...';
+      setTimeout(() => { window.location.href = 'CU06_Mockup_Alta_Fidelidad_Verificar_Entrada.html'; }, 1000);
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      simularExito();
+    }
+  </script>
+</body>
+</html>

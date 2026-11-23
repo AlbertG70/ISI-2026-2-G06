@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+    * { font-family: 'Caveat', cursive !important; }
+    body { background: #faf8f5; }
+    .napkin-border { border: 2px solid #333; border-radius: 4px; }
+    .sketch-line { border-bottom: 1.5px dashed #999; }
+    .note-field { border: 1.5px solid #aaa; border-radius: 4px; padding: 10px 14px; font-size: 17px; width: 100%; box-sizing: border-box; background: #fefefe; outline: none; resize: none; }
+    .note-field:focus { border-color: #555; }
+    .note-field::placeholder { color: #bbb; }
+    .btn-send { background: #333; color: #fff; border: none; border-radius: 4px; padding: 8px 22px; font-size: 18px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+    .btn-send:hover { background: #555; }
+    .btn-cancel { background: #eee; color: #666; border: 1.5px solid #bbb; border-radius: 4px; padding: 8px 18px; font-size: 18px; cursor: pointer; }
+    .btn-cancel:hover { background: #ddd; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: #d4d4d4; border: 1.5px solid #999; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    .like-btn { border: none; background: none; cursor: pointer; font-size: 15px; padding: 2px 4px; transition: transform 0.1s; }
+    .like-btn:hover { transform: scale(1.2); }
+    .error-msg { font-size: 15px; color: #dc2626; margin-top: 6px; display: none; }
+    .error-msg.show { display: block; }
+    .success-msg { font-size: 15px; color: #16a34a; margin-top: 6px; display: none; }
+    .success-msg.show { display: block; }
+    .char-counter { font-size: 13px; color: #aaa; text-align: right; margin-top: 3px; }
+    .char-counter.warn { color: #dc2626; }
+  </style>
+</head>
+<body class="p-6">
+  <div style="max-width: 600px; margin: 0 auto;">
+
+    <p style="font-size: 22px; color: #555; margin-bottom: 12px; text-align: center;">
+      ✏️ Mockup Servilleta — CU01: Asignar Notas Complementarias
+    </p>
+
+    <div class="napkin-border" style="background: #fff; padding: 22px;">
+
+      <!-- Header DAGAZ -->
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+          <polygon points="20,10 50,50 20,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+          <polygon points="80,10 50,50 80,90" fill="none" stroke="#333" stroke-width="5" stroke-linejoin="round"/>
+          <line x1="20" y1="10" x2="80" y2="10" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+          <line x1="20" y1="90" x2="80" y2="90" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <span style="font-size: 18px; color: #222; font-weight: 600; letter-spacing: 2px;">DAGAZ</span>
+        <span style="font-size: 14px; color: #aaa; margin-left: auto;">👤 Usuario123</span>
+      </div>
+
+      <div class="sketch-line" style="margin-bottom: 14px;"></div>
+
+      <!-- SECCIÓN 1: Noticia verificada + Veredicto -->
+      <div style="border: 1.5px solid #ccc; border-radius: 6px; padding: 14px; margin-bottom: 16px; background: #fefefe;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+          <div style="flex: 1;">
+            <p style="font-size: 21px; color: #222; margin: 0 0 4px 0; font-weight: 600;">
+              📰 "Ciudad enfrenta crisis de agua potable"
+            </p>
+            <p style="font-size: 15px; color: #888; margin: 0;">
+              El gobierno confirmó que las reservas de agua han disminuido un 40% respecto al año anterior...
+            </p>
+          </div>
+          <div style="border: 1.5px solid #16a34a; border-radius: 6px; padding: 6px 12px; text-align: center; background: #f0fdf4; min-width: 90px;">
+            <span style="font-size: 24px;">✅</span>
+            <p style="font-size: 15px; color: #16a34a; margin: 2px 0 0 0; font-weight: 600;">Verdadero</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: Agregar nota -->
+      <p style="font-size: 20px; color: #333; margin: 0 0 8px 0; font-weight: 600;">📝 Agregar una nota</p>
+
+      <textarea id="nota-input" class="note-field" rows="3"
+        placeholder="Escribe una nota sobre esta noticia..."
+        oninput="updateCounter()"
+        maxlength="300"></textarea>
+      <div id="char-count" class="char-counter">0 / 300</div>
+
+      <p id="error-blank" class="error-msg">⚠ La nota no puede estar vacía.</p>
+      <p id="error-chars" class="error-msg">⚠ La nota contiene caracteres inválidos (< > { } \).</p>
+      <p id="success-note" class="success-msg">✔ ¡Nota publicada exitosamente!</p>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+        <button class="btn-cancel" onclick="clearNota()">✖ Cancelar</button>
+        <button class="btn-send" onclick="enviarNota()">📤 Publicar nota</button>
+      </div>
+
+      <div class="sketch-line" style="margin: 16px 0;"></div>
+
+      <!-- SECCIÓN 3: Notas existentes de otros adultos -->
+      <p style="font-size: 20px; color: #333; margin: 0 0 10px 0; font-weight: 600;">💬 Notas de la comunidad</p>
+
+      <!-- Nota 1 -->
+      <div id="notes-list">
+        <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #e5e5e5;">
+          <div class="avatar">👤</div>
+          <div style="flex: 1;">
+            <p style="margin: 0; font-size: 15px; color: #333;"><b>Maria_R:</b></p>
+            <p style="margin: 2px 0 4px 0; font-size: 15px; color: #555;">El dato del 40% coincide con el reporte del periódico local de ayer.</p>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="like-btn" onclick="vote(this,'up')">👍 5</button>
+              <button class="like-btn" onclick="vote(this,'down')">👎 0</button>
+              <span style="font-size: 13px; color: #bbb; margin-left: 4px;">hace 2h</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nota 2 -->
+        <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #e5e5e5;">
+          <div class="avatar">👤</div>
+          <div style="flex: 1;">
+            <p style="margin: 0; font-size: 15px; color: #333;"><b>AguaViva:</b></p>
+            <p style="margin: 2px 0 4px 0; font-size: 15px; color: #555;">La fuente del gobierno no especifica la metodología del cálculo del porcentaje.</p>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="like-btn" onclick="vote(this,'up')">👍 3</button>
+              <button class="like-btn" onclick="vote(this,'down')">👎 1</button>
+              <span style="font-size: 13px; color: #bbb; margin-left: 4px;">hace 4h</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nota 3 -->
+        <div style="display: flex; gap: 10px; align-items: flex-start;">
+          <div class="avatar">👤</div>
+          <div style="flex: 1;">
+            <p style="margin: 0; font-size: 15px; color: #333;"><b>User123:</b></p>
+            <p style="margin: 2px 0 4px 0; font-size: 15px; color: #555;">Puedo confirmar, vivo en la zona y las restricciones ya comenzaron esta semana.</p>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="like-btn" onclick="vote(this,'up')">👍 8</button>
+              <button class="like-btn" onclick="vote(this,'down')">👎 0</button>
+              <span style="font-size: 13px; color: #bbb; margin-left: 4px;">hace 6h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top: 14px; display: flex; justify-content: space-around; color: #aaa; font-size: 14px;">
+      <span>↑ Noticia + Veredicto ↑</span>
+      <span>↑ Agregar nota ↑</span>
+      <span>↑ Notas comunidad ↑</span>
+    </div>
+
+  </div>
+
+  <script>
+    function updateCounter() {
+      const input = document.getElementById('nota-input');
+      const counter = document.getElementById('char-count');
+      const len = input.value.length;
+      counter.textContent = len + ' / 300';
+      counter.className = 'char-counter' + (len > 250 ? ' warn' : '');
+    }
+
+    const INVALID_CHARS = /[<>{}\\\|]/;
+
+    function enviarNota() {
+      const input = document.getElementById('nota-input');
+      const val = input.value.trim();
+      hideErrors();
+
+      if (!val) {
+        show('error-blank');
+        return;
+      }
+      if (INVALID_CHARS.test(val)) {
+        show('error-chars');
+        return;
+      }
+
+      // Éxito: agregar nota a la lista
+      const list = document.getElementById('notes-list');
+      const newNote = document.createElement('div');
+      newNote.style.cssText = 'display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding-top:12px;border-top:1.5px solid #d4fcd4;background:#f9fff9;border-radius:6px;padding:10px;';
+      newNote.innerHTML = `
+        <div class="avatar" style="background:#bbf7d0;border-color:#16a34a;">👤</div>
+        <div style="flex:1;">
+          <p style="margin:0;font-size:15px;color:#333;"><b>Tú (nuevo):</b></p>
+          <p style="margin:2px 0 4px 0;font-size:15px;color:#555;">${val}</p>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="like-btn" onclick="vote(this,'up')">👍 0</button>
+            <button class="like-btn" onclick="vote(this,'down')">👎 0</button>
+            <span style="font-size:13px;color:#16a34a;margin-left:4px;">✔ Recién publicada</span>
+          </div>
+        </div>`;
+      list.prepend(newNote);
+      input.value = '';
+      updateCounter();
+      show('success-note');
+      setTimeout(() => hide('success-note'), 2500);
+    }
+
+    function clearNota() {
+      document.getElementById('nota-input').value = '';
+      updateCounter();
+      hideErrors();
+    }
+
+    function hideErrors() {
+      hide('error-blank');
+      hide('error-chars');
+    }
+
+    function show(id) { document.getElementById(id).classList.add('show'); }
+    function hide(id) { document.getElementById(id).classList.remove('show'); }
+
+    function vote(btn, type) {
+      const num = parseInt(btn.textContent.replace(/\D/g,''));
+      if (type === 'up') btn.textContent = '👍 ' + (num + 1);
+      else btn.textContent = '👎 ' + (num + 1);
+    }
+  </script>
+</body>
+</html>
