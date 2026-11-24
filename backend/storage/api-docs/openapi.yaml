@@ -121,6 +121,9 @@ components:
         explicacion:
           type: string
           example: "Con una confiabilidad del 85.50%, este contenido es consistente con Reuters y AP."
+        motivo_breve:
+          type: [string, 'null']
+          description: Motivo en lenguaje claro. Puede ser nulo en verificaciones anteriores o rectificadas por un editor.
         fecha_emision:
           type: string
           format: date-time

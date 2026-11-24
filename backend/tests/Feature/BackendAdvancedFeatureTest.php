@@ -83,6 +83,7 @@ class BackendAdvancedFeatureTest extends TestCase
             'tipo_veredicto'      => 'PARCIAL',
             'nivel_confiabilidad' => 45.00,
             'explicacion'         => 'Análisis preliminar de baja confianza.',
+            'motivo_breve'        => 'El aviso menciona el día correcto, pero usa otra fecha.',
         ]);
 
         $response = $this->withToken($this->tokenEditor)
@@ -94,13 +95,15 @@ class BackendAdvancedFeatureTest extends TestCase
             ]);
 
         $response->assertStatus(200)
-            ->assertJsonPath('veredicto.tipo_veredicto', 'FALSO');
+            ->assertJsonPath('veredicto.tipo_veredicto', 'FALSO')
+            ->assertJsonPath('veredicto.motivo_breve', null);
 
         $this->assertEquals(95.0, (float) $response->json('veredicto.nivel_confiabilidad'));
 
         $this->assertDatabaseHas('veredictos', [
             'id_veredicto'   => $veredicto->id_veredicto,
             'tipo_veredicto' => 'FALSO',
+            'motivo_breve'   => null,
         ]);
 
         $this->assertDatabaseHas('logs_comunicador_api', [

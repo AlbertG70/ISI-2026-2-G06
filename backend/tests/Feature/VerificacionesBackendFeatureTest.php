@@ -9,10 +9,13 @@ use App\Models\ProcesoVerificacion;
 use App\Models\Usuario;
 use App\Models\Veredicto;
 use App\Services\BusquedaSemanticaService;
+use App\Services\BusquedaWebService;
+use App\Services\MultiModeloHarnessService;
 use App\Services\VerificacionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -95,7 +98,7 @@ class VerificacionesBackendFeatureTest extends TestCase
                 'mensaje',
                 'contenido' => ['id_contenido', 'tipo_entrada', 'contenido_original', 'estado'],
                 'proceso'   => ['id_proceso', 'score_confiabilidad', 'proveedor_ia'],
-                'veredicto' => ['id_veredicto', 'tipo_veredicto', 'nivel_confiabilidad', 'explicacion'],
+                'veredicto' => ['id_veredicto', 'tipo_veredicto', 'nivel_confiabilidad', 'explicacion', 'motivo_breve'],
                 'fuentes',
                 'categoria_metadata',
                 'verificacion_hechos',
@@ -144,6 +147,7 @@ class VerificacionesBackendFeatureTest extends TestCase
         $contenidoOriginal = $response->json('contenido.contenido_original');
         $this->assertNotEmpty($contenidoOriginal);
         $this->assertGreaterThan(10, mb_strlen($contenidoOriginal));
+        $this->assertNotEmpty($response->json('veredicto.motivo_breve'));
 
         // En la BD el tipo de entrada se guarda de forma consistente
         $this->assertDatabaseHas('contenidos', [
@@ -177,6 +181,7 @@ class VerificacionesBackendFeatureTest extends TestCase
 
         // El veredicto fue generado
         $this->assertNotNull($response->json('veredicto.tipo_veredicto'));
+        $this->assertNotEmpty($response->json('veredicto.motivo_breve'));
         $this->assertNotEmpty($response->json('fuentes'));
     }
 
@@ -385,6 +390,94 @@ class VerificacionesBackendFeatureTest extends TestCase
         $this->assertEquals('FALSO', $response->json('veredicto.tipo_veredicto'));
         $this->assertEquals(0.0, (float) $response->json('veredicto.nivel_confiabilidad'));
         $this->assertStringContainsString('0.0%', $response->json('veredicto.explicacion'));
+        $this->assertSame(
+            'No se encontró respaldo para la afirmación en la información consultada.',
+            $response->json('veredicto.motivo_breve'),
+        );
+    }
+
+    public function test_calibracion_conserva_el_motivo_y_la_fuente_web_al_consultar_el_veredicto(): void
+    {
+        config([
+            'dagaz.ia_proveedor' => 'openrouter',
+            'dagaz.openrouter.api_key' => 'sk-or-v1-test',
+            'dagaz.multi_modelo.habilitado' => true,
+        ]);
+        Http::fake([
+            'https://openrouter.ai/api/v1/chat/completions' => Http::response([
+                'choices' => [['message' => ['content' => json_encode([
+                    'score' => 0.95,
+                    'justificacion' => 'El aviso respalda la reapertura del sábado.',
+                    'motivo_breve' => 'La biblioteca reabre el sábado.',
+                ])]]],
+            ]),
+            '*' => Http::response([], 404),
+        ]);
+
+        $fuente = [
+            'titulo' => 'Horario de reapertura',
+            'url' => 'https://biblioteca.example/horario',
+            'fragmento' => 'El sábado la biblioteca estará abierta de 10 a 12.',
+            'fuente' => 'Biblioteca de Villa Aurora',
+        ];
+        $this->mock(BusquedaWebService::class, function ($mock) use ($fuente) {
+            $mock->shouldReceive('esTemaActualOVolatil')->once()->andReturn(true);
+            $mock->shouldReceive('buscarEnLaWeb')->once()->andReturn([$fuente]);
+        });
+
+        $motivo = 'La Biblioteca de Villa Aurora abre el sábado. Según su aviso, el horario empieza a las 10.';
+        $this->mock(MultiModeloHarnessService::class, function ($mock) use ($motivo, $fuente) {
+            $mock->shouldReceive('evaluarConConsejo')->once()->andReturn([
+                'calibracion_aplicada' => true,
+                'veredicto_calibrado' => 'PARCIAL',
+                'confianza_promedio' => 80.0,
+                'resumen_consenso' => 'El horario de apertura del mensaje difiere del aviso publicado.',
+                'evaluaciones_individuales' => [[
+                    'veredicto' => 'PARCIAL',
+                    'motivo_breve' => $motivo,
+                    'fuentes_consultadas' => [['nombre' => $fuente['fuente']]],
+                ]],
+            ]);
+        });
+
+        $emitido = $this->postJson('/api/v1/verificacion', [
+            'tipo_entrada' => 'TEXTO',
+            'contenido_original' => 'La biblioteca de Villa Aurora abre el sábado de 8 a 12.',
+        ])->assertOk()
+            ->assertJsonPath('veredicto.tipo_veredicto', 'PARCIAL')
+            ->assertJsonPath('veredicto.motivo_breve', $motivo);
+
+        $id = $emitido->json('contenido.id_contenido');
+        $this->getJson("/api/v1/verificacion/{$id}")
+            ->assertOk()
+            ->assertJsonPath('veredicto.motivo_breve', $motivo)
+            ->assertJsonPath('veredicto.explicacion', $emitido->json('veredicto.explicacion'))
+            ->assertJsonFragment(['url_sitio' => $fuente['url'], 'cita_contraste' => $fuente['fragmento']]);
+    }
+
+    public function test_presidencia_de_colombia_usa_el_registro_vigente_y_enlaza_la_fuente_oficial(): void
+    {
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-23 12:00:00', 'America/Bogota'));
+        Http::fake(['*' => Http::response([], 404)]);
+        $texto = 'abelardo de la espriella es presidente de colombia';
+
+        $resultado = $this->postJson('/api/v1/verificacion', [
+            'tipo_entrada' => 'TEXTO',
+            'contenido_original' => $texto,
+        ])->assertOk()->assertJsonPath('veredicto.tipo_veredicto', 'VERDADERO');
+
+        $id = $resultado->json('contenido.id_contenido');
+        $this->getJson("/api/v1/verificacion/{$id}")->assertOk()
+            ->assertJsonPath('veredicto.motivo_breve', 'La Presidencia confirma que Abelardo de la Espriella ejerce el cargo desde el 7 de agosto de 2026.')
+            ->assertJsonFragment([
+                'url_sitio' => 'https://www.presidencia.gov.co/contenidoVinculado/perfiles/presidente.html',
+                'origen' => 'REGISTRO_INSTITUCIONAL',
+            ]);
+
+        $servicio = app(BusquedaSemanticaService::class);
+        $this->assertNull($servicio->contrastarHechoInstitucional('Gustavo Petro fue presidente de Colombia en 2024.'));
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2030-08-07 12:00:00', 'America/Bogota'));
+        $this->assertNull($servicio->contrastarHechoInstitucional($texto));
     }
 
     public function test_flavio_bolsonaro_presidente_brasil_retorna_falso_y_conserva_cero_ante_disenso_de_consejo(): void

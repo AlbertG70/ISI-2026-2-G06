@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Share,
   Linking,
   ActivityIndicator,
+  AccessibilityInfo,
 } from 'react-native';
 import { COLORS, normalizarVeredicto } from '../theme/colors';
 import { useTheme } from '../context/ThemeContext';
@@ -43,7 +44,11 @@ export default function ResultadoScreen({ route, navigation }) {
   const [fuentes, setFuentes] = useState(params.veredicto?.fuentes || params.fuentes || []);
   const [cargandoDetalle, setCargandoDetalle] = useState(false);
 
-  const [mostrarExplicacion, setMostrarExplicacion] = useState(true);
+  const [mostrarMotivo, setMostrarMotivo] = useState(true);
+  const [mostrarExplicacionCompleta, setMostrarExplicacionCompleta] = useState(false);
+  const scrollRef = useRef(null);
+  const tituloFuentesRef = useRef(null);
+  const posicionFuentes = useRef(0);
   const [guardado, setGuardado] = useState(false);
   const [guardando, setGuardando] = useState(false);
 
@@ -103,6 +108,8 @@ export default function ResultadoScreen({ route, navigation }) {
 
   const vInfo = normalizarVeredicto(veredicto?.tipo_veredicto);
   const confianza = Number(veredicto?.nivel_confiabilidad) || 0;
+  const motivo = veredicto?.motivo_breve?.trim() || null;
+  const explicacionCompleta = veredicto?.explicacion || null;
 
   const fuentesValidas = (fuentes || []).filter(
     (f) => f && f.cita_contraste && String(f.cita_contraste).trim() !== ''
@@ -142,6 +149,15 @@ export default function ResultadoScreen({ route, navigation }) {
     try {
       await Share.share({ message: textoCompartir });
     } catch {}
+  };
+
+  const irAFuentes = () => {
+    scrollRef.current?.scrollTo({ y: posicionFuentes.current, animated: false });
+    requestAnimationFrame(() => {
+      if (tituloFuentesRef.current) {
+        AccessibilityInfo.sendAccessibilityEvent?.(tituloFuentesRef.current, 'focus');
+      }
+    });
   };
 
   const handleAbrirFuente = (url) => {
@@ -251,7 +267,7 @@ export default function ResultadoScreen({ route, navigation }) {
   });
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView ref={scrollRef} style={styles.container} contentContainerStyle={styles.content}>
       {/* Botón Volver */}
       <TouchableOpacity
         style={styles.backBtn}
@@ -311,23 +327,56 @@ export default function ResultadoScreen({ route, navigation }) {
             <CircularGauge porcentaje={confianza} color={vInfo.color} size={70} />
           </View>
 
-          {/* Desplegable Explicación */}
-          <TouchableOpacity
-            style={styles.accordionHeader}
-            onPress={() => setMostrarExplicacion(!mostrarExplicacion)}
-            activeOpacity={0.8}
-          >
-            <Text style={[styles.accordionTitle, { fontSize: font(15) }]}>
-              {mostrarExplicacion ? '▼ Ocultar justificación' : '► ¿Por qué este veredicto?'}
-            </Text>
-          </TouchableOpacity>
-
-          {mostrarExplicacion && (
-            <View style={styles.accordionBody}>
-              <Text style={[styles.accordionText, { fontSize: font(15) }]}>
-                {veredicto?.explicacion ||
-                  'El sistema contrastó la afirmación con el grafo de fuentes confiables de DAGAZ y bases de datos oficiales.'}
+          {motivo && (
+            <TouchableOpacity
+              style={styles.accordionHeader}
+              onPress={() => setMostrarMotivo((abierto) => !abierto)}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: mostrarMotivo }}
+            >
+              <Text style={[styles.accordionTitle, { fontSize: font(18) }]}>
+                ¿Por qué este veredicto?
               </Text>
+            </TouchableOpacity>
+          )}
+
+          {(!motivo || mostrarMotivo) && (motivo || explicacionCompleta || fuentesValidas.length > 0) && (
+            <View style={styles.accordionBody}>
+              {motivo && (
+                <Text style={[styles.accordionText, { fontSize: font(18), lineHeight: font(26) }]}>
+                  {motivo}
+                </Text>
+              )}
+              {fuentesValidas.length > 0 && (
+                <TouchableOpacity
+                  style={styles.accordionAction}
+                  onPress={irAFuentes}
+                  accessibilityRole="link"
+                >
+                  <Text style={[styles.accordionTitle, styles.enlaceFuentes, { fontSize: font(18) }]}>
+                    Ver fuentes consultadas
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {explicacionCompleta && (
+                <>
+                  <TouchableOpacity
+                    style={styles.accordionAction}
+                    onPress={() => setMostrarExplicacionCompleta((abierta) => !abierta)}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: mostrarExplicacionCompleta }}
+                  >
+                    <Text style={[styles.accordionTitle, { fontSize: font(18) }]}>
+                      {mostrarExplicacionCompleta ? 'Ocultar explicación completa' : 'Ver explicación completa'}
+                    </Text>
+                  </TouchableOpacity>
+                  {mostrarExplicacionCompleta && (
+                    <Text style={[styles.accordionText, { fontSize: font(18), lineHeight: font(26) }]}>
+                      {explicacionCompleta}
+                    </Text>
+                  )}
+                </>
+              )}
             </View>
           )}
 
@@ -382,8 +431,11 @@ export default function ResultadoScreen({ route, navigation }) {
       </View>
 
       {/* Fuentes de Contraste (CU07) */}
-      <View style={styles.sectionCard}>
-        <Text style={[styles.sectionTitle, { fontSize: font(18) }]}>
+      <View
+        style={styles.sectionCard}
+        onLayout={({ nativeEvent }) => { posicionFuentes.current = nativeEvent.layout.y; }}
+      >
+        <Text ref={tituloFuentesRef} accessibilityRole="header" style={[styles.sectionTitle, { fontSize: font(18) }]}>
           📰 Fuentes de Contraste Consultadas
         </Text>
         <Text style={[styles.sectionSubtitle, { fontSize: font(13) }]}>
@@ -436,7 +488,7 @@ export default function ResultadoScreen({ route, navigation }) {
         ) : (
           <View style={styles.warningFuentesBox}>
             <Text style={[styles.warningFuentesTitle, { fontSize: font(14) }]}>
-              ⚠️ No se encontró cobertura oficial o periodística relacionada aún en nuestro grafo de fuentes.
+              No hay citas de fuentes disponibles para esta verificación.
             </Text>
           </View>
         )}
@@ -674,10 +726,20 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   accordionHeader: {
+    minHeight: 48,
+    justifyContent: 'center',
     marginTop: 14,
     paddingVertical: 8,
     borderTopWidth: 1,
     borderTopColor: COLORS.borde,
+  },
+  accordionAction: {
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingVertical: 8,
+  },
+  enlaceFuentes: {
+    textDecorationLine: 'underline',
   },
   accordionTitle: {
     fontWeight: '700',
@@ -691,7 +753,6 @@ const styles = StyleSheet.create({
   },
   accordionText: {
     color: COLORS.tinta,
-    lineHeight: 22,
   },
   editorialBadge: {
     backgroundColor: COLORS.marca,

@@ -47,7 +47,7 @@ interface AdaptadorApiIaInterface
      * contradicen entre sí y si el argumento es sólido lógicamente.
      *
      * @param  string $texto Texto a verificar.
-     * @return array{score: float, justificacion: string}
+     * @return array{score: float, justificacion: string, motivo_breve?: string|null}
      *              Arreglo con:
      *              - 'score'        (float)  : Valor de coherencia [0.0, 1.0].
      *              - 'justificacion' (string): Explicación razonada del score.

@@ -500,6 +500,7 @@ class MultiModeloHarnessService
                 'confianza'             => (float) ($parsed['confianza'] ?? 75.0),
                 'acuerda_con_propuesto' => (bool) ($parsed['acuerdo_con_propuesto'] ?? ($veredictoNormalizado === strtoupper($veredictoPreliminar))),
                 'critica'               => (string) ($parsed['critica'] ?? ''),
+                'motivo_breve'          => is_string($parsed['motivo_breve'] ?? null) ? $parsed['motivo_breve'] : null,
                 'fuentes_consultadas'   => (array) ($parsed['fuentes_consultadas'] ?? []),
                 'citas_relevantes'      => (array) ($parsed['citas_relevantes'] ?? []),
             ];
@@ -847,6 +848,7 @@ Debes responder ÚNICAMENTE con un objeto JSON válido con esta estructura:
   "confianza": <número float entre 0 y 100>,
   "acuerdo_con_propuesto": <true o false>,
   "critica": "<argumentación concisa de tu postura técnica>",
+  "motivo_breve": "<Una o dos frases cortas en español sobre el dato decisivo para tu veredicto. Nombra la fuente si aclara el hecho e incluye la fecha, el lugar o el contexto si son decisivos. Omite porcentajes de confianza, citas largas, URLs y categorías. Devuelve null si careces de evidencia directa para sustentar la conclusión>",
   "fuentes_consultadas": [
     {
       "nombre": "<Nombre del organismo oficial, tribunal electoral, medio o registro público consultado>",

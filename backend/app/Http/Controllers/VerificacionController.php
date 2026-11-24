@@ -242,8 +242,11 @@ class VerificacionController extends Controller
         }
 
         $veredicto = $contenido->veredictos()->latest('fecha_emision')->first();
-        $proceso = $contenido->procesos()->latest('fecha_analisis')->first();
-        $contrasteTemas = $proceso && $proceso->contraste_temas ? json_decode($proceso->contraste_temas, true) : [];
+        $proceso = $veredicto?->proceso ?? $contenido->procesos()->latest('fecha_analisis')->first();
+        $contrasteTemas = $proceso?->contraste_temas;
+        if (is_string($contrasteTemas)) {
+            $contrasteTemas = json_decode($contrasteTemas, true);
+        }
         $multiModelo = $contrasteTemas['multi_modelo_evaluacion'] ?? null;
 
         $fuentesRespuesta = $veredicto ? $veredicto->fuentes
@@ -275,9 +278,10 @@ class VerificacionController extends Controller
             }
         }
 
+        $fuentesWeb = $contrasteTemas['fuentes_web'] ?? [];
         $fuentesRespuesta = !empty($multiModelo['calibracion_aplicada'])
-            ? array_merge($fuentesIa, $fuentesRespuesta)
-            : array_merge($fuentesRespuesta, $fuentesIa);
+            ? array_merge($fuentesIa, $fuentesWeb, $fuentesRespuesta)
+            : array_merge($fuentesRespuesta, $fuentesWeb, $fuentesIa);
 
         return response()->json([
             'contenido' => [
@@ -293,6 +297,7 @@ class VerificacionController extends Controller
                 'tipo_veredicto'     => $veredicto->tipo_veredicto,
                 'nivel_confiabilidad' => $veredicto->nivel_confiabilidad,
                 'explicacion'        => $veredicto->explicacion,
+                'motivo_breve'       => $veredicto->motivo_breve,
                 'fecha_emision'      => $veredicto->fecha_emision?->toIso8601String(),
                 'fuentes'            => $fuentesRespuesta,
             ] : null,
@@ -910,12 +915,14 @@ class VerificacionController extends Controller
             'tipo_veredicto'      => $veredicto->tipo_veredicto,
             'nivel_confiabilidad' => $veredicto->nivel_confiabilidad,
             'explicacion'         => $veredicto->explicacion,
+            'motivo_breve'         => $veredicto->motivo_breve,
         ];
 
         $veredicto->update([
             'tipo_veredicto'      => $validated['tipo_veredicto'],
             'nivel_confiabilidad' => $validated['nivel_confiabilidad'],
             'explicacion'         => "[Revisión Editorial por {$usuario->email}]: " . $validated['explicacion'],
+            'motivo_breve'         => null,
         ]);
 
         // Registrar trazabilidad en logs_comunicador_api
@@ -945,6 +952,7 @@ class VerificacionController extends Controller
                 'tipo_veredicto'      => $veredicto->tipo_veredicto,
                 'nivel_confiabilidad' => $veredicto->nivel_confiabilidad,
                 'explicacion'         => $veredicto->explicacion,
+                'motivo_breve'        => $veredicto->motivo_breve,
                 'intervenido_por'     => $usuario->email,
             ],
         ]);

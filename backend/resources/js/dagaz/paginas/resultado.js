@@ -22,7 +22,41 @@ let idContenido = null;
 
 /* ─── Veredicto ──────────────────────────────────────────────────────────── */
 
-function pintarVeredicto(contenido, veredicto) {
+function pintarExplicacion(veredicto, hayFuentes) {
+    const motivo = veredicto.motivo_breve?.trim();
+    const enlaceFuentes = hayFuentes
+        ? el('a', {
+              class: 'inline-flex min-h-12 items-center font-semibold text-tinta underline underline-offset-4',
+              text: 'Ver fuentes consultadas',
+              attrs: { href: '#titulo-fuentes' },
+          })
+        : null;
+    const explicacionCompleta = veredicto.explicacion
+        ? el('details', {}, [
+              el('summary', {
+                  class: 'min-h-12 cursor-pointer content-center font-semibold',
+                  text: 'Ver explicación completa',
+              }),
+              el('p', { class: 'mt-2 whitespace-pre-line break-words text-tinta', text: veredicto.explicacion }),
+          ])
+        : null;
+    const clase = 'mt-4 rounded-lg border-2 border-borde p-3';
+
+    if (motivo) {
+        return el('details', { class: clase, attrs: { open: true } }, [
+            el('summary', { class: 'min-h-12 cursor-pointer content-center font-semibold', text: '¿Por qué este veredicto?' }),
+            el('p', { class: 'mt-2 break-words text-tinta', text: motivo }),
+            enlaceFuentes,
+            explicacionCompleta,
+        ]);
+    }
+
+    return explicacionCompleta || enlaceFuentes
+        ? el('div', { class: clase }, [enlaceFuentes, explicacionCompleta])
+        : null;
+}
+
+function pintarVeredicto(contenido, veredicto, hayFuentes) {
     const destino = $('#bloque-veredicto');
     const texto = contenido.contenido_original || contenido.url_origen || '';
 
@@ -61,12 +95,7 @@ function pintarVeredicto(contenido, veredicto) {
                 ]),
             ]),
 
-            veredicto.explicacion
-                ? el('details', { class: 'mt-4 rounded-lg border-2 border-borde p-3' }, [
-                      el('summary', { class: 'min-h-12 cursor-pointer content-center font-semibold', text: '¿Por qué este veredicto?' }),
-                      el('p', { class: 'mt-2 whitespace-pre-line text-tinta', text: veredicto.explicacion }),
-                  ])
-                : null,
+            pintarExplicacion(veredicto, hayFuentes),
 
             veredicto.explicacion?.includes('[Revisión Editorial') || veredicto.intervenido_por
                 ? el('div', { class: 'mt-3 inline-flex items-center gap-1.5 rounded-lg border-2 border-marca bg-marca text-white px-3 py-1 text-xs font-bold' }, [
@@ -95,9 +124,8 @@ function enlaceSeguro(url) {
     }
 }
 
-function pintarFuentes(fuentes = []) {
+function pintarFuentes(fuentesValidas) {
     const lista = $('#lista-fuentes');
-    const fuentesValidas = (fuentes || []).filter((f) => f && f.cita_contraste && String(f.cita_contraste).trim() !== '');
 
     if (!fuentesValidas.length) {
         lista.replaceChildren(
@@ -107,11 +135,7 @@ function pintarFuentes(fuentes = []) {
                     el('div', { class: 'space-y-1' }, [
                         el('p', {
                             class: 'font-semibold text-base leading-snug',
-                            text: 'No se encontró ninguna noticia o fuente relacionada a este tema, este veredicto es posiblemente falso, pues ningún organismo de control se ha pronunciado aún.',
-                        }),
-                        el('p', {
-                            class: 'text-sm font-medium text-amber-800 dark:text-amber-300',
-                            text: 'Nota importante: Todavía no existen noticias, reportes ni evidencias oficiales sobre este tema en nuestra base de datos ni en el grafo de medios de comunicación.',
+                            text: 'No hay citas de fuentes disponibles para esta verificación.',
                         }),
                     ]),
                 ]),
@@ -133,7 +157,7 @@ function pintarFuentes(fuentes = []) {
                 : null;
 
             return el('li', { class: 'flex items-start gap-3 border-b border-dashed border-borde/60 py-3 last:border-0' }, [
-                medidorCircular(f.indice_credibilidad || 95, 52),
+                f.indice_credibilidad != null ? medidorCircular(f.indice_credibilidad, 52) : null,
                 el('div', { class: 'min-w-0 flex-1' }, [
                     el('div', { class: 'flex flex-wrap items-center' }, [
                         el('p', { class: 'font-semibold', text: f.nombre }),
@@ -429,7 +453,7 @@ function iniciarCompartir(contenido, veredicto) {
 
 /* ─── Panel Editorial / Revisor Humano (REQ-13 / TSK-3.7) ───────────────── */
 
-function iniciarPanelEditorial(veredicto, contenido) {
+function iniciarPanelEditorial(veredicto, contenido, hayFuentes) {
     const seccion = $('#panel-editorial');
     const formulario = $('#form-editorial');
     const boton = $('#btn-intervenir-veredicto');
@@ -492,7 +516,7 @@ function iniciarPanelEditorial(veredicto, contenido) {
             });
             avisar('Veredicto rectificado exitosamente por revisión editorial humana.', 'exito');
             mostrarErroresFormulario(formulario, null);
-            pintarVeredicto(contenido, r.veredicto);
+            pintarVeredicto(contenido, r.veredicto, hayFuentes);
             iniciarCompartir(contenido, r.veredicto);
         } catch (error) {
             if (!mostrarErroresFormulario(formulario, error)) avisar(error.message, 'error');
@@ -510,14 +534,16 @@ export async function iniciar() {
     try {
         const datos = await api(`/verificacion/${encodeURIComponent(idContenido)}`);
         todasLasNotas = datos.notas || [];
-        pintarVeredicto(datos.contenido, datos.veredicto);
-        pintarFuentes(datos.veredicto?.fuentes || []);
+        const fuentes = (datos.veredicto?.fuentes ?? []).filter((f) => f?.cita_contraste?.trim());
+        const hayFuentes = fuentes.length > 0;
+        pintarVeredicto(datos.contenido, datos.veredicto, hayFuentes);
+        pintarFuentes(fuentes);
         pintarNotas();
         iniciarFiltrosNotas();
         iniciarFormularioNota(Boolean(datos.veredicto));
         iniciarGuardado();
         iniciarCompartir(datos.contenido, datos.veredicto);
-        iniciarPanelEditorial(datos.veredicto, datos.contenido);
+        iniciarPanelEditorial(datos.veredicto, datos.contenido, hayFuentes);
         $('#acciones-resultado').hidden = false;
         $('#secciones-detalle').hidden = false;
     } catch (error) {

@@ -26,6 +26,7 @@ use Illuminate\Support\Str;
  * @property string         $tipo_veredicto
  * @property float          $nivel_confiabilidad
  * @property string         $explicacion
+ * @property string|null    $motivo_breve
  * @property \Carbon\Carbon $fecha_emision
  *
  * @package App\Models
@@ -50,6 +51,7 @@ class Veredicto extends Model
         'tipo_veredicto',
         'nivel_confiabilidad',
         'explicacion',
+        'motivo_breve',
         'fecha_emision',
     ];
 
