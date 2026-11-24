@@ -428,6 +428,45 @@ class VerificacionService
                     }
                 }
 
+                $motivoBreve = $this->generarMotivoBreve(
+                    $tipoVeredicto,
+                    $resultadoContraste,
+                    $analisisArchive,
+                    $evaluacionMultiModelo,
+                );
+
+                $fuentesWeb = array_map(static fn ($evidencia) => [
+                    'nombre'              => $evidencia['fuente'],
+                    'url_sitio'           => $evidencia['url'],
+                    'tipo_fuente'         => 'PERIODISTICO',
+                    'indice_credibilidad' => 90.0,
+                    'peso_en_veredicto'   => 0.85,
+                    'cita_contraste'      => $evidencia['fragmento'],
+                    'origen'              => 'BUSQUEDA_WEB',
+                    'modelo_evaluador'    => 'Búsqueda Web en Vivo',
+                ], $evidenciasWeb);
+
+                $hechoInstitucional = $resultadoContraste['verificacion_hechos']['contraste_institucional'] ?? null;
+                if (!empty($hechoInstitucional['url_fuente_oficial'])) {
+                    $fuentesWeb[] = [
+                        'nombre'         => $hechoInstitucional['fuente_oficial'],
+                        'url_sitio'      => $hechoInstitucional['url_fuente_oficial'],
+                        'tipo_fuente'    => 'OFICIAL',
+                        'cita_contraste' => $hechoInstitucional['cita'],
+                        'origen'         => 'REGISTRO_INSTITUCIONAL',
+                    ];
+                }
+
+                if (!empty($analisisArchive['descontextualizado']) && !empty($analisisArchive['evidencia_wayback_url'])) {
+                    $fuentesWeb[] = [
+                        'nombre'         => 'Wayback Machine',
+                        'url_sitio'      => $analisisArchive['evidencia_wayback_url'],
+                        'tipo_fuente'    => 'HISTORICO',
+                        'cita_contraste' => $analisisArchive['diagnostico'],
+                        'origen'         => 'ARCHIVE_ORG',
+                    ];
+                }
+
                 // ─── PASO 11: Persistir proceso con análisis completo ─────────
                 $contrasteGuardar = [
                     'categoria_metadata'  => $categoriaMetadata,
@@ -448,6 +487,9 @@ class VerificacionService
                 if ($evaluacionMultiModelo) {
                     $contrasteGuardar['multi_modelo_evaluacion'] = $evaluacionMultiModelo;
                 }
+                if ($fuentesWeb) {
+                    $contrasteGuardar['fuentes_web'] = $fuentesWeb;
+                }
 
                 $proceso->update([
                     'score_confiabilidad' => $scoreConfiabilidad,
@@ -462,6 +504,7 @@ class VerificacionService
                     'tipo_veredicto'     => $tipoVeredicto,
                     'nivel_confiabilidad' => $scoreConfiabilidad,
                     'explicacion'        => $explicacion,
+                    'motivo_breve'       => $motivoBreve,
                 ]);
 
                 // ─── PASO 13: Asociar fuentes al veredicto (veredicto_fuentes) ──
@@ -523,23 +566,6 @@ class VerificacionService
                     }
                 }
 
-                // Enriquecer con fuentes en vivo rescatadas de la búsqueda web
-                $fuentesWeb = [];
-                if (!empty($evidenciasWeb)) {
-                    foreach ($evidenciasWeb as $ew) {
-                        $fuentesWeb[] = [
-                            'nombre'              => $ew['fuente'],
-                            'url_sitio'           => $ew['url'],
-                            'tipo_fuente'         => 'PERIODISTICO',
-                            'indice_credibilidad' => 90.0,
-                            'peso_en_veredicto'   => 0.85,
-                            'cita_contraste'      => $ew['fragmento'],
-                            'origen'              => 'BUSQUEDA_WEB',
-                            'modelo_evaluador'    => 'Búsqueda Web en Vivo',
-                        ];
-                    }
-                }
-
                 $fuentesAsociadas = !empty($evaluacionMultiModelo['calibracion_aplicada'])
                     ? array_merge($fuentesIa, $fuentesWeb, $fuentesAsociadas)
                     : array_merge($fuentesAsociadas, $fuentesWeb, $fuentesIa);
@@ -581,6 +607,7 @@ class VerificacionService
                         'tipo_veredicto'      => $tipoVeredicto,
                         'nivel_confiabilidad' => $scoreConfiabilidad,
                         'explicacion'         => $explicacion,
+                        'motivo_breve'        => $motivoBreve,
                         'fecha_emision'       => $veredicto->fecha_emision?->toIso8601String(),
                     ],
                     'fuentes'             => $fuentesAsociadas,
@@ -895,7 +922,7 @@ class VerificacionService
      * @param  string                                                           $idProceso
      * @param  array<string, array<int, object>>                                $noticiasPorFuente
      * @param  array<int, array{titulo: string, url: string, fragmento: string, fuente: string}> $evidenciasWeb
-     * @return array{coherencia_score: float, coherencia_ia_score: float, justificacion: string, citas: array<string,string|null>, verificacion_hechos: ?array}
+     * @return array{coherencia_score: float, coherencia_ia_score: float, justificacion: string, motivo_breve?: string|null, citas: array<string,string|null>, verificacion_hechos: ?array}
      */
     private function contrastarConFuentes(
         AdaptadorApiIaInterface $adaptadorIa,
@@ -1018,6 +1045,7 @@ class VerificacionService
                 'coherencia_ia_score' => $coherenciaScore,
                 'ia_respondio'        => $iaRespondio,
                 'justificacion'       => $resultado['justificacion'] ?? '',
+                'motivo_breve'        => $topEvidencia || $evidenciasWeb ? ($resultado['motivo_breve'] ?? null) : null,
                 'citas'               => $citas,
                 'verificacion_hechos' => $verificacionHechos,
             ];
@@ -1244,6 +1272,92 @@ class VerificacionService
         }
 
         return [$tipo, $explicacion];
+    }
+
+    private function generarMotivoBreve(
+        string $tipo,
+        array $contraste,
+        ?array $archivo,
+        ?array $consejo,
+    ): string {
+        if ($tipo === 'ENGAÑOSO' && !empty($archivo['descontextualizado']) && !empty($archivo['primera_captura'])) {
+            $fecha = explode(' ', $archivo['primera_captura'])[0];
+
+            return "Wayback Machine ya tenía una copia de este contenido el {$fecha}. Compartirlo como reciente cambia el contexto.";
+        }
+
+        $hechos = $contraste['verificacion_hechos'] ?? [];
+        $institucional = $hechos['contraste_institucional'] ?? [];
+        $coincideInstitucional = ($tipo === 'VERDADERO' && !empty($institucional['es_confirmacion']))
+            || ($tipo === 'FALSO' && !empty($institucional['es_refutacion']));
+        if ($coincideInstitucional && !empty($institucional['motivo_breve'])) {
+            return $institucional['motivo_breve'];
+        }
+
+        foreach ($consejo['evaluaciones_individuales'] ?? [] as $evaluacion) {
+            if (($evaluacion['veredicto'] ?? null) !== $tipo || empty($evaluacion['fuentes_consultadas'])) {
+                continue;
+            }
+            $motivo = $this->validarMotivoBreve($evaluacion['motivo_breve'] ?? null);
+            if ($motivo !== null) {
+                return $motivo;
+            }
+        }
+
+        $confirmaciones = [];
+        $refutaciones = [];
+        foreach ($hechos['detalles'] ?? [] as $detalle) {
+            if (($detalle['estado_contraste'] ?? null) === 'CONFIRMA') {
+                $confirmaciones[] = $detalle;
+            } elseif (!empty($detalle['refutacion_explicita'])) {
+                $refutaciones[] = $detalle;
+            }
+        }
+        if ($confirmaciones && $refutaciones) {
+            return 'Las fuentes consultadas discrepan sobre el dato principal. La afirmación aún requiere aclaración.';
+        }
+
+        $scoreIa = $contraste['coherencia_ia_score'] ?? 0.0;
+        $tipoIa = match (true) {
+            $scoreIa >= 75.0 => 'VERDADERO',
+            $scoreIa >= 55.0 => 'PARCIAL',
+            $scoreIa >= 30.0 => 'ENGAÑOSO',
+            default          => 'FALSO',
+        };
+        if ($tipo === $tipoIa && ($motivo = $this->validarMotivoBreve($contraste['motivo_breve'] ?? null)) !== null) {
+            return $motivo;
+        }
+
+        $directas = match ($tipo) {
+            'VERDADERO' => $confirmaciones,
+            'FALSO'     => $refutaciones,
+            default     => [],
+        };
+        foreach ($directas as $detalle) {
+            $titular = $this->validarMotivoBreve($detalle['noticia_titular'] ?? null);
+            if ($titular !== null && !empty($detalle['fuente'])) {
+                $verbo = $tipo === 'VERDADERO' ? 'confirma' : 'desmiente';
+
+                return "{$detalle['fuente']} {$verbo} el dato principal en «{$titular}».";
+            }
+        }
+
+        return match ($tipo) {
+            'FALSO' => 'No se encontró respaldo para la afirmación en la información consultada.',
+            'NO_VERIFICABLE' => 'La información disponible no permite confirmar ni descartar la afirmación.',
+            default => 'La información disponible deja sin aclarar el dato principal del mensaje.',
+        };
+    }
+
+    private function validarMotivoBreve(mixed $texto): ?string
+    {
+        if (!is_string($texto)) {
+            return null;
+        }
+
+        $motivo = trim((string) preg_replace('/\s+/u', ' ', $texto));
+
+        return $motivo !== '' && mb_strlen($motivo) <= 300 ? $motivo : null;
     }
 
     /**

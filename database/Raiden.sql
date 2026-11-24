@@ -141,6 +141,7 @@ CREATE TABLE veredictos (
     nivel_confiabilidad DECIMAL(5,2) NOT NULL DEFAULT 0.00
                         CHECK (nivel_confiabilidad BETWEEN 0 AND 100),
     explicacion         TEXT NOT NULL,
+    motivo_breve        TEXT,
     fecha_emision       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     -- Máximo un veredicto formal vigente por contenido

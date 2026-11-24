@@ -43,7 +43,7 @@
         {{-- 1. Desglose de Fuentes Consultadas --}}
         <section class="dz-tarjeta space-y-3" aria-labelledby="titulo-fuentes">
             <div class="border-b-2 border-dashed border-borde/60 pb-2">
-                <h2 id="titulo-fuentes" class="text-xl font-bold text-tinta flex items-center gap-2">
+                <h2 id="titulo-fuentes" tabindex="-1" class="scroll-mt-24 text-xl font-bold text-tinta flex items-center gap-2">
                     <span>📎</span> Fuentes de Contraste y Evidencias
                 </h2>
                 <p class="text-sm text-tinta-suave mt-0.5">

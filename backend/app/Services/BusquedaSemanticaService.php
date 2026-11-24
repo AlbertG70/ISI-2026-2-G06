@@ -262,12 +262,16 @@ class BusquedaSemanticaService
                 'presidente del país', 'presidente del pais', 'primer mandatario de colombia',
                 'jefe de estado de colombia', 'presidencia de colombia', 'presidente colombia'
             ],
-            'titular_oficial' => 'Gustavo Petro Urrego',
-            'titular_alias' => ['gustavo petro', 'petro', 'gustavo petro urrego'],
+            'titular_oficial' => 'Abelardo de la Espriella',
+            'titular_alias' => ['abelardo de la espriella', 'de la espriella'],
             'cargo' => 'Presidente Constitucional de la República de Colombia',
-            'periodo' => '2022–2026',
-            'fuente_oficial' => 'Registraduría Nacional del Estado Civil',
-            'descripcion_contraste' => 'De acuerdo con los registros oficiales de la Presidencia de la República y la Registraduría Nacional del Estado Civil, el Presidente Constitucional de la República de Colombia en ejercicio es Gustavo Petro Urrego (período constitucional 2022–2026), junto a la Vicepresidenta Francia Márquez Mina.',
+            'periodo' => '2026–2030',
+            'vigencia_desde' => '2026-08-07',
+            'vigencia_hasta' => '2030-08-07',
+            'fuente_oficial' => 'Presidencia de la República de Colombia',
+            'url_fuente_oficial' => 'https://www.presidencia.gov.co/contenidoVinculado/perfiles/presidente.html',
+            'motivo_breve' => 'La Presidencia confirma que Abelardo de la Espriella ejerce el cargo desde el 7 de agosto de 2026.',
+            'descripcion_contraste' => 'Abelardo de la Espriella asumió la presidencia de Colombia el 7 de agosto de 2026 para el período 2026–2030.',
         ],
         'vicepresidente_colombia' => [
             'patrones' => [
@@ -704,6 +708,16 @@ class BusquedaSemanticaService
                 continue;
             }
 
+            if (isset($hecho['vigencia_desde'], $hecho['vigencia_hasta'])) {
+                $fecha = now('America/Bogota')->toDateString();
+                if ($fecha < $hecho['vigencia_desde'] || $fecha >= $hecho['vigencia_hasta']
+                    || !preg_match('/\b(?:es|sea|no es) (?:el |la )?(?:actual )?presidente\b/u', $textoSinTildes)
+                    || preg_match('/\b(?:19|20)\d{2}\b/u', $textoSinTildes)
+                ) {
+                    continue;
+                }
+            }
+
             // Verifica si el texto menciona al titular oficial
             $mencionaTitular = false;
             $aliasDetectados = [];
@@ -736,6 +750,10 @@ class BusquedaSemanticaService
                 }
             }
 
+            $motivoBreve = $hecho['motivo_breve']
+                ?? "{$hecho['fuente_oficial']} registra a {$hecho['titular_oficial']} como {$hecho['cargo']} ({$hecho['periodo']}).";
+            $fuenteOficial = isset($hecho['url_fuente_oficial']) ? ['url_fuente_oficial' => $hecho['url_fuente_oficial']] : [];
+
             if ($esNegacion && !$mencionaTitular) {
                 // Afirma correctamente que alguien que no es el titular NO ganó / no ostenta el cargo
                 return [
@@ -746,6 +764,8 @@ class BusquedaSemanticaService
                     'cita'            => "Certificación oficial ({$hecho['fuente_oficial']}): Confirma que {$hecho['titular_oficial']} es el mandatario/candidato proclamado ({$hecho['periodo']}), validando que la figura no electa no ostenta dicho mandato.",
                     'titular_oficial' => $hecho['titular_oficial'],
                     'fuente_oficial'  => $hecho['fuente_oficial'],
+                    'motivo_breve'    => $motivoBreve,
+                    ...$fuenteOficial,
                 ];
             }
 
@@ -758,6 +778,8 @@ class BusquedaSemanticaService
                     'cita'            => "Certificación oficial ({$hecho['fuente_oficial']}): Confirma a {$hecho['titular_oficial']} como {$hecho['cargo']} ({$hecho['periodo']}).",
                     'titular_oficial' => $hecho['titular_oficial'],
                     'fuente_oficial'  => $hecho['fuente_oficial'],
+                    'motivo_breve'    => $motivoBreve,
+                    ...$fuenteOficial,
                 ];
             }
 
@@ -770,6 +792,8 @@ class BusquedaSemanticaService
                     'cita'            => "Registro oficial ({$hecho['fuente_oficial']}): Se certifica que el titular electo de {$hecho['cargo']} sí es {$hecho['titular_oficial']} ({$hecho['periodo']}).",
                     'titular_oficial' => $hecho['titular_oficial'],
                     'fuente_oficial'  => $hecho['fuente_oficial'],
+                    'motivo_breve'    => $motivoBreve,
+                    ...$fuenteOficial,
                 ];
             }
 
@@ -787,6 +811,8 @@ class BusquedaSemanticaService
                 'cita'            => "Registro oficial ({$hecho['fuente_oficial']}): Se certifica que el titular electo de {$hecho['cargo']} es {$hecho['titular_oficial']} ({$hecho['periodo']}). La afirmación no coincide con los resultados oficiales ni con el mandato legal en funciones.",
                 'titular_oficial' => $hecho['titular_oficial'],
                 'fuente_oficial'  => $hecho['fuente_oficial'],
+                'motivo_breve'    => $motivoBreve,
+                ...$fuenteOficial,
             ];
         }
 
@@ -803,7 +829,7 @@ class BusquedaSemanticaService
      * @param  array<int, string>                               $afirmaciones
      * @param  \Illuminate\Support\Collection<int, \App\Models\Fuente> $fuentes
      * @param  array<string, array<int, object>>                $noticiasPorFuente
-     * @return array{concordancia_score: float, citas: array<string, string|null>, detalles: array<string, mixed>, hallazgos: array<int, string>}
+     * @return array{concordancia_score: float, citas: array<string, string|null>, detalles: array<string, mixed>, hallazgos: array<int, string>, contraste_institucional: ?array}
      */
     public function verificarHechos(
         string $texto,
@@ -834,11 +860,12 @@ class BusquedaSemanticaService
 
         if ($contrasteInstitucional !== null) {
             $hallazgos[] = $contrasteInstitucional['hallazgo'];
-            $esFuenteColombia = !str_contains(mb_strtolower($contrasteInstitucional['fuente_oficial'] ?? ''), 'brasil');
+            $citarFuentesDelGrafo = empty($contrasteInstitucional['url_fuente_oficial'])
+                && !str_contains(mb_strtolower($contrasteInstitucional['fuente_oficial'] ?? ''), 'brasil');
 
             if ($contrasteInstitucional['es_refutacion']) {
                 $tieneRefutacionInstitucional = true;
-                if ($esFuenteColombia) {
+                if ($citarFuentesDelGrafo) {
                     foreach ($fuentes as $fuente) {
                         $nomMin = mb_strtolower($fuente->nombre);
                         if (str_contains($nomMin, 'registradur') || 
@@ -857,7 +884,7 @@ class BusquedaSemanticaService
                 }
             } elseif ($contrasteInstitucional['es_confirmacion']) {
                 $puntuaciones[] = $contrasteInstitucional['score'];
-                if ($esFuenteColombia) {
+                if ($citarFuentesDelGrafo) {
                     foreach ($fuentes as $fuente) {
                         $nomMin = mb_strtolower($fuente->nombre);
                         if (str_contains($nomMin, 'registradur') || str_contains($nomMin, 'dane')) {
@@ -1074,6 +1101,7 @@ class BusquedaSemanticaService
                 'url_noticia'               => $mejorNoticia->url_articulo,
                 'categoria'                 => $mejorNoticia->categoria,
                 'estado_contraste'          => $tipoContraste,
+                'refutacion_explicita'      => $esRefutacion && $tipoContraste === 'REFUTA',
                 'concordancia'              => $mejorScore,
                 'coincidencias_especificas' => (int) ($mejorNoticia->coincidencias_especificas ?? 0),
                 'total_especificas'         => (int) ($mejorNoticia->total_especificas ?? 0),
@@ -1106,6 +1134,7 @@ class BusquedaSemanticaService
             'citas'               => $citas,
             'detalles'            => $detalles,
             'hallazgos'           => $hallazgos,
+            'contraste_institucional' => $contrasteInstitucional,
         ];
     }
 

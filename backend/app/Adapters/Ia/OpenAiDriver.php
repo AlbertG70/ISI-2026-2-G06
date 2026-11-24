@@ -262,7 +262,7 @@ class OpenAiDriver implements AdaptadorApiIaInterface
      * y retorne un JSON con score y justificación.
      *
      * @param  string $texto Texto a verificar.
-     * @return array{score: float, justificacion: string}
+     * @return array{score: float, justificacion: string, motivo_breve?: string|null}
      */
     public function verificarCoherencia(string $texto): array
     {
@@ -272,7 +272,7 @@ class OpenAiDriver implements AdaptadorApiIaInterface
         $mensajes = [
             [
                 'role'    => 'system',
-                'content' => "Eres el motor de verificación factual de noticias (fact-checker) de DAGAZ en Colombia. La fecha actual es {$fechaActualUpper} de " . now()->year . ". Ten en cuenta que los comicios de octubre de 2026 (como las elecciones presidenciales de Brasil del 25 de octubre de 2026) YA OCURRIERON en el pasado y NO son eventos futuros. Para temas de actualidad volátil (precio del dólar/TRM, petróleo Brent/WTI, acciones, inflación o política del día), evalúa la veracidad conforme a la realidad a fecha actual. Tu entrenamiento interno puede tener fecha de corte anterior, por lo que DEBES DAR PRIORIDAD ABSOLUTA a la \"EVIDENCIA DOCUMENTAL ACTUALIZADA EN LA BASE DE DATOS Y/O BÚSQUEDA WEB\" que acompaña la consulta. Si las fuentes y la realidad verificada confirman la afirmación, asigna un score entre 0.85 y 1.0 (VERDADERO). Si es parcialmente cierta o requiere matices, asigna entre 0.55 y 0.74. Si contradice la evidencia o es falsa, asigna entre 0.0 y 0.20. Responde ÚNICAMENTE con un objeto JSON válido usando exactamente estas claves sin tildes: {\"score\": 0.00, \"justificacion\": \"explicación breve basada en la evidencia actual\"}.",
+                'content' => "Eres el motor de verificación factual de noticias (fact-checker) de DAGAZ en Colombia. La fecha actual es {$fechaActualUpper} de " . now()->year . ". Ten en cuenta que los comicios de octubre de 2026 (como las elecciones presidenciales de Brasil del 25 de octubre de 2026) YA OCURRIERON en el pasado y NO son eventos futuros. Para temas de actualidad volátil (precio del dólar/TRM, petróleo Brent/WTI, acciones, inflación o política del día), evalúa la veracidad conforme a la realidad a fecha actual. Tu entrenamiento interno puede tener fecha de corte anterior, por lo que DEBES DAR PRIORIDAD ABSOLUTA a la \"EVIDENCIA DOCUMENTAL ACTUALIZADA EN LA BASE DE DATOS Y/O BÚSQUEDA WEB\" que acompaña la consulta. Si las fuentes y la realidad verificada confirman la afirmación, asigna un score entre 0.85 y 1.0 (VERDADERO). Si es parcialmente cierta o requiere matices, asigna entre 0.55 y 0.74. Si contradice la evidencia o es falsa, asigna entre 0.0 y 0.20. Responde ÚNICAMENTE con un objeto JSON válido con las claves score, justificacion y motivo_breve. Conserva la justificación del análisis. En motivo_breve escribe una o dos frases cortas en español sobre el dato decisivo y la evidencia aportada. Nombra la fuente si aclara el hecho e incluye la fecha, el lugar o el contexto si son decisivos. Omite porcentajes de confianza, citas largas, URLs y categorías. Devuelve null en motivo_breve si la evidencia aportada no permite sostener tu conclusión.",
             ],
             [
                 'role'    => 'user',
@@ -315,6 +315,7 @@ class OpenAiDriver implements AdaptadorApiIaInterface
                     return [
                         'score'         => (float) max(0.0, min(1.0, $scoreFloat)),
                         'justificacion' => trim($justRaw),
+                        'motivo_breve'  => is_string($json['motivo_breve'] ?? null) ? $json['motivo_breve'] : null,
                     ];
                 }
             }

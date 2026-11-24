@@ -284,7 +284,7 @@ class GeminiDriver implements AdaptadorApiIaInterface
      * {@inheritdoc}
      *
      * @param  string $texto Texto a verificar.
-     * @return array{score: float, justificacion: string}
+     * @return array{score: float, justificacion: string, motivo_breve?: string|null}
      */
     public function verificarCoherencia(string $texto): array
     {
@@ -300,7 +300,7 @@ REGLAS DE EVALUACIÓN:
 1. Ten en cuenta que los comicios de octubre de 2026 (como las elecciones presidenciales de Brasil del 25 de octubre de 2026) YA OCURRIERON en el pasado y NO son eventos futuros. Tu entrenamiento interno puede tener fecha de corte anterior, por lo que DEBES DAR PRIORIDAD ABSOLUTA a la "EVIDENCIA DOCUMENTAL ACTUALIZADA EN LA BASE DE DATOS" y resultados web vigentes que acompañan la consulta.
 2. Analiza si la afirmación es fáctica, exacta y consistente con los hechos, noticias y cotizaciones a fecha de {$fechaActual} (incluyendo actualidad económica volátil como dólar/TRM en Colombia, petróleo Brent/WTI, bolsa, inflación y decisiones gubernamentales recientes).
 3. Si las fuentes verificadas o la realidad de mercado confirman o respaldan la afirmación, asigna un score entre 0.85 y 1.0 (VERDADERO). Si es parcialmente cierta o requiere matices, asigna entre 0.55 y 0.74 (PARCIAL). Si contradice la evidencia, inventa datos o es falsa, asigna entre 0.0 y 0.25 (FALSO).
-4. Responde ÚNICAMENTE con un objeto JSON válido usando exactamente estas claves sin tildes: {"score": 0.00, "justificacion": "explicación breve basada en la evidencia actual"}.
+4. Responde ÚNICAMENTE con un objeto JSON válido con las claves score, justificacion y motivo_breve. Conserva la justificación del análisis. En motivo_breve escribe una o dos frases cortas en español sobre el dato decisivo y la evidencia aportada. Nombra la fuente si aclara el hecho e incluye la fecha, el lugar o el contexto si son decisivos. Omite porcentajes de confianza, citas largas, URLs y categorías. Devuelve null en motivo_breve si la evidencia aportada no permite sostener tu conclusión.
 PROMPT;
 
         $usuario = "Fecha de referencia: {$fechaActual}. Verifica fáctica y semánticamente la siguiente información contrastándola con la evidencia disponible:\n\n{$texto}";
@@ -349,6 +349,7 @@ PROMPT;
                     return [
                         'score'         => (float) max(0.0, min(1.0, $scoreFloat)),
                         'justificacion' => trim($justRaw),
+                        'motivo_breve'  => is_string($jsonNorm['motivo_breve'] ?? null) ? $jsonNorm['motivo_breve'] : null,
                     ];
                 }
             }
