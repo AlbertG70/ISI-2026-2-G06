@@ -112,13 +112,12 @@ ENV APP_ENV=production \
     CACHE_STORE=database \
     TRUSTED_PROXIES="*" \
     OCR_SERVICE_URL=disabled \
-    STT_SERVICE_URL=disabled \
-    PORT=8000
+    STT_SERVICE_URL=disabled
 
-EXPOSE 8000
+EXPOSE 8000 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=25s --retries=3 \
-    CMD curl -fsS "http://127.0.0.1:${PORT:-8000}/api/health" >/dev/null || exit 1
+    CMD curl -fsS "http://127.0.0.1:${PORT:-8000}/api/health" >/dev/null || curl -fsS "http://127.0.0.1:8000/api/health" >/dev/null || exit 1
 
 ENTRYPOINT ["/usr/local/bin/dagaz-entrypoint"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -83,8 +83,15 @@ case "$PORT" in
         ;;
 esac
 
-sed "s/__PORT__/${PORT}/g" /etc/nginx/templates/dagaz.conf.template > /etc/nginx/conf.d/default.conf
+EXTRA_LISTEN=""
+for fallback_port in 8000 8080; do
+    if [ "$fallback_port" != "$PORT" ]; then
+        EXTRA_LISTEN="${EXTRA_LISTEN}listen 0.0.0.0:${fallback_port}; "
+    fi
+done
+
+sed -e "s/__PORT__/${PORT}/g" -e "s|__EXTRA_LISTEN__|${EXTRA_LISTEN}|g" /etc/nginx/templates/dagaz.conf.template > /etc/nginx/conf.d/default.conf
 nginx -t
 
-echo "[DAGAZ] Iniciando Nginx + PHP-FPM en 0.0.0.0:${PORT} (APP_ENV=${APP_ENV:-production})" >&2
+echo "[DAGAZ] Iniciando Nginx + PHP-FPM en 0.0.0.0:${PORT} (escuchando también en puertos auxiliares) (APP_ENV=${APP_ENV:-production})" >&2
 exec "$@"
